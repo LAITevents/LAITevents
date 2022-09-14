@@ -11,7 +11,8 @@
 				</svg>
 			</router-link>
 		</header>
-		<h1 class="text-6xl">Events</h1>
-		<slot></slot>
+		<div>
+			<slot />
+		</div>
 	</div>
 </template>
