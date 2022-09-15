@@ -1,6 +1,8 @@
 <template>
 	<div class="mx-auto max-w px-2 sm:px-6 lg:px-12">
-		<header class="flex flex-col relative py-12">
+		<header
+			class="flex flex-row relative py-12 justify-between items-center"
+		>
 			<router-link to="/" class="relative w-28">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 100">
 					<path
@@ -10,9 +12,23 @@
 					></path>
 				</svg>
 			</router-link>
+			<div class="flex gap-10">
+				<nuxt-link v-if="user" to="/events">Events</nuxt-link>
+				<button v-if="user" @click="signOut" class="">Sign Out</button>
+				<nuxt-link v-if="!user" to="/login">Login</nuxt-link>
+			</div>
 		</header>
 		<div>
 			<slot />
 		</div>
 	</div>
 </template>
+
+<script setup lang="ts">
+const user = useSupabaseUser();
+async function signOut() {
+	const supabase = useSupabaseClient();
+	await supabase.auth.signOut();
+	navigateTo("/login");
+}
+</script>
