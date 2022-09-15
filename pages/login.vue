@@ -26,10 +26,9 @@
 			<button
 				@click="isSignUp = !isSignUp"
 				class="w-full mt-8 text-sm text-center underline text-slate-300"
-				:disabled="loading"
 			>
-				<span v-if="isSignUp"> Have an account? Log in instead </span>
-				<span v-else> Create a new account </span>
+				<span v-if="isSignUp"> Klik her for at logge ind </span>
+				<span v-else> Opret en konto </span>
 			</button>
 		</form>
 	</div>
@@ -39,21 +38,17 @@
 const supabase = useSupabaseClient();
 const email = ref("");
 const password = ref("");
-const loading = ref(false);
 const isSignUp = ref(false);
 
 const handleLogin = async () => {
 	try {
-		loading.value = true;
 		const { error } = await supabase.auth.signIn({
 			email: email.value,
 			password: password.value,
 		});
 		if (error) throw error;
 	} catch (error) {
-		alert(error.error_description || error.message);
 	} finally {
-		loading.value = false;
 		return navigateTo("/events");
 	}
 };
