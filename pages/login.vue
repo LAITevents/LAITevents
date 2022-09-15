@@ -7,7 +7,7 @@
 			<input
 				class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 				type="email"
-				placeholder="Email"
+				placeholder="mail@lait.dk"
 				v-model="email"
 			/>
 			<input
@@ -54,6 +54,7 @@ const handleLogin = async () => {
 		alert(error.error_description || error.message);
 	} finally {
 		loading.value = false;
+		return navigateTo("/events");
 	}
 };
 
@@ -62,15 +63,7 @@ const signUp = async () => {
 		email: email.value,
 		password: password.value,
 	});
+	console.log("user", user);
+	console.log("error", error);
 };
-
-onMounted(() => {
-	watchEffect(() => {
-		const user = useSupabaseUser();
-
-		if (user.value) {
-			navigateTo("/events");
-		}
-	});
-});
 </script>

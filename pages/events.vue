@@ -9,5 +9,6 @@
 definePageMeta({
 	middleware: "auth",
 });
+
 const user = useSupabaseUser();
 </script>
