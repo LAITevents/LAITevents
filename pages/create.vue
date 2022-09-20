@@ -54,6 +54,7 @@ const statusMsg = ref(null);
 const errorMsg = ref(null);
 const eventTitle = ref("");
 const eventDescription = ref("");
+const user = supabase.auth.user();
 
 // Create event
 const addEvent = async () => {
@@ -62,6 +63,7 @@ const addEvent = async () => {
 			{
 				eventTitle: eventTitle.value,
 				eventDescription: eventDescription.value,
+				userId: user.id,
 			},
 		]);
 		if (error) throw error;
