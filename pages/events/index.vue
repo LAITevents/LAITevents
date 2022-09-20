@@ -41,7 +41,11 @@ getData();
 			>
 				<nuxt-link
 					class="flex flex-col items-center p-8 cursor-pointer bg-light-blue"
-					:to="'/events/' + dashify(event.eventTitle)"
+					:to="{
+						path: `/events/${dashify(event.eventTitle)}/${
+							event.id
+						}`,
+					}"
 					v-for="(event, index) in data"
 					:key="index"
 				>
