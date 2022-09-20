@@ -35,6 +35,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+
 const supabase = useSupabaseClient();
 const email = ref("");
 const password = ref("");
@@ -62,6 +64,4 @@ const signUp = async () => {
 	console.log("user", user);
 	console.log("error", error);
 };
-
-console.log(user);
 </script>

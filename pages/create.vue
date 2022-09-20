@@ -47,6 +47,8 @@
 	</div>
 </template>
 <script setup lang="ts">
+import { ref } from "vue";
+
 const supabase = useSupabaseClient();
 const statusMsg = ref(null);
 const errorMsg = ref(null);
