@@ -54,6 +54,7 @@ getData();
 		<div v-if="dataLoaded">
 			<h1>{{ data.eventTitle }}</h1>
 			<p>{{ data.eventDescription }}</p>
+			<p>Deltagere:</p>
 		</div>
 	</div>
 </template>
