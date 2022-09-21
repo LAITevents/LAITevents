@@ -5,6 +5,7 @@ definePageMeta({
 	middleware: "auth",
 });
 const user = useSupabaseUser();
+console.log(user);
 const supabase = useSupabaseClient();
 const data = ref([]);
 const dataLoaded = ref(null);
@@ -32,7 +33,9 @@ getData();
 	<div>
 		<p class="text-2xl">
 			Hello
-			<span class="text-lait-yellow text-2xl">{{ user?.email }}</span>
+			<span class="text-lait-yellow text-2xl">{{
+				user?.user_metadata.username || user?.email
+			}}</span>
 		</p>
 
 		<div v-if="dataLoaded">
