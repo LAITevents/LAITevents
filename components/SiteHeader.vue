@@ -1,5 +1,5 @@
 <template>
-	<header class="flex flex-row relative py-12 justify-between items-center">
+	<header class="flex flex-row relative py-12 items-center justify-between">
 		<router-link to="/" class="relative w-28">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 100">
 				<path
@@ -9,10 +9,13 @@
 				></path>
 			</svg>
 		</router-link>
-		<div class="flex gap-10">
-			<nuxt-link v-if="user" to="/events">Events</nuxt-link>
-			<nuxt-link v-if="user" @click="signOut">Sign Out</nuxt-link>
-			<nuxt-link v-if="!user" to="/login">Login</nuxt-link>
+		<div>
+			<ul class="flex gap-10 cursor-pointer">
+				<nuxt-link v-if="user" to="/create">Opret</nuxt-link>
+				<nuxt-link v-if="user" to="/events">Events</nuxt-link>
+				<nuxt-link v-if="user" @click="signOut">Log ud</nuxt-link>
+				<nuxt-link v-if="!user" to="/login">Login</nuxt-link>
+			</ul>
 		</div>
 	</header>
 </template>

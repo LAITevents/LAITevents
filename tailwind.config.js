@@ -7,7 +7,13 @@ module.exports = {
 		"./plugins/**/*.{js,ts}",
 	],
 	theme: {
-		extend: {},
+		extend: {
+			colors: {
+				"lait-blue": "#376570",
+				"lait-yellow": "#ffd264",
+				"light-blue": "#4c757f",
+			},
+		},
 	},
 	variants: {
 		extend: {},
