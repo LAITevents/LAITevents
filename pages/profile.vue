@@ -1,5 +1,5 @@
 <template>
-	<div class="container mx-auto">
+	<div>
 		<!-- Status Message -->
 
 		<div
@@ -13,6 +13,7 @@
 		</div>
 		<h1 class="text-2xl">Din profil</h1>
 		<form>
+			<ProfileAvatar v-model:path="avatar_path" @upload="updateProfile" />
 			<div>
 				<label for="email">Email</label>
 				<input
@@ -86,6 +87,7 @@ const updateProfile = async () => {
 				id: user.value.id,
 				username: username.value,
 				website: email.value,
+				avatar_url: avatar_path.value,
 				updated_at: new Date(),
 			},
 			{
