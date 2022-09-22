@@ -5,11 +5,19 @@
 			class="flex flex-col gap-2"
 		>
 			<input
+				v-if="isSignUp"
+				class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+				type="username"
+				placeholder="Username"
+				v-model="username"
+			/>
+			<input
 				class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 				type="email"
 				placeholder="mail@lait.dk"
 				v-model="email"
 			/>
+
 			<input
 				class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 				type="password"
@@ -35,10 +43,14 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+
 const supabase = useSupabaseClient();
 const email = ref("");
 const password = ref("");
+const username = ref("");
 const isSignUp = ref(false);
+const user = useSupabaseUser();
 
 const handleLogin = async () => {
 	try {
@@ -54,10 +66,18 @@ const handleLogin = async () => {
 };
 
 const signUp = async () => {
-	const { user, error } = await supabase.auth.signUp({
-		email: email.value,
-		password: password.value,
-	});
+	const { user, error } = await supabase.auth.signUp(
+		{
+			email: email.value,
+			password: password.value,
+		},
+		{
+			data: {
+				email: email.value,
+				user_name: username.value,
+			},
+		}
+	);
 	console.log("user", user);
 	console.log("error", error);
 };
