@@ -5,14 +5,12 @@ definePageMeta({
 	middleware: "auth",
 });
 const user = useSupabaseUser();
-console.log(user);
 const supabase = useSupabaseClient();
 const data = ref([]);
 const dataLoaded = ref(null);
 const { dashify } = useDashify();
 
 // Henter data fra Supabase
-
 const getData = async () => {
 	try {
 		const { data: events, error } = await supabase

@@ -20,11 +20,9 @@ const getData = async () => {
 			.from("events")
 			.select("*")
 			.eq("id", currentId);
-
 		if (error) throw error;
 		data.value = events[0];
 		dataLoaded.value = true;
-		console.log(data.value);
 	} catch (error) {
 		errorMsg.value = error.message;
 		setTimeout(() => {

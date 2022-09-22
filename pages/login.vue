@@ -73,7 +73,8 @@ const signUp = async () => {
 		},
 		{
 			data: {
-				username: username.value,
+				email: email.value,
+				user_name: username.value,
 			},
 		}
 	);
