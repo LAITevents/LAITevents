@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+	middleware: "auth",
+});
 import { ref } from "vue";
 
 const supabase = useSupabaseClient();
@@ -35,9 +38,8 @@ const addEvent = async () => {
 </script>
 
 <template>
-	<div class="mx-auto p-8 flex items-start rounded-md shadow-lg">
+	<div class="mx-auto p-8 flex flex-col items-start rounded-md shadow-lg">
 		<!-- Status Message -->
-
 		<div
 			v-if="statusMsg || errorMsg"
 			class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
@@ -47,7 +49,6 @@ const addEvent = async () => {
 			</p>
 			<p class="text-red-500">{{ errorMsg }}</p>
 		</div>
-
 		<form @submit.prevent="addEvent" class="flex flex-col gap-y-5 w-full">
 			<h1 class="text-2xl">Opret event</h1>
 

@@ -11,6 +11,7 @@
 		</router-link>
 		<div>
 			<ul class="flex gap-10 cursor-pointer">
+				<nuxt-link v-if="user" to="/profile">Profil</nuxt-link>
 				<nuxt-link v-if="user" to="/create">Opret</nuxt-link>
 				<nuxt-link v-if="user" to="/events">Events</nuxt-link>
 				<nuxt-link v-if="user" @click="signOut">Log ud</nuxt-link>

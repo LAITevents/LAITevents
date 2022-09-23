@@ -55,11 +55,6 @@ watch(path, () => {
 <template>
 	<div>
 		<img v-if="src" :src="src" class="w-52 h-52 rounded" />
-		<div
-			v-else
-			class="avatar no-image"
-			:style="{ height: size, width: size }"
-		/>
 
 		<div style="width: 10em; position: relative">
 			<label class="block button primary" for="single">

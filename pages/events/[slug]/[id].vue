@@ -14,6 +14,7 @@ definePageMeta({
 
 const currentId = route.params.id;
 
+// Henter event data
 const getData = async () => {
 	try {
 		const { data: events, error } = await supabase
@@ -30,7 +31,6 @@ const getData = async () => {
 		}, 5000);
 	}
 };
-
 getData();
 </script>
 
