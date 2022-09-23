@@ -1,34 +1,7 @@
-<template>
-	<div>
-		<img v-if="src" :src="src" class="w-52 h-52 rounded" />
-		<div
-			v-else
-			class="avatar no-image"
-			:style="{ height: size, width: size }"
-		/>
-
-		<div style="width: 10em; position: relative">
-			<label class="block button primary" for="single">
-				{{ uploading ? "Uploading ..." : "Upload" }}
-			</label>
-			<input
-				style="position: absolute; visibility: hidden"
-				type="file"
-				id="single"
-				accept="image/*"
-				@change="uploadAvatar"
-				:disabled="uploading"
-			/>
-		</div>
-	</div>
-</template>
-
 <script setup>
 const props = defineProps(["path"]);
 const { path } = toRefs(props);
-
 const emit = defineEmits(["update:path", "upload"]);
-
 const supabase = useSupabaseClient();
 
 const uploading = ref(false);
@@ -78,3 +51,28 @@ watch(path, () => {
 	}
 });
 </script>
+
+<template>
+	<div>
+		<img v-if="src" :src="src" class="w-52 h-52 rounded" />
+		<div
+			v-else
+			class="avatar no-image"
+			:style="{ height: size, width: size }"
+		/>
+
+		<div style="width: 10em; position: relative">
+			<label class="block button primary" for="single">
+				{{ uploading ? "Uploading ..." : "Upload" }}
+			</label>
+			<input
+				style="position: absolute; visibility: hidden"
+				type="file"
+				id="single"
+				accept="image/*"
+				@change="uploadAvatar"
+				:disabled="uploading"
+			/>
+		</div>
+	</div>
+</template>

@@ -1,3 +1,39 @@
+<script setup lang="ts">
+import { ref } from "vue";
+
+const supabase = useSupabaseClient();
+const statusMsg = ref(null);
+const errorMsg = ref(null);
+const eventTitle = ref("");
+const eventDescription = ref("");
+const user = supabase.auth.user();
+
+// Create event
+const addEvent = async () => {
+	try {
+		const { error } = await supabase.from("events").insert([
+			{
+				title: eventTitle.value,
+				description: eventDescription.value,
+				userId: user.id,
+			},
+		]);
+		if (error) throw error;
+		statusMsg.value = "Success: Event oprettet";
+		eventTitle.value = null;
+		eventDescription.value = null;
+		setTimeout(() => {
+			statusMsg.value = false;
+		}, 5000);
+	} catch (error) {
+		errorMsg.value = `Error: ${error.message}`;
+		setTimeout(() => {
+			errorMsg.value = false;
+		}, 5000);
+	}
+};
+</script>
+
 <template>
 	<div class="mx-auto p-8 flex items-start rounded-md shadow-lg">
 		<!-- Status Message -->
@@ -46,38 +82,3 @@
 		</form>
 	</div>
 </template>
-<script setup lang="ts">
-import { ref } from "vue";
-
-const supabase = useSupabaseClient();
-const statusMsg = ref(null);
-const errorMsg = ref(null);
-const eventTitle = ref("");
-const eventDescription = ref("");
-const user = supabase.auth.user();
-
-// Create event
-const addEvent = async () => {
-	try {
-		const { error } = await supabase.from("events").insert([
-			{
-				eventTitle: eventTitle.value,
-				eventDescription: eventDescription.value,
-				userId: user.id,
-			},
-		]);
-		if (error) throw error;
-		statusMsg.value = "Success: Event oprettet";
-		eventTitle.value = null;
-		eventDescription.value = null;
-		setTimeout(() => {
-			statusMsg.value = false;
-		}, 5000);
-	} catch (error) {
-		errorMsg.value = `Error: ${error.message}`;
-		setTimeout(() => {
-			errorMsg.value = false;
-		}, 5000);
-	}
-};
-</script>

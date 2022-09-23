@@ -1,52 +1,3 @@
-<template>
-	<div>
-		<!-- Status Message -->
-
-		<div
-			v-if="statusMsg || errorMsg"
-			class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
-		>
-			<p class="text-at-light-green">
-				{{ statusMsg }}
-			</p>
-			<p class="text-red-500">{{ errorMsg }}</p>
-		</div>
-		<h1 class="text-2xl">Din profil</h1>
-		<form>
-			<ProfileAvatar v-model:path="avatar_path" @upload="updateProfile" />
-			<div>
-				<label for="email">Email</label>
-				<input
-					class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-					id="email"
-					type="text"
-					:value="user.email"
-					disabled
-				/>
-			</div>
-			<div>
-				<label for="username">Username</label>
-				<input
-					class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-					id="username"
-					type="text"
-					v-model="username"
-				/>
-			</div>
-
-			<div>
-				<input
-					type="submit"
-					@click="updateProfile"
-					class="cursor-pointer"
-					:value="loading ? 'Loading ...' : 'Update'"
-					:disabled="loading"
-				/>
-			</div>
-		</form>
-	</div>
-</template>
-
 <script setup lang="ts">
 import { ref } from "vue";
 const supabase = useSupabaseClient();
@@ -107,3 +58,52 @@ const updateProfile = async () => {
 	}
 };
 </script>
+
+<template>
+	<div>
+		<!-- Status Message -->
+
+		<div
+			v-if="statusMsg || errorMsg"
+			class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
+		>
+			<p class="text-at-light-green">
+				{{ statusMsg }}
+			</p>
+			<p class="text-red-500">{{ errorMsg }}</p>
+		</div>
+		<h1 class="text-2xl">Din profil</h1>
+		<form>
+			<ProfileAvatar v-model:path="avatar_path" @upload="updateProfile" />
+			<div>
+				<label for="email">Email</label>
+				<input
+					class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					id="email"
+					type="text"
+					:value="user.email"
+					disabled
+				/>
+			</div>
+			<div>
+				<label for="username">Username</label>
+				<input
+					class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					id="username"
+					type="text"
+					v-model="username"
+				/>
+			</div>
+
+			<div>
+				<input
+					type="submit"
+					@click="updateProfile"
+					class="cursor-pointer"
+					:value="loading ? 'Loading ...' : 'Update'"
+					:disabled="loading"
+				/>
+			</div>
+		</form>
+	</div>
+</template>
