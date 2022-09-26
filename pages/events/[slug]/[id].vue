@@ -4,8 +4,8 @@ import { ref } from "vue";
 const supabase = useSupabaseClient();
 const data = ref(null);
 const dataLoaded = ref(null);
-const errorMsg = ref(null);
 const statusMsg = ref(null);
+const errorMsg = ref(null);
 const route = useRoute();
 
 definePageMeta({
@@ -50,6 +50,7 @@ getData();
 		</div>
 
 		<div v-if="dataLoaded">
+			<img :src="data.img_url" class="w-80 h-auto object-cover rounded" />
 			<h1>{{ data.title }}</h1>
 			<p>{{ data.description }}</p>
 			<p>Deltagere:</p>

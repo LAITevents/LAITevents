@@ -3,13 +3,56 @@ definePageMeta({
 	middleware: "auth",
 });
 import { ref } from "vue";
+const props = defineProps(["path"]);
+const { path } = toRefs(props);
 
 const supabase = useSupabaseClient();
+const user = supabase.auth.user();
 const statusMsg = ref(null);
 const errorMsg = ref(null);
 const eventTitle = ref("");
 const eventDescription = ref("");
-const user = supabase.auth.user();
+
+const uploading = ref(false);
+const files = ref();
+const src = ref("");
+const imagePath = ref("");
+
+// Generate filepath
+async function setCurrentFile(filePath, file) {
+	src.value = URL.createObjectURL(file);
+
+	const { data } = await supabase.storage
+		.from("images")
+		.getPublicUrl("events/" + filePath);
+
+	imagePath.value = data.publicURL;
+}
+
+// Upload image
+const uploadImage = async (evt) => {
+	files.value = evt.target.files;
+	try {
+		uploading.value = true;
+		if (!files.value || files.value.length === 0) {
+			throw new Error("You must select an image to upload.");
+		}
+		const file = files.value[0];
+		const fileExt = file.name.split(".").pop();
+		const fileName = `${Math.random()}.${fileExt}`;
+		const filePath = `${fileName}`;
+		const { error: uploadError } = await supabase.storage
+			.from("images")
+			.upload("events/" + filePath, file);
+		if (uploadError) throw uploadError;
+
+		setCurrentFile(filePath, file);
+	} catch (error) {
+		alert(error.message);
+	} finally {
+		uploading.value = false;
+	}
+};
 
 // Create event
 const addEvent = async () => {
@@ -19,6 +62,7 @@ const addEvent = async () => {
 				title: eventTitle.value,
 				description: eventDescription.value,
 				userId: user.id,
+				img_url: imagePath.value,
 			},
 		]);
 		if (error) throw error;
@@ -38,7 +82,7 @@ const addEvent = async () => {
 </script>
 
 <template>
-	<div class="mx-auto p-8 flex flex-col items-start rounded-md shadow-lg">
+	<div class="mx-auto mt-8 p-8 flex flex-col rounded-md shadow-lg container">
 		<!-- Status Message -->
 		<div
 			v-if="statusMsg || errorMsg"
@@ -50,6 +94,27 @@ const addEvent = async () => {
 			<p class="text-red-500">{{ errorMsg }}</p>
 		</div>
 		<form @submit.prevent="addEvent" class="flex flex-col gap-y-5 w-full">
+			<div>
+				<img
+					v-if="src"
+					:src="src"
+					class="w-40 h-auto object-fill rounded"
+				/>
+
+				<div style="width: 10em; position: relative">
+					<label class="block button primary" for="single">
+						{{ uploading ? "Uploading ..." : "Upload" }}
+					</label>
+					<input
+						style=""
+						type="file"
+						id="single"
+						accept="image/*"
+						@change="uploadImage"
+						:disabled="uploading"
+					/>
+				</div>
+			</div>
 			<h1 class="text-2xl">Opret event</h1>
 
 			<div class="flex flex-col">

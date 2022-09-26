@@ -48,6 +48,8 @@ getData();
 					v-for="(event, index) in data"
 					:key="index"
 				>
+					<img :src="event.img_url" class="rounded" />
+
 					<h1 class="mb-2 text-center text-xl">
 						{{ event.title }}
 					</h1>
