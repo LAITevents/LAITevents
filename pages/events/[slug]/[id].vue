@@ -4,8 +4,8 @@ import { ref } from "vue";
 const supabase = useSupabaseClient();
 const data = ref(null);
 const dataLoaded = ref(null);
-const errorMsg = ref(null);
 const statusMsg = ref(null);
+const errorMsg = ref(null);
 const route = useRoute();
 
 definePageMeta({
@@ -14,6 +14,7 @@ definePageMeta({
 
 const currentId = route.params.id;
 
+// Henter event data
 const getData = async () => {
 	try {
 		const { data: events, error } = await supabase
@@ -30,7 +31,6 @@ const getData = async () => {
 		}, 5000);
 	}
 };
-
 getData();
 </script>
 
@@ -50,8 +50,9 @@ getData();
 		</div>
 
 		<div v-if="dataLoaded">
-			<h1>{{ data.eventTitle }}</h1>
-			<p>{{ data.eventDescription }}</p>
+			<img :src="data.img_url" class="w-80 h-auto object-cover rounded" />
+			<h1>{{ data.title }}</h1>
+			<p>{{ data.description }}</p>
 			<p>Deltagere:</p>
 		</div>
 	</div>
