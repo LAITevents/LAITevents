@@ -7,6 +7,7 @@ const password = ref("");
 const username = ref("");
 const isSignUp = ref(false);
 const user = useSupabaseUser();
+const router = useRouter();
 
 const handleLogin = async () => {
 	try {
@@ -15,28 +16,31 @@ const handleLogin = async () => {
 			password: password.value,
 		});
 		if (error) throw error;
-	} catch (error) {
-	} finally {
-		return navigateTo("/events");
-	}
+	} catch (error) {}
+
+	const signUp = async () => {
+		const { user, error } = await supabase.auth.signUp(
+			{
+				email: email.value,
+				password: password.value,
+			},
+			{
+				data: {
+					email: email.value,
+					user_name: username.value,
+				},
+			}
+		);
+		console.log("user", user);
+		console.log("error", error);
+	};
 };
 
-const signUp = async () => {
-	const { user, error } = await supabase.auth.signUp(
-		{
-			email: email.value,
-			password: password.value,
-		},
-		{
-			data: {
-				email: email.value,
-				user_name: username.value,
-			},
-		}
-	);
-	console.log("user", user);
-	console.log("error", error);
-};
+watchEffect(() => {
+	if (user.value) {
+		router.push("/");
+	}
+});
 </script>
 
 <template>

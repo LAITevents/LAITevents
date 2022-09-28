@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import { useUser } from "@/composable/useUser";
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 const supabase = useSupabaseClient();
-const data = ref(null);
 const dataLoaded = ref(null);
+const data = ref();
 const statusMsg = ref(null);
 const errorMsg = ref(null);
 const route = useRoute();
 const user = supabase.auth.user();
-const currentUser = ref("");
 const eventParticipants = ref([]);
+const { getUsername } = useUser();
 
 const registered = ref(false);
 
@@ -20,7 +21,8 @@ definePageMeta({
 const currentId = route.params.id;
 
 // Henter event data
-const getData = async () => {
+
+const getEvents = async () => {
 	try {
 		const { data: events, error } = await supabase
 			.from("events")
@@ -36,9 +38,11 @@ const getData = async () => {
 		}, 5000);
 	}
 };
-getData();
+getEvents();
 
+// Henter deltagere til det specifikke event id
 const getParticipants = async () => {
+	eventParticipants.value = [];
 	try {
 		const { data: participants, error } = await supabase
 			.from("event_participants")
@@ -46,12 +50,9 @@ const getParticipants = async () => {
 			.eq("event_id", currentId);
 		if (error) throw error;
 		participants.forEach(async (participant) => {
-			const user = await getUser(participant.user_id);
+			const user = await getUsername(participant.user_id);
 			eventParticipants.value.push(user);
-			updateRegistrationStatus();
 		});
-
-		console.log(participants);
 	} catch (error) {
 		errorMsg.value = error.message;
 		setTimeout(() => {
@@ -61,40 +62,16 @@ const getParticipants = async () => {
 };
 getParticipants();
 
-// Henter username fra profil tabellen
-const getCurrentUser = async () => {
-	const { data: profiles } = await supabase
-		.from("profiles")
-		.select("username")
-		.eq("id", user.id);
-	currentUser.value = profiles[0].username;
-};
-getCurrentUser();
-
-const getUser = async (participant) => {
-	const { data: profiles } = await supabase
-		.from("profiles")
-		.select("username")
-		.eq("id", participant);
-	// currentUser.value = profiles[0].username;
-	console.log(profiles);
-	return profiles[0].username;
-};
-
-const updateRegistrationStatus = () => {
-	registered.value = eventParticipants.value.includes(currentUser.value);
-};
-
 // Tilmeld event
 const registerEvent = async () => {
-	if (eventParticipants.value.includes(currentUser.value)) return;
+	if (registered.value) return;
 	try {
 		const { error } = await supabase.from("event_participants").insert({
 			event_id: currentId,
 			user_id: user.id,
 		});
 		if (error) throw error;
-		getParticipants();
+		registered.value = true;
 	} catch (error) {
 		errorMsg.value = error.message;
 	}
@@ -104,15 +81,21 @@ const registerEvent = async () => {
 const cancelRegistration = async () => {
 	try {
 		const { error } = await supabase
-			.from("events")
-			.update({ participants: "" })
-			.eq("participants", user.id);
+			.from("event_participants")
+			.delete()
+			.match({ event_id: currentId, user_id: user.id })
+			.select();
+
 		if (error) throw error;
 		registered.value = false;
 	} catch (error) {
 		errorMsg.value = error.message;
 	}
 };
+
+watch(registered, () => {
+	getParticipants();
+});
 </script>
 
 <template>
@@ -142,6 +125,9 @@ const cancelRegistration = async () => {
 			</template>
 		</div>
 		<button v-if="!registered" @click="registerEvent()">Tilmeld</button>
-		<button v-else>Afmeld</button>
+		<button v-else @click="cancelRegistration()">Afmeld</button>
 	</div>
 </template>
+
+function getUsername(user_id: any) { throw new Error("Function not
+implemented."); }
