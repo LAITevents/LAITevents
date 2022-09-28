@@ -128,6 +128,3 @@ watch(registered, () => {
 		<button v-else @click="cancelRegistration()">Afmeld</button>
 	</div>
 </template>
-
-function getUsername(user_id: any) { throw new Error("Function not
-implemented."); }
