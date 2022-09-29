@@ -20,7 +20,7 @@ definePageMeta({
 
 const currentId = route.params.id;
 
-// Henter event data
+// Gets event data from supabase
 
 const getEvents = async () => {
 	try {
@@ -40,7 +40,7 @@ const getEvents = async () => {
 };
 getEvents();
 
-// Henter deltagere til det specifikke event id
+// Gets participants for the specific event id
 const getParticipants = async () => {
 	eventParticipants.value = [];
 	try {
@@ -63,7 +63,7 @@ const getParticipants = async () => {
 };
 getParticipants();
 
-// Tilmeld event
+// Register an event
 const registerEvent = async () => {
 	if (registered.value) return;
 	try {
@@ -78,7 +78,7 @@ const registerEvent = async () => {
 	}
 };
 
-// Afmeld event
+// Cancel event registration
 const cancelRegistration = async () => {
 	try {
 		const { error } = await supabase
