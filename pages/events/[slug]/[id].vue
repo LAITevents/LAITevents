@@ -50,8 +50,9 @@ const getParticipants = async () => {
 			.eq("event_id", currentId);
 		if (error) throw error;
 		participants.forEach(async (participant) => {
-			const user = await getUsername(participant.user_id);
-			eventParticipants.value.push(user);
+			const userName = await getUsername(participant.user_id);
+			eventParticipants.value.push(userName);
+			if (participant.user_id === user.id) registered.value = true;
 		});
 	} catch (error) {
 		errorMsg.value = error.message;
