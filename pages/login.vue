@@ -1,3 +1,48 @@
+<script setup lang="ts">
+import { ref } from "vue";
+
+const supabase = useSupabaseClient();
+const email = ref("");
+const password = ref("");
+const username = ref("");
+const isSignUp = ref(false);
+const user = useSupabaseUser();
+const router = useRouter();
+
+const handleLogin = async () => {
+	try {
+		const { error } = await supabase.auth.signIn({
+			email: email.value,
+			password: password.value,
+		});
+		if (error) throw error;
+	} catch (error) {}
+
+	const signUp = async () => {
+		const { user, error } = await supabase.auth.signUp(
+			{
+				email: email.value,
+				password: password.value,
+			},
+			{
+				data: {
+					email: email.value,
+					user_name: username.value,
+				},
+			}
+		);
+		console.log("user", user);
+		console.log("error", error);
+	};
+};
+
+watchEffect(() => {
+	if (user.value) {
+		router.push("/");
+	}
+});
+</script>
+
 <template>
 	<div class="max-w-lg mx-auto mt-8">
 		<form
@@ -41,44 +86,3 @@
 		</form>
 	</div>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-
-const supabase = useSupabaseClient();
-const email = ref("");
-const password = ref("");
-const username = ref("");
-const isSignUp = ref(false);
-const user = useSupabaseUser();
-
-const handleLogin = async () => {
-	try {
-		const { error } = await supabase.auth.signIn({
-			email: email.value,
-			password: password.value,
-		});
-		if (error) throw error;
-	} catch (error) {
-	} finally {
-		return navigateTo("/events");
-	}
-};
-
-const signUp = async () => {
-	const { user, error } = await supabase.auth.signUp(
-		{
-			email: email.value,
-			password: password.value,
-		},
-		{
-			data: {
-				email: email.value,
-				user_name: username.value,
-			},
-		}
-	);
-	console.log("user", user);
-	console.log("error", error);
-};
-</script>
