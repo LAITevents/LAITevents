@@ -11,5 +11,8 @@
     "@nuxtjs/supabase": "^0.1.25",
     "@nuxtjs/tailwindcss": "^5.3.5",
     "nuxt": "3.0.0-rc.11"
+  },
+  "dependencies": {
+    "@vuepic/vue-datepicker": "^3.5.2"
   }
 }
