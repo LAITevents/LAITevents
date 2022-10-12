@@ -2,26 +2,30 @@
 definePageMeta({
     middleware: "auth",
 });
-import { useUser } from "@/composable/useUser";
 import { ref } from "vue";
-const supabase = useSupabaseClient();
-const { getUsername } = useUser();
-const user = supabase.auth.user();
-const username = ref("");
 
 const getDisplayUsername = async () => {
-    username.value = await getUsername(user?.id);
+    await getUsername(user?.value.id).then((result) => {
+        console.log(result);
+        username.value = result;
+    });
 };
-getDisplayUsername();
+
+onMounted(() => {
+    getDisplayUsername();
+});
+
+const user = useSupabaseUser();
+const username = ref("");
+const { getUsername } = useUser();
+import { useUser } from "@/composable/useUser";
 </script>
 
 <template>
     <div>
         <p class="text-2xl">
             Hello
-            <span class="text-lait-yellow text-2xl">{{
-                username || user?.email
-            }}</span>
+            <span class="text-lait-yellow text-2xl">{{ username }}</span>
         </p>
 
         <EventCard />
