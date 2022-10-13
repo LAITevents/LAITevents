@@ -3,8 +3,6 @@ definePageMeta({
     middleware: "auth",
 });
 import { ref } from "vue";
-const props = defineProps(["path"]);
-const { path } = toRefs(props);
 
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
@@ -17,8 +15,18 @@ const uploading = ref(false);
 const files = ref();
 const src = ref("");
 const imagePath = ref("");
+
 const selectedDate = ref();
 const selectedTime = ref();
+
+// Format selectedDate to use UTC and add value from timepicker
+const newDateTime = () => {
+    const newDate = new Date(selectedDate.value);
+    const offset = newDate.getTimezoneOffset() / 60;
+    newDate.setUTCHours(selectedTime.value.hours + offset);
+    newDate.setUTCMinutes(selectedTime.value.minutes);
+    return newDate;
+};
 
 // Generate filepath
 async function setCurrentFile(filePath, file) {
@@ -65,6 +73,7 @@ const addEvent = async () => {
                 description: eventDescription.value,
                 userId: user.id,
                 img_url: imagePath.value,
+                selected_date: newDateTime(),
             },
         ]);
         if (error) throw error;
@@ -143,9 +152,16 @@ const addEvent = async () => {
                 />
             </div>
             <div class="flex flex-row gap-4">
-                <DatePicker />
-                <TimePicker />
+                <div>
+                    <label class="mb-1">Vælg dato</label>
+                    <DatePicker v-model="selectedDate" />
+                </div>
+                <div>
+                    <label class="mb-1">Vælg tidspunkt</label>
+                    <TimePicker v-model="selectedTime" />
+                </div>
             </div>
+
             <button
                 type="submit"
                 class="p-2 font-medium bg-blue-500 hover:bg-blue-700 rounded"

@@ -3,12 +3,12 @@ import { ref } from "vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
-const date = ref();
+const selectedDate = ref();
 
-const format = (date) => {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
+const format = (selectedDate) => {
+    const day = selectedDate.getDate();
+    const month = selectedDate.getMonth() + 1;
+    const year = selectedDate.getFullYear();
 
     return `${day}/${month}/${year}`;
 };
@@ -16,9 +16,10 @@ const format = (date) => {
 
 <template>
     <Datepicker
-        v-model="date"
+        v-model="selectedDate"
         :enableTimePicker="false"
         placeholder="Vælg dato"
         :format="format"
+        utc
     ></Datepicker>
 </template>

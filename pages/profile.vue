@@ -14,7 +14,6 @@ const statusMsg = ref(null);
 const events = ref();
 
 // Henter data på ens profil
-console.log(user);
 const getProfile = async () => {
     const { data, error } = await supabase
         .from("profiles")

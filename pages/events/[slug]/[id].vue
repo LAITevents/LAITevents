@@ -2,6 +2,12 @@
 import { useUser } from "@/composable/useUser";
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
+import { useDateFormatter } from "@/composable/useDateFormatter";
+const { formatDate } = useDateFormatter();
+const { formatTime } = useDateFormatter();
+
+const { getUsername } = useUser();
+
 const supabase = useSupabaseClient();
 const dataLoaded = ref(null);
 const data = ref();
@@ -10,10 +16,8 @@ const errorMsg = ref(null);
 const route = useRoute();
 const user = supabase.auth.user();
 const eventParticipants = ref([]);
-const { getUsername } = useUser();
 
 const registered = ref(false);
-
 definePageMeta({
     middleware: "auth",
 });
@@ -124,6 +128,8 @@ watch(registered, () => {
             >
                 <p>Deltagere: {{ participant }}</p>
             </template>
+            <div>Dato: {{ formatDate(data.selected_date) }}</div>
+            <div>Tidspunkt: {{ formatTime(data.selected_date) }}</div>
         </div>
         <button v-if="!registered" @click="registerEvent()">Tilmeld</button>
         <button v-else @click="cancelRegistration()">Afmeld</button>
