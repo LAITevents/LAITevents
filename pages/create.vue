@@ -75,7 +75,7 @@ const addEvent = async () => {
                 userId: user.id,
                 img_url: imagePath.value,
                 selected_date: newDateTime(),
-                place_id: placeId.value,
+                place_id: placeId.value.placeId,
             },
         ]);
         if (error) throw error;

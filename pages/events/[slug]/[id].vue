@@ -25,7 +25,6 @@ definePageMeta({
 const currentId = route.params.id;
 
 // Gets event data from supabase
-
 const getEvents = async () => {
     try {
         const { data: events, error } = await supabase

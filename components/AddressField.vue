@@ -5,7 +5,7 @@ const { usePlacesApi } = useGooglePlaces();
 declare var google;
 
 const addressInput = ref(null);
-const placeId = ref(null);
+const placeId = ref();
 
 defineExpose({
     placeId,
