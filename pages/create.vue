@@ -18,6 +18,7 @@ const imagePath = ref("");
 
 const selectedDate = ref();
 const selectedTime = ref();
+const placeId = ref();
 
 // Format selectedDate to use UTC and add value from timepicker
 const newDateTime = () => {
@@ -134,7 +135,7 @@ const addEvent = async () => {
                 <input
                     type="text"
                     required
-                    class="p-2 text-gray-500 focus:outline-none"
+                    class="form-control p-2 text-gray-500 focus:outline-none"
                     id="event-name"
                     v-model="eventTitle"
                 />
@@ -146,7 +147,7 @@ const addEvent = async () => {
                 <input
                     type="text"
                     required
-                    class="p-2 text-gray-500 focus:outline-none"
+                    class="form-control p-2 text-gray-500 focus:outline-none"
                     id="event-description"
                     v-model="eventDescription"
                 />
@@ -161,6 +162,8 @@ const addEvent = async () => {
                     <TimePicker v-model="selectedTime" />
                 </div>
             </div>
+
+            <AddressField v-model="placeId" />
 
             <button
                 type="submit"
