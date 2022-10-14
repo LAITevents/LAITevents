@@ -6,7 +6,6 @@ import { ref } from "vue";
 
 const getDisplayUsername = async () => {
     await getUsername(user?.value.id).then((result) => {
-        console.log(result);
         username.value = result;
     });
 };

@@ -12,8 +12,11 @@ export function useDateFormatter() {
     const formatTime = (date) => {
         const formattedDate = new Date(date);
 
-        return formattedDate.toLocaleTimeString("da");
+        return formattedDate
+            .toLocaleTimeString("da", {
+                timeStyle: "short",
+            })
+            .replace(".", ":");
     };
-
     return { formatDate, formatTime };
 }
