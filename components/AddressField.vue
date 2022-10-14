@@ -7,6 +7,10 @@ declare var google;
 const addressInput = ref(null);
 const placeId = ref(null);
 
+defineExpose({
+    placeId,
+});
+
 const link =
     "https://maps.googleapis.com/maps/api/js?key=AIzaSyDZHEUaLKeeJztYBC9xiHX1ye-asu-p5t0&libraries=places&region=dk";
 
@@ -25,8 +29,6 @@ onMounted(async () => {
     autocomplete.addListener("place_changed", () => {
         let place = autocomplete.getPlace();
         placeId.value = place.place_id;
-
-        console.log(placeId.value);
     });
 });
 </script>

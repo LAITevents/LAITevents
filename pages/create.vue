@@ -75,6 +75,7 @@ const addEvent = async () => {
                 userId: user.id,
                 img_url: imagePath.value,
                 selected_date: newDateTime(),
+                place_id: placeId.value,
             },
         ]);
         if (error) throw error;
@@ -163,7 +164,7 @@ const addEvent = async () => {
                 </div>
             </div>
 
-            <AddressField v-model="placeId" />
+            <AddressField ref="placeId" />
 
             <button
                 type="submit"
