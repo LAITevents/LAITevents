@@ -10,7 +10,8 @@ const { getUsername } = useUser();
 
 const supabase = useSupabaseClient();
 const dataLoaded = ref(null);
-const data = ref();
+const data = ref({});
+
 const statusMsg = ref(null);
 const errorMsg = ref(null);
 const route = useRoute();
@@ -132,5 +133,6 @@ watch(registered, () => {
         </div>
         <button v-if="!registered" @click="registerEvent()">Tilmeld</button>
         <button v-else @click="cancelRegistration()">Afmeld</button>
+        <MapsView :placeLat="data.place_lat" :placeLng="data.place_lng" />
     </div>
 </template>

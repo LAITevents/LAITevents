@@ -65,7 +65,6 @@ const getEventForUser = async () => {
     events.value = await getEvents(user?.value.id);
 };
 getEventForUser();
-console.log(events.value);
 </script>
 
 <template>

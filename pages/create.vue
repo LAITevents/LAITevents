@@ -18,7 +18,7 @@ const imagePath = ref("");
 
 const selectedDate = ref();
 const selectedTime = ref();
-const placeId = ref();
+const placeInfo = ref();
 
 // Format selectedDate to use UTC and add value from timepicker
 const newDateTime = () => {
@@ -75,7 +75,9 @@ const addEvent = async () => {
                 userId: user.id,
                 img_url: imagePath.value,
                 selected_date: newDateTime(),
-                place_id: placeId.value.placeId,
+                place_id: placeInfo.value.placeId,
+                place_lat: placeInfo.value.placeLat,
+                place_lng: placeInfo.value.placeLng,
             },
         ]);
         if (error) throw error;
@@ -164,7 +166,7 @@ const addEvent = async () => {
                 </div>
             </div>
 
-            <AddressField ref="placeId" />
+            <AddressField ref="placeInfo" />
 
             <button
                 type="submit"

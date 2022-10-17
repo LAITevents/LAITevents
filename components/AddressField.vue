@@ -3,12 +3,17 @@ import { ref } from "vue";
 import { useGooglePlaces } from "@/composable/useGooglePlaces";
 const { usePlacesApi } = useGooglePlaces();
 declare var google;
+let autocomplete;
 
 const addressInput = ref(null);
 const placeId = ref();
+const placeLat = ref();
+const placeLng = ref();
 
 defineExpose({
     placeId,
+    placeLng,
+    placeLat,
 });
 
 const link =
@@ -28,6 +33,8 @@ onMounted(async () => {
 
     autocomplete.addListener("place_changed", () => {
         let place = autocomplete.getPlace();
+        placeLat.value = place.geometry.location.lat();
+        placeLng.value = place.geometry.location.lng();
         placeId.value = place.place_id;
     });
 });
