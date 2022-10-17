@@ -2,6 +2,12 @@
 import { Loader } from "@googlemaps/js-api-loader";
 
 const mapDiv = ref(null);
+const props = defineProps({
+    placeLat: { type: String, required: true },
+    placeLng: { type: String, required: true },
+});
+
+console.log(props.placeLat, props.placeLng);
 
 const loader = new Loader({
     apiKey: "AIzaSyDZHEUaLKeeJztYBC9xiHX1ye-asu-p5t0",
@@ -21,7 +27,7 @@ loader
         new google.maps.Map(mapDiv.value, mapOptions);
     })
     .catch((e) => {
-        // do something
+        console.log(e);
     });
 </script>
 

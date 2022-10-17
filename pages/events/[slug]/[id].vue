@@ -133,6 +133,10 @@ watch(registered, () => {
         </div>
         <button v-if="!registered" @click="registerEvent()">Tilmeld</button>
         <button v-else @click="cancelRegistration()">Afmeld</button>
-        <MapsView :placeLat="data.place_lat" :placeLng="data.place_lng" />
+        <MapsView
+            v-if="data.place_lat && data.place_lng"
+            :placeLat="data.place_lat"
+            :placeLng="data.place_lng"
+        />
     </div>
 </template>
