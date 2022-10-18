@@ -7,6 +7,7 @@ export function useGooglePlaces() {
 
             if (!googleScript) {
                 googleScript = document.createElement("script");
+                googleScript.setAttribute("id", "__googleMapsScriptId");
                 googleScript.src = link;
                 googleScript.async = true;
                 document.head.append(googleScript);

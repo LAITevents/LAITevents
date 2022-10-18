@@ -19,6 +19,7 @@ const user = supabase.auth.user();
 const eventParticipants = ref([]);
 
 const registered = ref(false);
+
 definePageMeta({
     middleware: "auth",
 });
@@ -134,9 +135,10 @@ watch(registered, () => {
         <button v-if="!registered" @click="registerEvent()">Tilmeld</button>
         <button v-else @click="cancelRegistration()">Afmeld</button>
         <MapsView
-            v-if="data.place_lat && data.place_lng"
+            v-if="data.place_lat && data.place_lng && data.place_id"
             :placeLat="data.place_lat"
             :placeLng="data.place_lng"
+            :placeId="data.place_id"
         />
     </div>
 </template>
