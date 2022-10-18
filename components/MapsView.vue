@@ -12,6 +12,7 @@ const placeLatNum = +props.placeLat;
 const placeLngNum = +props.placeLng;
 const myLatLng = { lat: placeLatNum, lng: placeLngNum };
 
+// check if google script is already loaded. SKAL LAVES TIL AT KØRE, HVIS DER ER SCRIPT I FORVVEJEN
 let id = "__googleMapsScriptId";
 if (document.getElementById(id) === null) {
     let loader = new Loader({
