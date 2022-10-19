@@ -38,6 +38,15 @@ onMounted(async () => {
         placeId.value = place.place_id;
     });
 });
+
+onUnmounted(() => {
+    var scripts = document.querySelectorAll(
+        "script[src*='maps.googleapis.com/maps-api-v3']"
+    );
+    for (var i = 0; i < scripts.length; i++) {
+        scripts[i].parentNode.removeChild(scripts[i]);
+    }
+});
 </script>
 
 <template>
