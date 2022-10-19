@@ -1,22 +1,15 @@
 <script setup lang="ts">
 import { Loader } from "@googlemaps/js-api-loader";
-
 const mapDiv = ref(null);
+
 const props = defineProps({
     placeLat: { type: String, required: true },
     placeLng: { type: String, required: true },
     placeId: { type: String, required: true },
 });
-
 const placeLatNum = +props.placeLat;
 const placeLngNum = +props.placeLng;
 const myLatLng = { lat: placeLatNum, lng: placeLngNum };
-
-// check if google script is already loaded. SKAL LAVES TIL AT KØRE, HVIS DER ER SCRIPT I FORVVEJEN
-let id = "__googleMapsScriptId";
-
-if (document.getElementById(id)) {
-}
 
 let loader = new Loader({
     apiKey: "AIzaSyDZHEUaLKeeJztYBC9xiHX1ye-asu-p5t0",
@@ -86,6 +79,7 @@ loader
         console.log(e);
     });
 
+// remove google scripts after leaving af page
 onUnmounted(() => {
     var scripts = document.querySelectorAll(
         "script[src*='maps.googleapis.com/maps-api-v3']"

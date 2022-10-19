@@ -10,6 +10,7 @@ const statusMsg = ref(null);
 const errorMsg = ref(null);
 const eventTitle = ref("");
 const eventDescription = ref("");
+const eventDepartment = ref("Vælg en afdeling");
 
 const uploading = ref(false);
 const files = ref();
@@ -19,6 +20,7 @@ const imagePath = ref("");
 const selectedDate = ref();
 const selectedTime = ref();
 const placeInfo = ref();
+const data = ref([]);
 
 // Format selectedDate to use UTC and add value from timepicker
 const newDateTime = () => {
@@ -94,6 +96,20 @@ const addEvent = async () => {
         }, 5000);
     }
 };
+
+// Get teams
+
+const getTeams = async () => {
+    try {
+        const { data: teams, error } = await supabase.from("teams").select("*");
+
+        if (error) throw error;
+        data.value = teams;
+    } catch (error) {
+        console.warn(error.message);
+    }
+};
+getTeams();
 </script>
 
 <template>
@@ -167,6 +183,21 @@ const addEvent = async () => {
             </div>
 
             <AddressField ref="placeInfo" />
+
+            <div class="flex flex-col">
+                <label for="team">Hvem skal eventet holdes for</label>
+                <select
+                    class="text-black"
+                    name="teams"
+                    v-model="eventDepartment"
+                    required
+                >
+                    <option value="Vælg en afdeling">Vælg en afdeling</option>
+                    <option v-for="team in data" :key="team.id">
+                        {{ team.team_title }}
+                    </option>
+                </select>
+            </div>
 
             <button
                 type="submit"

@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { useGooglePlaces } from "@/composable/useGooglePlaces";
 const { usePlacesApi } = useGooglePlaces();
 declare var google;
-let autocomplete;
 
 const addressInput = ref(null);
 const placeId = ref();
@@ -16,16 +15,15 @@ defineExpose({
     placeLat,
 });
 
-const link =
-    "https://maps.googleapis.com/maps/api/js?key=AIzaSyDZHEUaLKeeJztYBC9xiHX1ye-asu-p5t0&libraries=places&region=dk";
-
-onMounted(async () => {
+onBeforeMount(async () => {
+    const link =
+        "https://maps.googleapis.com/maps/api/js?key=AIzaSyDZHEUaLKeeJztYBC9xiHX1ye-asu-p5t0&libraries=places&region=dk";
+    await usePlacesApi(link);
     var options = {
         componentRestrictions: { country: "dk" },
         fields: ["place_id", "geometry", "name"],
     };
 
-    await usePlacesApi(link);
     const autocomplete = new google.maps.places.Autocomplete(
         addressInput.value,
         options
