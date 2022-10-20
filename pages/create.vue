@@ -10,7 +10,6 @@ const statusMsg = ref(null);
 const errorMsg = ref(null);
 const eventTitle = ref("");
 const eventDescription = ref("");
-const eventDepartment = ref("Vælg en afdeling");
 
 const uploading = ref(false);
 const files = ref();
@@ -21,6 +20,7 @@ const selectedDate = ref();
 const selectedTime = ref();
 const placeInfo = ref();
 const data = ref([]);
+const eventDepartment = ref(null);
 
 // Format selectedDate to use UTC and add value from timepicker
 const newDateTime = () => {
@@ -80,6 +80,7 @@ const addEvent = async () => {
                 place_id: placeInfo.value.placeId,
                 place_lat: placeInfo.value.placeLat,
                 place_lng: placeInfo.value.placeLng,
+                team_id: eventDepartment.value,
             },
         ]);
         if (error) throw error;
@@ -98,11 +99,9 @@ const addEvent = async () => {
 };
 
 // Get teams
-
 const getTeams = async () => {
     try {
         const { data: teams, error } = await supabase.from("teams").select("*");
-
         if (error) throw error;
         data.value = teams;
     } catch (error) {
@@ -119,7 +118,7 @@ getTeams();
             v-if="statusMsg || errorMsg"
             class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
         >
-            <p class="text-at-light-green">
+            <p class="">
                 {{ statusMsg }}
             </p>
             <p class="text-red-500">{{ errorMsg }}</p>
@@ -184,16 +183,16 @@ getTeams();
 
             <AddressField ref="placeInfo" />
 
-            <div class="flex flex-col">
-                <label for="team">Hvem skal eventet holdes for</label>
+            <div class="">
                 <select
-                    class="text-black"
-                    name="teams"
                     v-model="eventDepartment"
-                    required
+                    class="form-control p-2 text-gray-500 focus:outline-none"
                 >
-                    <option value="Vælg en afdeling">Vælg en afdeling</option>
-                    <option v-for="team in data" :key="team.id">
+                    <option
+                        v-for="team in data"
+                        :key="team.id"
+                        :value="team.id"
+                    >
                         {{ team.team_title }}
                     </option>
                 </select>

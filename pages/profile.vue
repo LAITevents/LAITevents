@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useEvent } from "@/composable/useEvent";
-const { getEvents } = useEvent();
+const { getEventsForUser } = useEvent();
+const { getDepartment } = useEvent();
 
 const supabase = useSupabaseClient();
 const username = ref("");
@@ -11,7 +12,12 @@ const loading = ref(true);
 const user = useSupabaseUser();
 const errorMsg = ref(null);
 const statusMsg = ref(null);
-const events = ref();
+
+console.log(user.value.id);
+
+definePageMeta({
+    middleware: "auth",
+});
 
 // Henter data på ens profil
 const getProfile = async () => {
@@ -61,10 +67,14 @@ const updateProfile = async () => {
     }
 };
 
-const getEventForUser = async () => {
-    events.value = await getEvents(user?.value.id);
+const getUserDepartment = async () => {
+    const { data: teams, error } = await supabase
+        .from("user_teams")
+        .select("team_id")
+        .eq("user_id", user?.value.id);
+    if (error) throw error;
 };
-getEventForUser();
+getUserDepartment();
 </script>
 
 <template>
@@ -102,6 +112,13 @@ getEventForUser();
                     v-model="username"
                 />
             </div>
+            <div>
+                <label for="department">Team</label>
+                <input
+                    class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="text"
+                />
+            </div>
 
             <div>
                 <input
@@ -113,5 +130,7 @@ getEventForUser();
                 />
             </div>
         </form>
+
+        <EventCard />
     </div>
 </template>

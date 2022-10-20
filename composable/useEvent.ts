@@ -1,13 +1,34 @@
 export function useEvent() {
-	const supabase = useSupabaseClient();
+    const supabase = useSupabaseClient();
 
-	const getEvents = async (userId?) => {
-		const { data: events } = await supabase
+    const getData = async () => {
+        try {
+            const { data: eventData, error } = await supabase
+                .from("events")
+                .select("*");
+
+            if (error) throw error;
+            return eventData;
+        } catch (error) {
+            console.warn(error.message);
+        }
+    };
+
+    const getEventsForUser = async (userId?) => {
+        const { data: events } = await supabase
             .from("events")
             .select()
-            .eq("userId", userId)
-		return events;
-	};
+            .eq("userId", userId);
+        return events;
+    };
 
-	return { getEvents };
+    const getDepartment = async (teamId?) => {
+        const { data: team } = await supabase
+            .from("teams")
+            .select("team_title")
+            .eq("id", teamId);
+        return team;
+    };
+
+    return { getEventsForUser, getDepartment, getData };
 }

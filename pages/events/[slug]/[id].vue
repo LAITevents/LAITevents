@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useUser } from "@/composable/useUser";
+import { useEvent } from "@/composable/useEvent";
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
+const { getDepartment } = useEvent();
 const { formatDate } = useDateFormatter();
 const { formatTime } = useDateFormatter();
 
@@ -11,6 +13,7 @@ const { getUsername } = useUser();
 const supabase = useSupabaseClient();
 const dataLoaded = ref(null);
 const data = ref({});
+const departmentName = ref();
 
 const statusMsg = ref(null);
 const errorMsg = ref(null);
@@ -34,8 +37,12 @@ const getEvents = async () => {
             .select("*, event_participants(*)")
             .eq("id", currentId);
         if (error) throw error;
-        data.value = events[0];
         dataLoaded.value = true;
+
+        data.value = events[0];
+        await getDepartment(events[0].team_id).then(
+            (result) => (departmentName.value = result[0].team_title)
+        );
     } catch (error) {
         errorMsg.value = error.message;
         setTimeout(() => {
@@ -58,6 +65,7 @@ const getParticipants = async () => {
             const userName = await getUsername(participant.user_id);
             eventParticipants.value.push(userName);
             if (participant.user_id === user.id) registered.value = true;
+            console.log(eventParticipants.value);
         });
     } catch (error) {
         errorMsg.value = error.message;
@@ -132,6 +140,7 @@ watch(registered, () => {
             <div>Dato: {{ formatDate(data.selected_date) }}</div>
             <div>Tidspunkt: {{ formatTime(data.selected_date) }}</div>
         </div>
+        <div>Team: {{ departmentName }}</div>
         <button v-if="!registered" @click="registerEvent()">Tilmeld</button>
         <button v-else @click="cancelRegistration()">Afmeld</button>
         <MapsView
