@@ -65,7 +65,6 @@ const getParticipants = async () => {
             const userName = await getUsername(participant.user_id);
             eventParticipants.value.push(userName);
             if (participant.user_id === user.id) registered.value = true;
-            console.log(eventParticipants.value);
         });
     } catch (error) {
         errorMsg.value = error.message;

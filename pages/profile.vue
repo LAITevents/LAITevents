@@ -13,8 +13,6 @@ const user = useSupabaseUser();
 const errorMsg = ref(null);
 const statusMsg = ref(null);
 
-console.log(user.value.id);
-
 definePageMeta({
     middleware: "auth",
 });
