@@ -40,7 +40,7 @@ const getEvents = async () => {
         dataLoaded.value = true;
 
         data.value = events[0];
-        if (events[0].tean_id) {
+        if (events[0].team_id) {
             await getDepartment(events[0].team_id).then(
                 (result) => (departmentName.value = result[0].team_title)
             );
@@ -141,7 +141,8 @@ watch(registered, () => {
             <div>Dato: {{ formatDate(data.selected_date) }}</div>
             <div>Tidspunkt: {{ formatTime(data.selected_date) }}</div>
         </div>
-        <div>Team: {{ departmentName }}</div>
+        <div>Event for: {{ departmentName || "Alle" }}</div>
+
         <button v-if="!registered" @click="registerEvent()">Tilmeld</button>
         <button v-else @click="cancelRegistration()">Afmeld</button>
         <MapsView

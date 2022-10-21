@@ -12,12 +12,14 @@ const loading = ref(true);
 const user = useSupabaseUser();
 const errorMsg = ref(null);
 const statusMsg = ref(null);
+const profileEvents = ref({});
+const dataLoaded = ref(false);
 
 definePageMeta({
     middleware: "auth",
 });
 
-// Henter data på ens profil
+// Get profile data
 const getProfile = async () => {
     const { data, error } = await supabase
         .from("profiles")
@@ -65,14 +67,23 @@ const updateProfile = async () => {
     }
 };
 
-const getUserDepartment = async () => {
-    const { data: teams, error } = await supabase
-        .from("user_teams")
-        .select("team_id")
-        .eq("user_id", user?.value.id);
-    if (error) throw error;
+// const getUserDepartment = async () => {
+//     const { data: teams, error } = await supabase
+//         .from("user_teams")
+//         .select("team_id")
+//         .eq("user_id", user?.value.id);
+//     if (error) throw error;
+// };
+// getUserDepartment();
+
+const getEventsForProfile = async () => {
+    profileEvents.value = await getEventsForUser(user.value.id);
+    dataLoaded.value = true;
 };
-getUserDepartment();
+
+onMounted(() => {
+    getEventsForProfile();
+});
 </script>
 
 <template>
@@ -129,6 +140,9 @@ getUserDepartment();
             </div>
         </form>
 
-        <EventCard />
+        <div>
+            <h1 class="text-2xl pt-10">Mine events</h1>
+            <EventCard :events="profileEvents" :loaded="dataLoaded" />
+        </div>
     </div>
 </template>

@@ -1,4 +1,5 @@
 <script setup>
+import { v4 as uuidv4 } from "uuid";
 const props = defineProps(["path"]);
 const { path } = toRefs(props);
 const emit = defineEmits(["update:path", "upload"]);
@@ -7,6 +8,9 @@ const supabase = useSupabaseClient();
 const uploading = ref(false);
 const src = ref("");
 const files = ref();
+
+console.log(path.value);
+
 const downloadImage = async () => {
     try {
         const { data, error } = await supabase.storage
@@ -27,9 +31,7 @@ const uploadAvatar = async (evt) => {
             throw new Error("You must select an image to upload.");
         }
         const file = files.value[0];
-        const fileExt = file.name.split(".").pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `${fileName}`;
+        const filePath = uuidv4() + "-" + file.name;
         const { error: uploadError } = await supabase.storage
             .from("avatars")
             .upload(filePath, file);
