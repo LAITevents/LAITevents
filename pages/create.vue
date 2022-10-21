@@ -2,6 +2,7 @@
 definePageMeta({
     middleware: "auth",
 });
+
 import { ref } from "vue";
 
 const supabase = useSupabaseClient();

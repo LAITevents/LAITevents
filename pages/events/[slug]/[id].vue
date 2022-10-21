@@ -40,9 +40,11 @@ const getEvents = async () => {
         dataLoaded.value = true;
 
         data.value = events[0];
-        await getDepartment(events[0].team_id).then(
-            (result) => (departmentName.value = result[0].team_title)
-        );
+        if (events[0].tean_id) {
+            await getDepartment(events[0].team_id).then(
+                (result) => (departmentName.value = result[0].team_title)
+            );
+        }
     } catch (error) {
         errorMsg.value = error.message;
         setTimeout(() => {

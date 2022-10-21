@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Datepicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
 
 const selectedDate = ref();
 

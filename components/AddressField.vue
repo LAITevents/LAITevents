@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import { useGooglePlaces } from "@/composable/useGooglePlaces";
 const { usePlacesApi } = useGooglePlaces();
-declare var google;
 
 const addressInput = ref(null);
 const placeId = ref();
@@ -15,25 +14,27 @@ defineExpose({
     placeLat,
 });
 
-onBeforeMount(async () => {
-    const link =
-        "https://maps.googleapis.com/maps/api/js?key=AIzaSyDZHEUaLKeeJztYBC9xiHX1ye-asu-p5t0&libraries=places&region=dk";
-    await usePlacesApi(link);
-    var options = {
-        componentRestrictions: { country: "dk" },
-        fields: ["place_id", "geometry", "name"],
-    };
+onBeforeMount(() => {
+    nextTick(function () {
+        // const link =
+        //     "https://maps.googleapis.com/maps/api/js?key=AIzaSyDZHEUaLKeeJztYBC9xiHX1ye-asu-p5t0&libraries=places&region=dk";
+        // usePlacesApi(link);
+        var options = {
+            componentRestrictions: { country: "dk" },
+            fields: ["place_id", "geometry", "name"],
+        };
 
-    const autocomplete = new google.maps.places.Autocomplete(
-        addressInput.value,
-        options
-    );
+        const autocomplete = new google.maps.places.Autocomplete(
+            addressInput.value,
+            options
+        );
 
-    autocomplete.addListener("place_changed", () => {
-        let place = autocomplete.getPlace();
-        placeLat.value = place.geometry.location.lat();
-        placeLng.value = place.geometry.location.lng();
-        placeId.value = place.place_id;
+        autocomplete.addListener("place_changed", () => {
+            let place = autocomplete.getPlace();
+            placeLat.value = place.geometry.location.lat();
+            placeLng.value = place.geometry.location.lng();
+            placeId.value = place.place_id;
+        });
     });
 });
 
@@ -45,6 +46,8 @@ onUnmounted(() => {
         scripts[i].parentNode.removeChild(scripts[i]);
     }
 });
+
+onMounted(async () => {});
 </script>
 
 <template>
