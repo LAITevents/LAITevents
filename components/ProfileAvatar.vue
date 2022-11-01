@@ -9,15 +9,13 @@ const uploading = ref(false);
 const src = ref("");
 const files = ref();
 
-console.log(path.value);
-
 const downloadImage = async () => {
     try {
         const { data, error } = await supabase.storage
             .from("avatars")
-            .download(path.value);
+            .getPublicUrl(path.value);
         if (error) throw error;
-        src.value = URL.createObjectURL(data);
+        src.value = data.publicURL;
     } catch (error) {
         console.error("Error downloading image: ", error.message);
     }
