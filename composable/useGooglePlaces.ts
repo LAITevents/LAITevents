@@ -19,6 +19,8 @@ export function useGooglePlaces() {
                 googleScript.addEventListener("load", () => {
                     resolve(googleScript);
                 });
+            } else {
+                resolve(googleScript);
             }
         });
     };

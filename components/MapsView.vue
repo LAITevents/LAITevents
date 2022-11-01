@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Loader } from "@googlemaps/js-api-loader";
+import { useGooglePlaces } from "~~/composable/useGooglePlaces";
+const { usePlacesApi } = useGooglePlaces();
 const mapDiv = ref(null);
 
 const props = defineProps({
@@ -19,7 +20,10 @@ const mapOptions = {
     zoom: 14,
 };
 
-onMounted(() => {
+declare var google: any;
+const config = useRuntimeConfig();
+async function initMap() {
+    await usePlacesApi(config.public.googleLink);
     const map = new google.maps.Map(mapDiv.value, mapOptions);
 
     const request = {
@@ -64,20 +68,10 @@ onMounted(() => {
             });
         }
     });
-    // })
-    // .catch((e) => {
-    //     console.log(e);
-    // });
-});
+}
 
-// remove google scripts after leaving af page
-onUnmounted(() => {
-    var scripts = document.querySelectorAll(
-        "script[src*='maps.googleapis.com/maps-api-v3']"
-    );
-    for (var i = 0; i < scripts.length; i++) {
-        scripts[i].parentNode.removeChild(scripts[i]);
-    }
+onMounted(() => {
+    initMap();
 });
 </script>
 

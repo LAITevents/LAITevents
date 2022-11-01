@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import { useGooglePlaces } from "~~/composable/useGooglePlaces";
 import { ref } from "vue";
-import { useGooglePlaces } from "@/composable/useGooglePlaces";
 const { usePlacesApi } = useGooglePlaces();
-
 const addressInput = ref(null);
 const placeId = ref();
 const placeLat = ref();
@@ -14,11 +13,13 @@ defineExpose({
     placeLat,
 });
 
+const config = useRuntimeConfig();
+declare var google: any;
+
 onBeforeMount(() => {
-    nextTick(function () {
-        // const link =
-        //     "https://maps.googleapis.com/maps/api/js?key=AIzaSyDZHEUaLKeeJztYBC9xiHX1ye-asu-p5t0&libraries=places&region=dk";
-        // usePlacesApi(link);
+    nextTick(async () => {
+        await usePlacesApi(config.public.googleLink);
+
         var options = {
             componentRestrictions: { country: "dk" },
             fields: ["place_id", "geometry", "name"],
@@ -46,8 +47,6 @@ onUnmounted(() => {
         scripts[i].parentNode.removeChild(scripts[i]);
     }
 });
-
-onMounted(async () => {});
 </script>
 
 <template>

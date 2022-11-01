@@ -37,7 +37,7 @@ const getProfile = async () => {
     }
     loading.value = false;
 };
-getProfile();
+
 
 // Update profil
 const updateProfile = async () => {
@@ -83,6 +83,7 @@ const getEventsForProfile = async () => {
 
 onMounted(() => {
     getEventsForProfile();
+    getProfile();
 });
 </script>
 
