@@ -2,12 +2,11 @@
 import { useUser } from "@/composable/useUser";
 import { useEvent } from "@/composable/useEvent";
 import { useRoute, useRouter } from "vue-router";
+const { formatDate, formatTime } = useDateFormatter();
+
 import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 const { getDepartment } = useEvent();
-const { formatDate } = useDateFormatter();
-const { formatTime } = useDateFormatter();
-
 const { getUsername } = useUser();
 
 const supabase = useSupabaseClient();
@@ -34,11 +33,10 @@ const getEvents = async () => {
     try {
         const { data: events, error } = await supabase
             .from("events")
-            .select("*, event_participants(*)")
+            .select("*, event_participants(*), comments(*)")
             .eq("id", currentId);
         if (error) throw error;
         dataLoaded.value = true;
-
         data.value = events[0];
         if (events[0].team_id) {
             await getDepartment(events[0].team_id).then(
@@ -142,6 +140,12 @@ watch(registered, () => {
             <div>Tidspunkt: {{ formatTime(data.selected_date) }}</div>
         </div>
         <div>Event for: {{ departmentName || "Alle" }}</div>
+
+        <CommentSection
+            v-if="data.comments"
+            :comments="data.comments"
+            :currentId="currentId"
+        />
 
         <button v-if="!registered" @click="registerEvent()">Tilmeld</button>
         <button v-else @click="cancelRegistration()">Afmeld</button>
