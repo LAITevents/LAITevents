@@ -8,11 +8,11 @@ const props = defineProps({
     currentId: { type: String },
 });
 
-const { getUsername } = useUser();
+const { getProfileData } = useUser();
 const supabase = useSupabaseClient();
-const comments = ref(props.comments);
 const commentFromUser = ref("");
 const user = supabase.auth.user();
+const comments = ref(props.comments);
 
 watchEffect(async () => {
     const subscription = supabase
@@ -38,10 +38,27 @@ const sendComment = async (evt) => {
     }
 };
 
-const getUsernameForComment = async (user_id: string) => {
-    let username = "";
-    username = await getUsername(user_id);
-    return username;
+// const getUserdataFromSupabase = async (userId) => {
+//     try {
+//         const { data: userdata, error } = await supabase
+//             .from("profiles")
+//             .select("*")
+//             .eq("id", userId);
+//         if (error) throw error;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+
+const getUserData = async (userid) => {
+    const users = [];
+
+    const data = await getProfileData(userid);
+    data.forEach(async (user) => {
+        users.push(user);
+    });
+
+    console.log(users);
 };
 </script>
 
@@ -50,7 +67,9 @@ const getUsernameForComment = async (user_id: string) => {
         <ul>
             <li v-for="comment in comments" :key="comment.id">
                 <div class="flex gap-4">
-                    <p>{{ getUsernameForComment(comment.user_id) }}</p>
+                    <p>
+                        {{ getUserData(comment.user_id) }}
+                    </p>
 
                     <p>{{ comment.content }}</p>
                 </div>
