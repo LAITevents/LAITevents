@@ -9,13 +9,5 @@ export function useUser() {
         return profile[0].username;
     };
 
-    const getProfileData = async (userId) => {
-        const { data: userdata } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", userId);
-        return userdata[0];
-    };
-
-    return { getUsername, getProfileData };
+    return { getUsername };
 }
