@@ -37,6 +37,36 @@ const sendComment = async (evt) => {
         console.log(err);
     }
 };
+
+// const users = [];
+// comments.value.forEach((obj) => {
+//     users.push(obj.user_id);
+// });
+
+// console.log(users);
+// let newUsers = [...new Set(users)];
+
+const getProfile = async (user_id) => {
+    const users = [];
+
+    users.push(user_id);
+
+    let newUsers = [...new Set(users)];
+    console.log(newUsers);
+
+    // try {
+    //     const { data, error } = await supabase
+    //         .from("profiles")
+    //         .select("*")
+    //         .eq("id", user_id);
+    //     if (error) throw error;
+    //     console.log(data);
+
+    //     // push userdata til comments array
+    // } catch (error) {
+    //     console.log(error);
+    // }
+};
 </script>
 
 <template>
@@ -45,7 +75,7 @@ const sendComment = async (evt) => {
             <li v-for="comment in comments" :key="comment.id">
                 <div class="flex gap-4">
                     <p>
-                        {{ comment.user_id }}
+                        {{ getProfile(comment.user_id) }}
                     </p>
 
                     <p>{{ comment.content }}</p>

@@ -28,16 +28,15 @@ const getProfile = async () => {
         .single();
     if (error) throw error;
     username.value = data.username;
-    email.value = data.website;
+    email.value = data.email;
     avatar_path.value = data.avatar_url;
     if (data) {
         username.value = data.username;
-        email.value = data.website;
+        email.value = data.email;
         avatar_path.value = data.avatar_url;
     }
     loading.value = false;
 };
-
 
 // Update profil
 const updateProfile = async () => {
