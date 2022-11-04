@@ -18,8 +18,9 @@ const users = ref([]);
 watchEffect(async () => {
     const subscription = supabase
         .from("comments")
-        .on("INSERT", (payload) => {
-            comments.value.push(payload.new);
+        .on("INSERT", async (payload) => {
+            const user = await getProfile(payload.new.user_id);
+            displayComments.value.push({ ...payload.new, ...user });
         })
         .subscribe();
     return () => supabase.removeSubscription(subscription);
@@ -30,6 +31,21 @@ watch(comments, () => {
         comment.user_id;
     });
 });
+
+const getProfile = async (user_id) => {
+    let user = null;
+    try {
+        const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user_id);
+        if (error) throw error;
+        user = data[0];
+    } catch (error) {
+        console.log(error);
+    }
+    return user;
+};
 
 // Send comment to database
 const sendComment = async (evt) => {
@@ -45,7 +61,7 @@ const sendComment = async (evt) => {
     }
 };
 
-const getProfile = async () => {
+const getProfiles = async () => {
     comments.value.forEach((comment) => {
         users.value.push(comment.user_id);
     });
@@ -71,7 +87,7 @@ const getProfile = async () => {
         });
     }
 };
-getProfile();
+getProfiles();
 </script>
 
 <template>
