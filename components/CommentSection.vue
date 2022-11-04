@@ -8,11 +8,12 @@ const props = defineProps({
     currentId: { type: String },
 });
 
-const { getUsername } = useUser();
 const supabase = useSupabaseClient();
 const commentFromUser = ref("");
 const user = supabase.auth.user();
 const comments = ref(props.comments);
+const displayComments = ref([]);
+const users = ref([]);
 
 watchEffect(async () => {
     const subscription = supabase
@@ -22,6 +23,12 @@ watchEffect(async () => {
         })
         .subscribe();
     return () => supabase.removeSubscription(subscription);
+});
+
+watch(comments, () => {
+    comments.value.forEach((comment) => {
+        comment.user_id;
+    });
 });
 
 // Send comment to database
@@ -38,44 +45,42 @@ const sendComment = async (evt) => {
     }
 };
 
-// const users = [];
-// comments.value.forEach((obj) => {
-//     users.push(obj.user_id);
-// });
+const getProfile = async () => {
+    comments.value.forEach((comment) => {
+        users.value.push(comment.user_id);
+    });
+    let userdata: [{ id: string }] = null;
+    try {
+        const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .in("id", users.value);
+        if (error) throw error;
+        // @ts-ignore
+        userdata = data;
+    } catch (error) {
+        console.log(error);
+    }
 
-// console.log(users);
-// let newUsers = [...new Set(users)];
-
-const getProfile = async (user_id) => {
-    const users = [];
-
-    users.push(user_id);
-
-    let newUsers = [...new Set(users)];
-    console.log(newUsers);
-
-    // try {
-    //     const { data, error } = await supabase
-    //         .from("profiles")
-    //         .select("*")
-    //         .eq("id", user_id);
-    //     if (error) throw error;
-    //     console.log(data);
-
-    //     // push userdata til comments array
-    // } catch (error) {
-    //     console.log(error);
-    // }
+    if (userdata) {
+        displayComments.value = comments.value.map((comment) => {
+            return {
+                ...comment,
+                ...userdata.find((obj) => obj.id === comment.user_id),
+            };
+        });
+    }
 };
+getProfile();
 </script>
 
 <template>
     <div>
         <ul>
-            <li v-for="comment in comments" :key="comment.id">
+            <li v-for="comment in displayComments" :key="comment.id">
                 <div class="flex gap-4">
                     <p>
-                        {{ getProfile(comment.user_id) }}
+                        {{ comment.username }}
                     </p>
 
                     <p>{{ comment.content }}</p>
