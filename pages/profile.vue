@@ -88,61 +88,76 @@ onMounted(() => {
 
 <template>
     <div>
-        <!-- Status Message -->
+        <div class="grid grid-cols-12 gap-5">
+            <!-- Status Message -->
+            <!-- <div
+                v-if="statusMsg || errorMsg"
+                class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
+            >
+                <p class="text-at-light-green">
+                    {{ statusMsg }}
+                </p>
+                <p class="text-red-500">{{ errorMsg }}</p>
+            </div> -->
+            <h2 class="text-3xl font-medium col-start-2 col-span-2">
+                Din profil
+            </h2>
 
-        <div
-            v-if="statusMsg || errorMsg"
-            class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
-        >
-            <p class="text-at-light-green">
-                {{ statusMsg }}
-            </p>
-            <p class="text-red-500">{{ errorMsg }}</p>
+            <div class="col-span-3 col-start-2">
+                <p class="">Upload / skift billede</p>
+                <ProfileAvatar
+                    v-model:path="avatar_path"
+                    @upload="updateProfile"
+                />
+            </div>
+
+            <div class="col-span-5">
+                <form>
+                    <div class="flex flex-col">
+                        <label for="username">Username</label>
+                        <input
+                            class="py-2 px-3 mb-4 bg-light-blue text-white focus:outline-none"
+                            id="username"
+                            type="text"
+                            v-model="username"
+                        />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="email">Email</label>
+                        <input
+                            class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
+                            id="email"
+                            type="text"
+                            :value="user?.email"
+                            disabled
+                        />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="department">Team</label>
+                        <input
+                            class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
+                            type="text"
+                        />
+                    </div>
+
+                    <div class="text-right">
+                        <input
+                            type="submit"
+                            @click="updateProfile"
+                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base mt-2"
+                            :value="loading ? 'Loading ...' : 'Opdater profil'"
+                            :disabled="loading"
+                        />
+                    </div>
+                </form>
+            </div>
         </div>
-        <h1 class="text-2xl">Din profil</h1>
-        <form>
-            <ProfileAvatar v-model:path="avatar_path" @upload="updateProfile" />
-            <div>
-                <label for="email">Email</label>
-                <input
-                    class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="email"
-                    type="text"
-                    :value="user?.email"
-                    disabled
-                />
-            </div>
-            <div>
-                <label for="username">Username</label>
-                <input
-                    class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="username"
-                    type="text"
-                    v-model="username"
-                />
-            </div>
-            <div>
-                <label for="department">Team</label>
-                <input
-                    class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                />
-            </div>
-
-            <div>
-                <input
-                    type="submit"
-                    @click="updateProfile"
-                    class="cursor-pointer"
-                    :value="loading ? 'Loading ...' : 'Update'"
-                    :disabled="loading"
-                />
-            </div>
-        </form>
-
-        <div>
-            <h1 class="text-2xl pt-10">Mine events</h1>
-            <EventCard :events="profileEvents" :loaded="dataLoaded" />
+        <div class="grid grid-cols-12">
+            <h2 class="text-3xl font-medium pt-10 col-start-2 col-span-2">
+                Mine events
+            </h2>
+            <!-- <EventCard :events="profileEvents" :loaded="dataLoaded" /> -->
         </div>
     </div>
 </template>

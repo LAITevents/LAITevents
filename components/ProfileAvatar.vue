@@ -54,7 +54,7 @@ watch(path, () => {
 
 <template>
     <div>
-        <img v-if="src" :src="src" class="w-52 h-52 rounded" />
+        <img v-if="src" :src="src" class="w-[300px] h-[300px]" />
 
         <div style="width: 10em; position: relative">
             <label class="block button primary" for="single">
