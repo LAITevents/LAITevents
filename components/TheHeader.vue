@@ -11,8 +11,11 @@ const signOut = async () => {
 </script>
 
 <template>
-    <header class="flex flex-row relative py-12 items-center justify-between">
-        <router-link v-if="user" to="/" class="relative w-28">
+    <header
+        v-if="user"
+        class="flex flex-row relative py-12 items-center justify-between"
+    >
+        <router-link to="/" class="relative w-28">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 100">
                 <path
                     fill="#fff"
@@ -23,9 +26,9 @@ const signOut = async () => {
         </router-link>
         <div>
             <ul class="flex gap-10 cursor-pointer font-bold">
-                <nuxt-link v-if="user" to="/create">Opret event</nuxt-link>
-                <nuxt-link v-if="user" to="/profile">Profil</nuxt-link>
-                <nuxt-link v-if="user" @click="signOut">Log ud</nuxt-link>
+                <nuxt-link to="/create">Opret event</nuxt-link>
+                <nuxt-link to="/profile">Profil</nuxt-link>
+                <nuxt-link @click="signOut">Log ud</nuxt-link>
             </ul>
         </div>
     </header>
