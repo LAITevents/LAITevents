@@ -2,6 +2,7 @@
 import { useGooglePlaces } from "~~/composable/useGooglePlaces";
 const { usePlacesApi } = useGooglePlaces();
 const mapDiv = ref(null);
+const placeTitel = ref("");
 
 const props = defineProps({
     placeLat: { type: String, required: true },
@@ -53,6 +54,7 @@ async function initMap() {
 
             nameElement.textContent = place.name!;
             content.appendChild(nameElement);
+            placeTitel.value = place.name;
 
             const placeAddressElement = document.createElement("p");
 
@@ -76,5 +78,6 @@ onMounted(() => {
 </script>
 
 <template>
+    <p>{{ placeTitel }}</p>
     <div ref="mapDiv" class="h-96"></div>
 </template>

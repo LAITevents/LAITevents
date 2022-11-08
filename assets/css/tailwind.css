@@ -1,13 +1,22 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+@font-face {
+    font-family: "gordita-regular";
+    src: url('@/assets/fonts/gordita-regular.woff') format('woff');
+}
+@font-face {
+    font-family: "gordita-medium";
+    src: url('@/assets/fonts/gordita-medium.woff') format('woff');
+}
+@font-face {
+    font-family: "gordita-bold";
+    src: url('@/assets/fonts/gordita-bold.woff') format('woff');
+}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-    html, body {
-        font-family: Roboto, sans-serif;
-    }
+
     body {
         background-color: #376570;
         color: #fff
