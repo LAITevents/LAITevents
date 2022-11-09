@@ -47,7 +47,6 @@ const updateProfile = async () => {
             {
                 id: user.value.id,
                 username: username.value,
-                website: email?.value,
                 avatar_url: avatar_path.value,
                 updated_at: new Date(),
             },
@@ -61,10 +60,7 @@ const updateProfile = async () => {
             statusMsg.value = false;
         }, 5000);
     } catch (error) {
-        errorMsg.value`Error: ${error.message}`;
-        setTimeout(() => {
-            errorMsg.value = false;
-        }, 5000);
+        console.log(error);
     }
 };
 
@@ -101,7 +97,7 @@ onMounted(() => {
                 </p>
                 <p class="text-red-500">{{ errorMsg }}</p>
             </div> -->
-            <h2 class="text-3xl font-medium col-start-2 col-span-2">
+            <h2 class="text-3xl font-medium col-start-2 col-span-3">
                 Din profil
             </h2>
 
@@ -155,7 +151,7 @@ onMounted(() => {
                 </form>
             </div>
 
-            <h2 class="text-3xl font-medium pt-10 col-start-2 col-span-3">
+            <h2 class="text-3xl font-medium pt-10 col-start-2 col-span-8">
                 Mine events
             </h2>
 

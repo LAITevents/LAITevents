@@ -29,7 +29,7 @@ const uploadAvatar = async (evt) => {
             throw new Error("You must select an image to upload.");
         }
         const file = files.value[0];
-        const filePath = uuidv4() + "-" + file.name;
+        const filePath = uuidv4();
         const { error: uploadError } = await supabase.storage
             .from("avatars")
             .upload(filePath, file);
