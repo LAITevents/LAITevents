@@ -17,7 +17,7 @@ export function useEvent() {
     const getEventsForUser = async (userId?) => {
         const { data: events } = await supabase
             .from("events")
-            .select()
+            .select("id, title")
             .eq("userId", userId);
         return events;
     };

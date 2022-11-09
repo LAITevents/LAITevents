@@ -54,10 +54,10 @@ watch(path, () => {
 
 <template>
     <div>
-        <img v-if="src" :src="src" class="w-[300px] h-[300px]" />
+        <img v-if="src" :src="src" class="" />
 
-        <div style="width: 10em; position: relative">
-            <label class="block button primary" for="single">
+        <div style="position: relative">
+            <label class="" for="single">
                 {{ uploading ? "Uploading ..." : "Upload" }}
             </label>
             <input

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useEvent } from "@/composable/useEvent";
+import { useDashify } from "~~/composable/dashify";
 const { getEventsForUser } = useEvent();
 const { getDepartment } = useEvent();
+const { dashify } = useDashify();
 
 const supabase = useSupabaseClient();
 const username = ref("");
@@ -152,12 +154,28 @@ onMounted(() => {
                     </div>
                 </form>
             </div>
-        </div>
-        <div class="grid grid-cols-12">
-            <h2 class="text-3xl font-medium pt-10 col-start-2 col-span-2">
+
+            <h2 class="text-3xl font-medium pt-10 col-start-2 col-span-3">
                 Mine events
             </h2>
-            <!-- <EventCard :events="profileEvents" :loaded="dataLoaded" /> -->
+
+            <div class="col-start-2 col-span-2">
+                <NuxtLink
+                    v-for="event in profileEvents"
+                    :key="event.id"
+                    :to="{
+                        path: `/events/${dashify(event.title)}/${event.id}`,
+                    }"
+                >
+                    <p>{{ event.title }}</p>
+                </NuxtLink>
+            </div>
+
+            <h2
+                class="text-3xl font-medium pt-10 col-start-2 col-span-8 text-lait-yellow"
+            >
+                Tidligere events
+            </h2>
         </div>
     </div>
 </template>

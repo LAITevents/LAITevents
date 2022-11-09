@@ -24,13 +24,19 @@ const props = defineProps({
                     path: `/events/${dashify(event.title)}/${event.id}`,
                 }"
             >
-                <img :src="event.img_url" class="rounded" />
+                <img
+                    v-if="event.img_url"
+                    :src="event.img_url"
+                    class="rounded"
+                />
 
                 <h1 class="mb-2 text-center text-xl">
                     {{ event.title }}
                 </h1>
 
-                <p class="mt-6 py-1 px-3">{{ event.description }}</p>
+                <p v-if="event.description" class="mt-6 py-1 px-3">
+                    {{ event.description }}
+                </p>
             </nuxt-link>
         </div>
     </div>
