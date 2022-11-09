@@ -17,6 +17,7 @@
   "dependencies": {
     "@types/googlemaps": "^3.43.3",
     "@vuepic/vue-datepicker": "^3.5.2",
+    "nuxt-icons": "^2.0.2",
     "uuid": "^9.0.0"
   }
 }

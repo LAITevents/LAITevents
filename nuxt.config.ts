@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
     components: true,
-    modules: ["@nuxtjs/supabase", "@nuxtjs/tailwindcss"],
+    modules: ["@nuxtjs/supabase", "@nuxtjs/tailwindcss", "nuxt-icons"],
 
     runtimeConfig: {
         public: {

@@ -3,9 +3,9 @@ export function useDateFormatter() {
         const formattedDate = new Date(date);
 
         return formattedDate.toLocaleString("Da-DK", {
+            day: "numeric",
             weekday: "long",
             month: "long",
-            day: "numeric",
         });
     };
 

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useDashify } from "@/composable/dashify";
 import { ref } from "vue";
+import { useDateFormatter } from "~/composable/useDateFormatter";
 const supabase = useSupabaseClient();
 const data = ref([]);
 const { dashify } = useDashify();
+const { formatDate } = useDateFormatter();
 
 const props = defineProps({
     events: { type: Object },
@@ -13,30 +15,36 @@ const props = defineProps({
 
 <template>
     <div v-if="loaded">
-        <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-        >
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <nuxt-link
-                v-for="event in props.events"
-                :key="event.id"
-                class="flex flex-col items-center p-8 cursor-pointer bg-light-blue"
+                v-for="(event, index) in props.events"
+                :key="index"
+                class="flex-col p-8 col-span-4 bg-light-blue justify-between cursor-pointer [:nth-of-type(3n+2)_&]:translate-y-[5rem]"
                 :to="{
                     path: `/events/${dashify(event.title)}/${event.id}`,
                 }"
             >
-                <img
-                    v-if="event.img_url"
-                    :src="event.img_url"
-                    class="rounded"
-                />
+                <div class="mb-2 flex justify-between items-center font-medium">
+                    <h1 class="text-xl">
+                        {{ event.title }}
+                    </h1>
+                    <p class="uppercase text-xs text-lait-yellow">#FEST</p>
+                </div>
 
-                <h1 class="mb-2 text-center text-xl">
-                    {{ event.title }}
-                </h1>
-
-                <p v-if="event.description" class="mt-6 py-1 px-3">
-                    {{ event.description }}
-                </p>
+                <div class="flex mb-2 justify-between">
+                    <div class="flex items-center gap-3">
+                        <nuxt-icon
+                            class="w-4 text-xl m-0"
+                            name="EventCalendar"
+                            fill
+                        />
+                        <p class="capitalize text-sm">
+                            {{ formatDate(event.selected_date) }}
+                        </p>
+                    </div>
+                    <nuxt-icon name="EventAlert" fill />
+                </div>
+                <img v-if="event.img_url" :src="event.img_url" />
             </nuxt-link>
         </div>
     </div>
