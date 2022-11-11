@@ -21,6 +21,38 @@
         background-color: #376570;
         color: #fff
     }
+
+    .translate-event:nth-of-type(3n+2) {
+        transform: translateY(8rem);
+    }
+
+   .content-wrap {
+        display: block;
+        position: relative;
+    }
+
+    .content-wrap:after {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background-color: #4c757f;
+        transform: scale(1);
+        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+    }
+    
+    .event-content {
+        padding: 3rem 3rem 2rem 3rem;
+        position: relative;
+        z-index: 1;
+        height: 37.5rem;
+    }
+
+    .content-wrap:after:hover {
+        transform: scale(0.94);
+    }
 }
 
 

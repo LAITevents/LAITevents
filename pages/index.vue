@@ -32,11 +32,13 @@ onMounted(() => {
 
 <template>
     <div>
-        <p class="text-2xl">
-            Hello
-            <span class="text-lait-yellow text-2xl">{{ username }}</span>
-        </p>
-
+        <div class="text-2xl font-medium">
+            <p>
+                Hello
+                <span class="text-lait-yellow">{{ username }}</span>
+            </p>
+        </div>
+        <TagList :events="events" />
         <EventCard :events="events" :loaded="dataLoaded" />
     </div>
 </template>
