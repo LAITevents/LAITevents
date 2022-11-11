@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useUser } from "@/composable/useUser";
 import { useEvent } from "@/composable/useEvent";
+import IEvents from "@/interfaces/events";
 
 definePageMeta({
     middleware: "auth",
@@ -10,7 +11,7 @@ const { getData } = useEvent();
 const { getUsername } = useUser();
 const user = useSupabaseUser();
 const username = ref("");
-const events = ref({});
+const events = ref([]);
 const dataLoaded = ref(null);
 
 const getDisplayUsername = async () => {
@@ -38,7 +39,7 @@ onMounted(() => {
                 <span class="text-lait-yellow">{{ username }}</span>
             </p>
         </div>
-        <TagList :events="events" />
+
         <EventCard :events="events" :loaded="dataLoaded" />
     </div>
 </template>
