@@ -5,7 +5,7 @@ import { useDateFormatter } from "~/composable/useDateFormatter";
 const supabase = useSupabaseClient();
 const { dashify } = useDashify();
 const { formatDate } = useDateFormatter();
-const selected = ref(["#ALLE", "#SJOV", "#WEBINAR", "#KURSUS", "#SPORT"]);
+const selected = ref(["#SJOV", "#WEBINAR", "#KURSUS", "#SPORT"]);
 
 const props = defineProps({
     events: { type: Array },
@@ -14,7 +14,9 @@ const props = defineProps({
 
 const toggleOnClick = (event) => {
     const element = event.target;
+
     const text = element.textContent.trim();
+    console.log("You clicked on " + text);
 
     if (selected.value.includes(text)) {
         element.classList.add("line-through");
@@ -26,11 +28,15 @@ const toggleOnClick = (event) => {
 };
 
 const filteredEvents = computed(() => {
+    console.log(filteredEvents);
+
+    const events = props.events;
+
     if (selected.value.length == 0) {
         return;
     } else {
-        return props.events.filter(
-            (event) => !selected.value.includes(event.category_id.name)
+        return events.filter((event) =>
+            selected.value.includes(event.category_id.name)
         );
     }
 });
@@ -41,7 +47,6 @@ const filteredEvents = computed(() => {
         <div
             class="flex space-x-6 space-y-2 flex-wrap lg:justify-end items-end cursor-pointer text-lait-yellow font-bold"
         >
-            <div @click="toggleOnClick($event)">#ALLE</div>
             <div @click="toggleOnClick($event)">#SJOV</div>
             <div @click="toggleOnClick($event)">#WEBINAR</div>
             <div @click="toggleOnClick($event)">#KURSUS</div>
