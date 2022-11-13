@@ -5,7 +5,7 @@ import { useDateFormatter } from "~/composable/useDateFormatter";
 const supabase = useSupabaseClient();
 const { dashify } = useDashify();
 const { formatDate } = useDateFormatter();
-const selected = ref(["#ALLE", "#SJOV", "#WEBINAR", "#KURSUS", "#SPORT"]);
+const selected = ref(["#SJOV", "#WEBINAR", "#KURSUS", "#SPORT"]);
 
 const props = defineProps({
     events: { type: Array },
@@ -26,8 +26,8 @@ const toggleOnClick = (event) => {
 };
 
 const filteredEvents = computed(() => {
-    if (selected.value.length == 0) {
-        return;
+    if (selected.value.length == 4) {
+        return props.events;
     } else {
         return props.events.filter(
             (event) => !selected.value.includes(event.category_id.name)
@@ -41,17 +41,13 @@ const filteredEvents = computed(() => {
         <div
             class="flex space-x-6 space-y-2 flex-wrap lg:justify-end items-end cursor-pointer text-lait-yellow font-bold"
         >
-            <div @click="toggleOnClick($event)">#ALLE</div>
             <div @click="toggleOnClick($event)">#SJOV</div>
             <div @click="toggleOnClick($event)">#WEBINAR</div>
             <div @click="toggleOnClick($event)">#KURSUS</div>
             <div @click="toggleOnClick($event)">#SPORT</div>
         </div>
 
-        <div
-            class="grid grid-cols-1 lg:grid-cols-12 gap-8"
-            v-if="selected.length > 0"
-        >
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <NuxtLink
                 v-for="event in filteredEvents"
                 :key="event.id"
@@ -95,11 +91,6 @@ const filteredEvents = computed(() => {
                     />
                 </div>
             </NuxtLink>
-        </div>
-        <div v-else>
-            <h1 class="text-3xl max-w-screen mx-auto">
-                Der er ingen events lige pt. :(
-            </h1>
         </div>
     </div>
 </template>
