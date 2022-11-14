@@ -18,23 +18,23 @@ const handleLogin = async () => {
         });
         if (error) throw error;
     } catch (error) {}
+};
 
-    const signUp = async () => {
-        const { user, error } = await supabase.auth.signUp(
-            {
+const signUp = async () => {
+    const { user, error } = await supabase.auth.signUp(
+        {
+            email: email.value,
+            password: password.value,
+        },
+        {
+            data: {
                 email: email.value,
-                password: password.value,
+                user_name: username.value,
             },
-            {
-                data: {
-                    email: email.value,
-                    user_name: username.value,
-                },
-            }
-        );
-        console.log("user", user);
-        console.log("error", error);
-    };
+        }
+    );
+    console.log("user", user);
+    console.log("error", error);
 };
 
 watchEffect(() => {
