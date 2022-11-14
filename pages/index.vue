@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useUser } from "@/composable/useUser";
-import { useEvent } from "@/composable/useEvent";
-import IEvents from "@/interfaces/events";
 
 definePageMeta({
     middleware: "auth",
 });
-const { getData } = useEvent();
 const { getUsername } = useUser();
 const user = useSupabaseUser();
 const username = ref("");
-const events = ref([]);
-const dataLoaded = ref(null);
 
 const getDisplayUsername = async () => {
     await getUsername(user?.value.id).then((result) => {
@@ -20,14 +15,8 @@ const getDisplayUsername = async () => {
     });
 };
 
-const getEventData = async () => {
-    events.value = await getData();
-    dataLoaded.value = true;
-};
-
 onMounted(() => {
     getDisplayUsername();
-    getEventData();
 });
 </script>
 
@@ -40,6 +29,6 @@ onMounted(() => {
             </p>
         </div>
 
-        <EventCard :events="events" :loaded="dataLoaded" />
+        <EventCard />
     </div>
 </template>
