@@ -43,7 +43,6 @@ const filteredEvents = computed(() => {
 <template>
   <div>
     <div class="">
-      <p class="font-bold">test2</p>
       <ul
         class="flex flex-end space-x-6 space-y-2 flex-wrap lg:justify-end items-end cursor-pointer text-lait-yellow font-bold"
       >
