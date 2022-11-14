@@ -2,18 +2,16 @@
 import { useDashify } from "@/composable/dashify";
 import { ref } from "vue";
 import { useDateFormatter } from "~/composable/useDateFormatter";
+import { useEvent } from "@/composable/useEvent";
 const supabase = useSupabaseClient();
+const { getData } = useEvent();
 const { dashify } = useDashify();
 const { formatDate } = useDateFormatter();
-const selected = ref(["#SJOV", "#WEBINAR", "#KURSUS", "#SPORT"]);
+// const selected = ref(["#SJOV", "#WEBINAR", "#KURSUS", "#SPORT"]);
 
-const props = defineProps({
-    events: { type: Array },
-    loaded: { type: Boolean },
-});
-
-const filterValue = ref("");
 const activeIndex = ref(0);
+const filterValue = ref("#ALLE");
+const eventsList: any = ref(await getData());
 
 const hashtags = ref([
     { name: "#ALLE", count: 2 },
@@ -31,70 +29,28 @@ const setActive = (index: number) => {
     activeIndex.value = index;
 };
 
-const filteredEvents = filterEvents(filterValue.value);
-
-function filterEvents(filterValue: string) {
-    let filteredArray = [];
-    if (activeIndex.value == 0) {
-        filteredArray = props.events;
-    } else {
-        filteredArray = props.events.filter((event: any) => {
-            const tags = event.category_id.name;
-            let events = null;
-            if (tags != null && tags.includes(filterValue)) {
-                events = event;
-            }
-            if (events != null) {
-                return event;
-            }
-        });
+const filteredEvents = computed(() => {
+    if (filterValue.value == "#ALLE") {
+        return eventsList.value;
     }
-    return filteredArray;
-}
 
-// const toggleOnClick = (event) => {
-//     const element = event.target;
-//     const text = element.textContent.trim();
-
-//     if (selected.value.includes(text)) {
-//         element.classList.add("line-through");
-//         selected.value.splice(selected.value.indexOf(text), 1);
-//     } else {
-//         element.classList.remove("line-through");
-//         selected.value.push(text);
-//     }
-// };
-
-// const filteredEvents = computed(() => {
-//     if (selected.value.length == 4) {
-//         return props.events;
-//     } else {
-//         return props.events.filter(
-//             (event) => !selected.value.includes(event.category_id.name)
-//         );
-//     }
-// });
+    return eventsList.value.filter(
+        (event) => event.category_id.name === filterValue.value
+    );
+});
 </script>
 
 <template>
     <div>
-        <!-- <div
-            class="flex space-x-6 space-y-2 flex-wrap lg:justify-end items-end cursor-pointer text-lait-yellow font-bold"
-        >
-            <div @click="toggleOnClick($event)">#SJOV</div>
-            <div @click="toggleOnClick($event)">#WEBINAR</div>
-            <div @click="toggleOnClick($event)">#KURSUS</div>
-            <div @click="toggleOnClick($event)">#SPORT</div>
-        </div> -->
-
-        <div
-            class="flex space-x-6 space-y-2 flex-wrap lg:justify-end items-end cursor-pointer text-lait-yellow font-bold"
-        >
-            <ul>
+        <div class="">
+            <ul
+                class="flex flex-end space-x-6 space-y-2 flex-wrap lg:justify-end items-end cursor-pointer text-lait-yellow font-bold"
+            >
                 <li
                     v-for="(hashtag, index) in hashtags"
                     :key="index"
                     @click="[setFilter(hashtag.name), setActive(index)]"
+                    class=""
                 >
                     <span :class="{ 'line-through': activeIndex === index }">
                         {{ hashtag.name }}
