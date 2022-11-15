@@ -99,12 +99,6 @@ const deleteEvent = async (event_id) => {
     } catch (error) {
         console.log(error);
     }
-
-    // if (readyToDelete.value == false) {
-    //     return;
-    // } else {
-
-    // }
 };
 
 onMounted(() => {

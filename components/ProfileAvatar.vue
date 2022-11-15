@@ -8,6 +8,7 @@ const supabase = useSupabaseClient();
 const uploading = ref(false);
 const src = ref("");
 const files = ref();
+const showUpload = ref(true);
 
 const downloadImage = async () => {
     try {
@@ -75,7 +76,7 @@ watch(path, () => {
                 fill="#D9D9D9"
             />
         </svg>
-        <div style="position: relative">
+        <div v-if="showUpload" style="position: relative">
             <label class="" for="single">
                 {{ uploading ? "Uploading ..." : "Upload" }}
             </label>
