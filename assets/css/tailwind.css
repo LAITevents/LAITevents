@@ -22,17 +22,6 @@
         color: #fff
     }
 
-    .active {
-        background-color: #4c757f
-        
-    }
-
-    .active span {
-        color: #ffd264;
-        width: auto;
-        float: left;
-    }
-
     .translate-event:nth-of-type(3n+2) {
         transform: translateY(6rem);
     }
