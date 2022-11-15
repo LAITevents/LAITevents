@@ -66,7 +66,10 @@ const filteredEvents = computed(() => {
                     >
                         {{ hashtag.name }}
                     </span>
-                    <span>{{ hashtag.count }}</span>
+                    <span
+                        class="absolute w-full text-[10px] font-regular top-44 ml-0.5"
+                        >{{ hashtag.count }}</span
+                    >
                 </li>
             </ul>
         </div>
