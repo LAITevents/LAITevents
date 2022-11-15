@@ -78,6 +78,35 @@ const getEventsForProfile = async () => {
     dataLoaded.value = true;
 };
 
+const readyToDelete = ref(false);
+const deleteEvent = async (event_id) => {
+    try {
+        const { error } = await supabase
+            .from("event_participants")
+            .delete()
+            .eq("event_id", event_id);
+        if (error) throw error;
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        const { error } = await supabase
+            .from("events")
+            .delete()
+            .eq("id", event_id);
+        if (error) throw error;
+    } catch (error) {
+        console.log(error);
+    }
+
+    // if (readyToDelete.value == false) {
+    //     return;
+    // } else {
+
+    // }
+};
+
 onMounted(() => {
     getEventsForProfile();
     getProfile();
@@ -156,15 +185,26 @@ onMounted(() => {
             </h2>
 
             <div class="col-start-2 col-span-2">
-                <NuxtLink
-                    v-for="event in profileEvents"
-                    :key="event.id"
-                    :to="{
-                        path: `/events/${dashify(event.title)}/${event.id}`,
-                    }"
-                >
-                    <p>{{ event.title }}</p>
-                </NuxtLink>
+                <ul>
+                    <li v-for="event in profileEvents" :key="event.id">
+                        <div class="flex gap-5">
+                            <NuxtLink
+                                :to="{
+                                    path: `/events/${dashify(event.title)}/${
+                                        event.id
+                                    }`,
+                                }"
+                            >
+                                <p>{{ event.title }}</p>
+                            </NuxtLink>
+                            <nuxt-icon
+                                @click="deleteEvent(event.id)"
+                                class="text-2xl cursor-pointer"
+                                name="ProfileDelete"
+                            />
+                        </div>
+                    </li>
+                </ul>
             </div>
 
             <h2
