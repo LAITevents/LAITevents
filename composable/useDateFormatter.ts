@@ -18,5 +18,16 @@ export function useDateFormatter() {
             })
             .replace(".", ":");
     };
-    return { formatDate, formatTime };
+
+    const getDeadlineDate = (date) => {
+        const formattedDate = new Date(date - 1 * 24 * 60 * 60 * 1000);
+
+        return formattedDate.toLocaleString("Da-DK", {
+            day: "numeric",
+            weekday: "long",
+            month: "long",
+        });
+    };
+
+    return { formatDate, formatTime, getDeadlineDate };
 }

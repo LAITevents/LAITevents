@@ -2,7 +2,7 @@
 import { useUser } from "@/composable/useUser";
 import { useEvent } from "@/composable/useEvent";
 import { useRoute, useRouter } from "vue-router";
-const { formatDate, formatTime } = useDateFormatter();
+const { formatDate, formatTime, getDeadlineDate } = useDateFormatter();
 
 import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
@@ -106,6 +106,8 @@ const cancelRegistration = async () => {
     }
 };
 
+// Function that returns deadline for signup
+
 watch(registered, () => {
     getParticipants();
 });
@@ -114,30 +116,60 @@ watch(registered, () => {
 <template>
     <div>
         <div v-if="dataLoaded" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="col-start-2 col-span-5">
-                <p
-                    class="flex flex-end lg:justify-end items-end text-lait-yellow text-xs font-bold"
-                >
-                    {{ data.category_id.name }}
-                </p>
-                <img
-                    :src="data.img_url"
-                    class="lg:w-full h-auto object-cover"
-                />
-                <h1>{{ data.title }}</h1>
-                <p>{{ data.description }}</p>
-                <template
-                    v-for="participant in eventParticipants"
-                    :key="participant"
-                >
-                    <p>Deltagere: {{ participant }}</p>
-                </template>
+            <div class="col-start-2 col-span-5 lg:translate-y-16">
+                <div class="mb-14">
+                    <p
+                        class="flex flex-end lg:justify-end items-end text-lait-yellow text-xs mb-1 font-bold"
+                    >
+                        {{ data.category_id.name }}
+                    </p>
+                    <img
+                        :src="data.img_url"
+                        class="lg:w-full h-auto object-cover"
+                    />
+                    <h1 class="font-medium text-2xl mt-4 mb-3">
+                        {{ data.title }}
+                    </h1>
+                    <p class="">{{ data.description }}</p>
+                </div>
+                <div>
+                    <h3 class="font-medium text-2xl mb-3">
+                        Deltagere
+                        <span class="text-lait-yellow text-2xl"
+                            >({{ eventParticipants.length }})</span
+                        >
+                    </h3>
+                    <div class="flex gap-4 col-span-5">
+                        <template
+                            v-for="participant in eventParticipants"
+                            :key="participant"
+                        >
+                            <p class="bg-light-blue px-4 py-2">
+                                {{ participant }}
+                            </p>
+                        </template>
+                    </div>
+                </div>
             </div>
 
             <div class="lg:col-start-8 col-span-12 lg:col-span-4">
                 <div class="p-7 bg-light-blue">
-                    <div>Dato: {{ formatDate(data.selected_date) }}</div>
-                    <div>Tidspunkt: {{ formatTime(data.selected_date) }}</div>
+                    <h3 class="text-center font-medium mb-4">
+                        Sidste chance for tilmelding:
+                        <span class="capitalize text-lait-yellow">{{
+                            getDeadlineDate(data.selected_date)
+                        }}</span>
+                    </h3>
+                    <div class="flex gap-2 capitalize">
+                        <nuxt-icon class="text-xl" name="EventCalendar" />
+
+                        {{ formatDate(data.selected_date) }}
+                    </div>
+                    <div class="flex gap-2 capitalize my-2">
+                        <nuxt-icon class="text-2xl -ml-0.5" name="EventClock" />
+
+                        Kl: {{ formatTime(data.selected_date) }}
+                    </div>
                     <!-- <div>Event for: {{ departmentName || "Alle" }}</div> -->
 
                     <MapsView
@@ -147,10 +179,22 @@ watch(registered, () => {
                         :placeId="data.place_id"
                     />
 
-                    <button v-if="!registered" @click="registerEvent()">
-                        Tilmeld
-                    </button>
-                    <button v-else @click="cancelRegistration()">Afmeld</button>
+                    <div class="text-lait-yellow text-center">
+                        <button
+                            v-if="!registered"
+                            @click="registerEvent()"
+                            class="uppercase border-lait-yellow border-2 font-medium px-4 py-1 mt-7"
+                        >
+                            Tilmeld event
+                        </button>
+                        <button
+                            v-else
+                            @click="cancelRegistration()"
+                            class="uppercase border-lait-yellow border-2 font-medium px-4 py-1 mt-7"
+                        >
+                            Afmeld event
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-light-blue mt-12 p-7">
                     <CommentSection

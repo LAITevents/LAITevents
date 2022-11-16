@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import IComments from "@/interfaces/comments";
-import { useUser } from "~/composable/useUser";
 
 const props = defineProps({
     comments: { type: Object as () => IComments[], default: [] },
@@ -95,7 +94,7 @@ getProfiles();
         <ul>
             <li v-for="comment in displayComments" :key="comment.id">
                 <div class="flex gap-4">
-                    <div class="w-10 h-10">
+                    <div class="w-10 min-w-[40px] h-10">
                         <ProfileAvatar
                             :showUpload="false"
                             v-model:path="comment.avatar_url"
@@ -119,7 +118,7 @@ getProfiles();
         <form @submit.prevent="sendComment" class="flex flex-row">
             <div class="relative w-full">
                 <input
-                    class="py-2 px-3 mb-2 w-full bg-[#87A3AA] text-white focus:outline-none placeholder-white flex-grow"
+                    class="py-2 px-3 w-full bg-[#87A3AA] text-white focus:outline-none placeholder-white flex-grow"
                     type="text"
                     placeholder="Skriv din kommentar her"
                     v-model="commentFromUser"
