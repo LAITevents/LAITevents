@@ -129,6 +129,7 @@ onMounted(() => {
                 <ProfileAvatar
                     v-model:path="avatar_path"
                     @upload="updateProfile"
+                    :showUpload="true"
                 />
             </div>
 

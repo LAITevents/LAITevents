@@ -1,14 +1,13 @@
 <script setup>
 import { v4 as uuidv4 } from "uuid";
-const props = defineProps(["path"]);
-const { path } = toRefs(props);
+const props = defineProps(["path", "showUpload"]);
+const { path, showUpload } = toRefs(props);
 const emit = defineEmits(["update:path", "upload"]);
 const supabase = useSupabaseClient();
 
 const uploading = ref(false);
 const src = ref("");
 const files = ref();
-const showUpload = ref(true);
 
 const downloadImage = async () => {
     try {
@@ -76,7 +75,7 @@ watch(path, () => {
                 fill="#D9D9D9"
             />
         </svg>
-        <div v-if="showUpload" style="position: relative">
+        <div v-if="props.showUpload" style="position: relative">
             <label class="" for="single">
                 {{ uploading ? "Uploading ..." : "Upload" }}
             </label>
