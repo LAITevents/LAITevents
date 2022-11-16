@@ -33,7 +33,7 @@ const getEvents = async () => {
     try {
         const { data: events, error } = await supabase
             .from("events")
-            .select("*, event_participants(*), comments(*)")
+            .select("*, event_participants(*), comments(*), category_id(*)")
             .eq("id", currentId);
         if (error) throw error;
         dataLoaded.value = true;
@@ -113,47 +113,53 @@ watch(registered, () => {
 
 <template>
     <div>
-        <!-- App message -->
-        <div
-            v-if="statusMsg || errorMsg"
-            class="mb-10 p-4 rounded-md shadow-md bg-light-grey"
-        >
-            <p class="text-green-500">
-                {{ statusMsg }}
-            </p>
-            <p class="text-red-500">
-                {{ errorMsg }}
-            </p>
+        <div v-if="dataLoaded" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="col-start-2 col-span-5">
+                <p
+                    class="flex flex-end lg:justify-end items-end text-lait-yellow text-xs font-bold"
+                >
+                    {{ data.category_id.name }}
+                </p>
+                <img
+                    :src="data.img_url"
+                    class="lg:w-full h-auto object-cover"
+                />
+                <h1>{{ data.title }}</h1>
+                <p>{{ data.description }}</p>
+                <template
+                    v-for="participant in eventParticipants"
+                    :key="participant"
+                >
+                    <p>Deltagere: {{ participant }}</p>
+                </template>
+            </div>
+
+            <div class="lg:col-start-8 col-span-12 lg:col-span-4">
+                <div class="p-7 bg-light-blue">
+                    <div>Dato: {{ formatDate(data.selected_date) }}</div>
+                    <div>Tidspunkt: {{ formatTime(data.selected_date) }}</div>
+                    <!-- <div>Event for: {{ departmentName || "Alle" }}</div> -->
+
+                    <MapsView
+                        v-if="data.place_lat && data.place_lng && data.place_id"
+                        :placeLat="data.place_lat"
+                        :placeLng="data.place_lng"
+                        :placeId="data.place_id"
+                    />
+
+                    <button v-if="!registered" @click="registerEvent()">
+                        Tilmeld
+                    </button>
+                    <button v-else @click="cancelRegistration()">Afmeld</button>
+                </div>
+                <div class="bg-light-blue mt-12 p-7">
+                    <CommentSection
+                        v-if="data.comments"
+                        :comments="data.comments"
+                        :currentId="currentId"
+                    />
+                </div>
+            </div>
         </div>
-
-        <div v-if="dataLoaded">
-            <img :src="data.img_url" class="w-80 h-auto object-cover rounded" />
-            <h1>{{ data.title }}</h1>
-            <p>{{ data.description }}</p>
-            <template
-                v-for="participant in eventParticipants"
-                :key="participant"
-            >
-                <p>Deltagere: {{ participant }}</p>
-            </template>
-            <div>Dato: {{ formatDate(data.selected_date) }}</div>
-            <div>Tidspunkt: {{ formatTime(data.selected_date) }}</div>
-        </div>
-        <div>Event for: {{ departmentName || "Alle" }}</div>
-
-        <CommentSection
-            v-if="data.comments"
-            :comments="data.comments"
-            :currentId="currentId"
-        />
-
-        <button v-if="!registered" @click="registerEvent()">Tilmeld</button>
-        <button v-else @click="cancelRegistration()">Afmeld</button>
-        <MapsView
-            v-if="data.place_lat && data.place_lng && data.place_id"
-            :placeLat="data.place_lat"
-            :placeLng="data.place_lng"
-            :placeId="data.place_id"
-        />
     </div>
 </template>

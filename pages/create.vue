@@ -20,8 +20,10 @@ const imagePath = ref("");
 const selectedDate = ref();
 const selectedTime = ref();
 const placeInfo = ref();
-const data = ref([]);
+const teams = ref([]);
+const categories = ref([]);
 const eventDepartment = ref(null);
+const categoryForEvent = ref("");
 
 // Format selectedDate to use UTC and add value from timepicker
 const newDateTime = () => {
@@ -82,6 +84,7 @@ const addEvent = async () => {
                 place_lat: placeInfo.value.placeLat,
                 place_lng: placeInfo.value.placeLng,
                 team_id: eventDepartment.value,
+                category_id: categoryForEvent.value,
             },
         ]);
         if (error) throw error;
@@ -102,14 +105,26 @@ const addEvent = async () => {
 // Get teams
 const getTeams = async () => {
     try {
-        const { data: teams, error } = await supabase.from("teams").select("*");
+        const { data, error } = await supabase.from("teams").select("*");
         if (error) throw error;
-        data.value = teams;
+        teams.value = data;
     } catch (error) {
         console.warn(error.message);
     }
 };
 getTeams();
+
+// Get categories
+const getCategories = async () => {
+    try {
+        const { data, error } = await supabase.from("categories").select("*");
+        if (error) throw error;
+        categories.value = data;
+    } catch (error) {
+        console.warn(error.message);
+    }
+};
+getCategories();
 </script>
 
 <template>
@@ -190,11 +205,27 @@ getTeams();
                     class="form-control p-2 text-gray-500 focus:outline-none"
                 >
                     <option
-                        v-for="team in data"
+                        v-for="team in teams"
                         :key="team.id"
                         :value="team.id"
                     >
                         {{ team.team_title }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="flex flex-col">
+                <label class="mb-1">Kategori</label>
+                <select
+                    v-model="categoryForEvent"
+                    class="form-control p-2 text-gray-500 focus:outline-none w-40"
+                >
+                    <option
+                        v-for="category in categories"
+                        :key="category.id"
+                        :value="category.id"
+                    >
+                        {{ category.name }}
                     </option>
                 </select>
             </div>

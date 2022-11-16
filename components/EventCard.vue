@@ -7,7 +7,6 @@ const supabase = useSupabaseClient();
 const { getData } = useEvent();
 const { dashify } = useDashify();
 const { formatDate } = useDateFormatter();
-// const selected = ref(["#SJOV", "#WEBINAR", "#KURSUS", "#SPORT"]);
 
 const activeIndex = ref(0);
 const filterValue = ref("#ALLE");

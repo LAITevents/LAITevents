@@ -95,23 +95,42 @@ getProfiles();
         <ul>
             <li v-for="comment in displayComments" :key="comment.id">
                 <div class="flex gap-4">
-                    <p>
-                        {{ comment.username }}
-                    </p>
+                    <div class="w-10 h-10">
+                        <ProfileAvatar
+                            :showUpload="false"
+                            v-model:path="comment.avatar_url"
+                        />
+                    </div>
+                    <div class="flex-row">
+                        <p class="text-lait-yellow text-xs">
+                            {{ comment.username }}
+                        </p>
 
-                    <p>{{ comment.content }}</p>
+                        <p>{{ comment.content }}</p>
+                    </div>
                 </div>
+
+                <hr
+                    class="my-5 text-center w-60 h-0.5 border-lait-grey opacity-30 mx-auto"
+                />
             </li>
         </ul>
 
-        <form @submit.prevent="sendComment">
-            <input
-                class="text-black"
-                type="text"
-                placeholder="Skriv din kommentar her"
-                v-model="commentFromUser"
-            />
-            <button type="submit">Send</button>
+        <form @submit.prevent="sendComment" class="flex flex-row">
+            <div class="relative w-full">
+                <input
+                    class="py-2 px-3 mb-2 w-full bg-[#87A3AA] text-white focus:outline-none placeholder-white flex-grow"
+                    type="text"
+                    placeholder="Skriv din kommentar her"
+                    v-model="commentFromUser"
+                />
+                <button
+                    class="text-white absolute right-4 bottom-3.5"
+                    type="submit"
+                >
+                    Send
+                </button>
+            </div>
         </form>
     </div>
 </template>
