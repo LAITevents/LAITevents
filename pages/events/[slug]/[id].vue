@@ -62,8 +62,8 @@ const getParticipants = async () => {
             .eq("event_id", currentId);
         if (error) throw error;
         participants.forEach(async (participant) => {
-            const userName = await getUsername(participant.user_id);
-            eventParticipants.value.push(userName);
+            const userDetails = await getUsername(participant.user_id);
+            eventParticipants.value.push(userDetails);
             if (participant.user_id === user.id) registered.value = true;
         });
     } catch (error) {
@@ -144,9 +144,15 @@ watch(registered, () => {
                             v-for="participant in eventParticipants"
                             :key="participant"
                         >
-                            <p class="bg-light-blue px-4 py-2">
-                                {{ participant }}
-                            </p>
+                            <div class="flex resize-image">
+                                <ProfileAvatar
+                                    :showUpload="false"
+                                    v-model:path="participant.avatar_url"
+                                />
+                                <p class="bg-light-blue px-4 py-2">
+                                    {{ participant.username }}
+                                </p>
+                            </div>
                         </template>
                     </div>
                 </div>

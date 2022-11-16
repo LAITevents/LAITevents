@@ -26,6 +26,11 @@
         transform: translateY(6rem);
     }
 
+    .resize-image div img {
+        height: 40px;
+        width: auto;
+    }
+
    .content-wrap {
         display: block;
         position: relative;
