@@ -19,15 +19,10 @@ export function useDateFormatter() {
             .replace(".", ":");
     };
 
-    const getDeadlineDate = (date) => {
-        const formattedDate = new Date(date - 1 * 24 * 60 * 60 * 1000);
-
-        return formattedDate.toLocaleString("Da-DK", {
-            day: "numeric",
-            weekday: "long",
-            month: "long",
-        });
+    const formatDeadlineDate = (date) => {
+        const newDate = new Date(date);
+        return newDate;
     };
 
-    return { formatDate, formatTime, getDeadlineDate };
+    return { formatDate, formatTime, formatDeadlineDate };
 }

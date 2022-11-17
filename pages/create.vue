@@ -4,6 +4,8 @@ definePageMeta({
 });
 
 import { ref } from "vue";
+import { useDateFormatter } from "@/composable/useDateFormatter";
+const { formatDeadlineDate } = useDateFormatter();
 
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
@@ -34,7 +36,6 @@ const newDateTime = () => {
     newDate.setUTCMinutes(selectedTime.value.minutes);
     return newDate;
 };
-
 // Generate filepath
 async function setCurrentFile(filePath, file) {
     src.value = URL.createObjectURL(file);
@@ -81,6 +82,7 @@ const addEvent = async () => {
                 userId: user.id,
                 img_url: imagePath.value,
                 selected_date: newDateTime(),
+                deadline_date: formatDeadlineDate(selectedDeadline.value),
                 place_id: placeInfo.value.placeId,
                 place_lat: placeInfo.value.placeLat,
                 place_lng: placeInfo.value.placeLng,

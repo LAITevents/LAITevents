@@ -2,10 +2,10 @@
 import { useUser } from "@/composable/useUser";
 import { useEvent } from "@/composable/useEvent";
 import { useRoute, useRouter } from "vue-router";
-const { formatDate, formatTime, getDeadlineDate } = useDateFormatter();
 
 import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
+const { formatDate, formatTime } = useDateFormatter();
 const { getDepartment } = useEvent();
 const { getUsername } = useUser();
 
@@ -144,7 +144,7 @@ watch(registered, () => {
                             v-for="participant in eventParticipants"
                             :key="participant"
                         >
-                            <div class="flex resize-image">
+                            <div class="flex resize-image mb-20">
                                 <ProfileAvatar
                                     :showUpload="false"
                                     v-model:path="participant.avatar_url"
@@ -163,7 +163,7 @@ watch(registered, () => {
                     <h3 class="text-center font-medium mb-4">
                         Sidste chance for tilmelding:
                         <span class="capitalize text-lait-yellow">{{
-                            getDeadlineDate(data.selected_date)
+                            formatDate(data.deadline_date)
                         }}</span>
                     </h3>
                     <div class="flex gap-2 capitalize">

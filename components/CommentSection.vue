@@ -49,14 +49,18 @@ const getProfile = async (user_id) => {
 // Send comment to database
 const sendComment = async (evt) => {
     evt.preventDefault();
-    try {
-        const content = commentFromUser.value;
-        await supabase
-            .from("comments")
-            .insert([{ content, user_id: user.id, event_id: props.currentId }]);
-        commentFromUser.value = "";
-    } catch (err) {
-        console.log(err);
+    if (commentFromUser.value.length > 0) {
+        try {
+            const content = commentFromUser.value;
+            await supabase
+                .from("comments")
+                .insert([
+                    { content, user_id: user.id, event_id: props.currentId },
+                ]);
+            commentFromUser.value = "";
+        } catch (err) {
+            console.log(err);
+        }
     }
 };
 
@@ -124,7 +128,7 @@ getProfiles();
                     v-model="commentFromUser"
                 />
                 <button
-                    class="text-white absolute right-4 bottom-3.5"
+                    class="text-white absolute right-4 bottom-2"
                     type="submit"
                 >
                     Send
