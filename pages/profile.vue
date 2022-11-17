@@ -78,7 +78,6 @@ const getEventsForProfile = async () => {
     dataLoaded.value = true;
 };
 
-const readyToDelete = ref(false);
 const deleteEvent = async (event_id) => {
     try {
         const { error } = await supabase
@@ -104,6 +103,10 @@ const deleteEvent = async (event_id) => {
 onMounted(() => {
     getEventsForProfile();
     getProfile();
+});
+
+watch(profileEvents, () => {
+    getEventsForProfile();
 });
 </script>
 
