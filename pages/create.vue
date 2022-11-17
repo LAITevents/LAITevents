@@ -150,7 +150,6 @@ getCategories();
 
             <div class="col-span-3 col-start-2">
                 <p class="">Upload billede</p>
-
                 <div>
                     <label for="single">
                         <div class="w-full h-auto">
@@ -188,7 +187,7 @@ getCategories();
                 </div>
             </div>
 
-            <div class="md:col-span-6 col-span-5">
+            <div class="col-start-2 col-span-12 md:col-span-6 lg:col-span-5">
                 <form @submit.prevent="addEvent">
                     <div class="flex flex-col">
                         <label for="event-name" class="mb-1">Titel</label>
@@ -202,7 +201,7 @@ getCategories();
                     </div>
 
                     <div
-                        class="flex md:flex-col lg:flex-row gap-4 lg:justify-between"
+                        class="flex flex-col gap-4 md:flex-col lg:flex-row lg:justify-between"
                     >
                         <div class="w-full">
                             <label class="mb-1">Vælg dato</label>
