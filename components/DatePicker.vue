@@ -15,6 +15,7 @@ const format = (selectedDate) => {
 
 <template>
     <Datepicker
+        class="custom-datepicker"
         v-model="selectedDate"
         :enableTimePicker="false"
         placeholder="Vælg dato"

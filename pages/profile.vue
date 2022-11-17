@@ -138,7 +138,7 @@ onMounted(() => {
                     <div class="flex flex-col">
                         <label for="username">Username</label>
                         <input
-                            class="py-2 px-3 mb-4 bg-light-blue text-white focus:outline-none"
+                            class="custom-input"
                             id="username"
                             type="text"
                             v-model="username"
@@ -147,7 +147,7 @@ onMounted(() => {
                     <div class="flex flex-col">
                         <label for="email">Email</label>
                         <input
-                            class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
+                            class="custom-input"
                             id="email"
                             type="text"
                             :value="user?.email"
@@ -157,17 +157,14 @@ onMounted(() => {
 
                     <div class="flex flex-col">
                         <label for="department">Team</label>
-                        <input
-                            class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
-                            type="text"
-                        />
+                        <input class="custom-input" type="text" />
                     </div>
 
                     <div class="text-right">
                         <input
                             type="submit"
                             @click="updateProfile"
-                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base mt-2"
+                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
                             :value="loading ? 'Loading ...' : 'Opdater profil'"
                             :disabled="loading"
                         />

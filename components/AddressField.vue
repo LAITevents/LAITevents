@@ -53,7 +53,7 @@ onUnmounted(() => {
     <div>
         <input
             type="search"
-            class="form-control p-2 text-gray-500 focus:outline-none w-3/5"
+            class="custom-input w-full"
             placeholder="Søg efter en adresse.."
             aria-label="Search"
             ref="addressInput"
