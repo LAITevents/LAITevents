@@ -144,12 +144,16 @@ getCategories();
         </div>
 
         <div class="grid grid-cols-12 gap-5">
-            <h1 class="text-3xl font-medium col-start-2 col-span-3">
+            <h1
+                class="text-3xl font-medium lg:col-start-2 col-span-10 lg:col-span-3"
+            >
                 Opret event
             </h1>
 
-            <div class="col-span-3 col-start-2">
-                <p class="">Upload billede</p>
+            <div
+                class="col-span-11 md:col-span-5 lg:col-span-3 md:col-start-2 lg:col-start-2"
+            >
+                <p>Upload billede</p>
                 <div>
                     <label for="single">
                         <div class="w-full h-auto">
@@ -176,18 +180,20 @@ getCategories();
                             </svg>
                         </div>
                     </label>
-                    <input
-                        class="file:bg-lait-blue file:text-lait-yellow file:font-bold file:text file:border-none"
-                        type="file"
-                        id="single"
-                        accept="image/*"
-                        @change="uploadImage"
-                        :disabled="uploading"
-                    />
+                    <div>
+                        <input
+                            class="file:bg-lait-blue file:text-lait-yellow file:font-bold file:text file:border-none"
+                            type="file"
+                            id="single"
+                            accept="image/*"
+                            @change="uploadImage"
+                            :disabled="uploading"
+                        />
+                    </div>
                 </div>
             </div>
 
-            <div class="col-start-2 col-span-12 md:col-span-6 lg:col-span-5">
+            <div class="col-span-12 md:col-span-6 lg:col-span-5">
                 <form @submit.prevent="addEvent">
                     <div class="flex flex-col">
                         <label for="event-name" class="mb-1">Titel</label>
@@ -217,8 +223,10 @@ getCategories();
                         </div>
                     </div>
 
-                    <div class="flex flex-row gap-4 justify-between mt-4">
-                        <div class="w-full flex flex-col">
+                    <div
+                        class="flex flex-col lg:gap-4 md:flex-col lg:flex-row mt-4"
+                    >
+                        <div class="flex flex-col w-full">
                             <label class="mb-1">Kategori</label>
                             <select
                                 v-model="categoryForEvent"
@@ -234,7 +242,7 @@ getCategories();
                                 </option>
                             </select>
                         </div>
-                        <div class="w-full flex flex-col">
+                        <div class="flex flex-col w-full">
                             <label class="mb-1">Afdeling</label>
                             <select
                                 v-model="eventDepartment"
@@ -271,7 +279,7 @@ getCategories();
 
                     <div class="flex justify-end">
                         <button
-                            class="uppercase cursor-pointer text-lait-yellow font-bold text-base"
+                            class="uppercase cursor-pointer mb-10 text-lait-yellow font-bold text-base"
                             type="submit"
                         >
                             opret event

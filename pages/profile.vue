@@ -123,11 +123,13 @@ watch(profileEvents, () => {
                 </p>
                 <p class="text-red-500">{{ errorMsg }}</p>
             </div> -->
-            <h2 class="text-3xl font-medium col-start-2 col-span-3">
+            <h2
+                class="text-3xl font-medium col-span-8 lg:col-start-2 lg:col-span-10"
+            >
                 Din profil
             </h2>
 
-            <div class="col-span-3 col-start-2">
+            <div class="col-span-8 lg:col-span-3 lg:col-start-2">
                 <p class="">Upload / skift billede</p>
                 <ProfileAvatar
                     v-model:path="avatar_path"
@@ -136,7 +138,7 @@ watch(profileEvents, () => {
                 />
             </div>
 
-            <div class="col-span-5">
+            <div class="col-span-12 lg:col-span-5">
                 <form>
                     <div class="flex flex-col">
                         <label for="username">Username</label>
@@ -175,11 +177,13 @@ watch(profileEvents, () => {
                 </form>
             </div>
 
-            <h2 class="text-3xl font-medium pt-10 col-start-2 col-span-8">
+            <h2
+                class="text-3xl font-medium pt-10 col-span-12 lg:col-span-8 lg:col-start-2"
+            >
                 Mine events
             </h2>
 
-            <div class="col-start-2 col-span-2">
+            <div class="lg:col-span-12 col-span-10 lg:col-start-2">
                 <ul>
                     <li v-for="event in profileEvents" :key="event.id">
                         <div class="flex gap-5">
@@ -203,7 +207,7 @@ watch(profileEvents, () => {
             </div>
 
             <h2
-                class="text-3xl font-medium pt-10 col-start-2 col-span-8 text-lait-yellow"
+                class="lg:col-start-2 text-3xl font-medium pt-10 col-span-12 text-lait-yellow"
             >
                 Tidligere events
             </h2>
