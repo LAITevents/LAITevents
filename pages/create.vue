@@ -11,14 +11,14 @@ const supabase = useSupabaseClient();
 const user = supabase.auth.user();
 const statusMsg = ref(null);
 const errorMsg = ref(null);
-const eventTitle = ref("");
-const eventDescription = ref("");
 
 const uploading = ref(false);
 const files = ref();
 const src = ref("");
 const imagePath = ref("");
 
+const eventTitle = ref("");
+const eventDescription = ref("");
 const selectedDate = ref();
 const selectedTime = ref();
 const selectedDeadline = ref();

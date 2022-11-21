@@ -106,8 +106,6 @@ const cancelRegistration = async () => {
     }
 };
 
-// Function that returns deadline for signup
-
 watch(registered, () => {
     getParticipants();
 });
