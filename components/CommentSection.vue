@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import IComments from "@/interfaces/comments";
-import { useUser } from "~/composable/useUser";
 
 const props = defineProps({
     comments: { type: Object as () => IComments[], default: [] },
@@ -50,14 +49,18 @@ const getProfile = async (user_id) => {
 // Send comment to database
 const sendComment = async (evt) => {
     evt.preventDefault();
-    try {
-        const content = commentFromUser.value;
-        await supabase
-            .from("comments")
-            .insert([{ content, user_id: user.id, event_id: props.currentId }]);
-        commentFromUser.value = "";
-    } catch (err) {
-        console.log(err);
+    if (commentFromUser.value.length > 0) {
+        try {
+            const content = commentFromUser.value;
+            await supabase
+                .from("comments")
+                .insert([
+                    { content, user_id: user.id, event_id: props.currentId },
+                ]);
+            commentFromUser.value = "";
+        } catch (err) {
+            console.log(err);
+        }
     }
 };
 
@@ -95,7 +98,7 @@ getProfiles();
         <ul>
             <li v-for="comment in displayComments" :key="comment.id">
                 <div class="flex gap-4">
-                    <div class="w-10 h-10">
+                    <div class="w-10 min-w-[40px] h-10">
                         <ProfileAvatar
                             :showUpload="false"
                             v-model:path="comment.avatar_url"
@@ -119,13 +122,13 @@ getProfiles();
         <form @submit.prevent="sendComment" class="flex flex-row">
             <div class="relative w-full">
                 <input
-                    class="py-2 px-3 mb-2 w-full bg-[#87A3AA] text-white focus:outline-none placeholder-white flex-grow"
+                    class="py-2 px-3 w-full bg-[#87A3AA] text-white focus:outline-none placeholder-white flex-grow"
                     type="text"
                     placeholder="Skriv din kommentar her"
                     v-model="commentFromUser"
                 />
                 <button
-                    class="text-white absolute right-4 bottom-3.5"
+                    class="text-white absolute right-4 bottom-2"
                     type="submit"
                 >
                     Send

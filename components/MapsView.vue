@@ -78,6 +78,9 @@ onMounted(() => {
 </script>
 
 <template>
-    <p>{{ placeTitel }}</p>
+    <div class="flex gap-2 mb-8">
+        <nuxt-icon class="text-xl" name="EventLocation" />
+        <p>{{ placeTitel }}</p>
+    </div>
     <div ref="mapDiv" class="h-96"></div>
 </template>

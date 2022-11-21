@@ -7,11 +7,11 @@ definePageMeta({
 });
 const { getUsername } = useUser();
 const user = useSupabaseUser();
-const username = ref("");
+const userDetails = ref("");
 
 const getDisplayUsername = async () => {
     await getUsername(user?.value.id).then((result) => {
-        username.value = result;
+        userDetails.value = result;
     });
 };
 
@@ -25,7 +25,7 @@ onMounted(() => {
         <div class="text-2xl font-medium">
             <p>
                 Hello
-                <span class="text-lait-yellow">{{ username }}</span>
+                <span class="text-lait-yellow">{{ userDetails.username }}</span>
             </p>
         </div>
 

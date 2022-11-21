@@ -18,5 +18,11 @@ export function useDateFormatter() {
             })
             .replace(".", ":");
     };
-    return { formatDate, formatTime };
+
+    const formatDeadlineDate = (date) => {
+        const newDate = new Date(date);
+        return newDate;
+    };
+
+    return { formatDate, formatTime, formatDeadlineDate };
 }

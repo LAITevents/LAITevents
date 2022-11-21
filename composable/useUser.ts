@@ -4,9 +4,9 @@ export function useUser() {
     const getUsername = async (userId) => {
         const { data: profile } = await supabase
             .from("profiles")
-            .select("username")
+            .select("username, avatar_url")
             .eq("id", userId);
-        return profile[0].username;
+        return profile[0];
     };
 
     return { getUsername };

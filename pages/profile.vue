@@ -78,7 +78,6 @@ const getEventsForProfile = async () => {
     dataLoaded.value = true;
 };
 
-const readyToDelete = ref(false);
 const deleteEvent = async (event_id) => {
     try {
         const { error } = await supabase
@@ -105,6 +104,10 @@ onMounted(() => {
     getEventsForProfile();
     getProfile();
 });
+
+watch(profileEvents, () => {
+    getEventsForProfile();
+});
 </script>
 
 <template>
@@ -120,11 +123,13 @@ onMounted(() => {
                 </p>
                 <p class="text-red-500">{{ errorMsg }}</p>
             </div> -->
-            <h2 class="text-3xl font-medium col-start-2 col-span-3">
+            <h2
+                class="text-3xl font-medium col-span-8 lg:col-start-2 lg:col-span-10"
+            >
                 Din profil
             </h2>
 
-            <div class="col-span-3 col-start-2">
+            <div class="col-span-8 lg:col-span-3 lg:col-start-2">
                 <p class="">Upload / skift billede</p>
                 <ProfileAvatar
                     v-model:path="avatar_path"
@@ -133,12 +138,12 @@ onMounted(() => {
                 />
             </div>
 
-            <div class="col-span-5">
+            <div class="col-span-12 lg:col-span-5">
                 <form>
                     <div class="flex flex-col">
                         <label for="username">Username</label>
                         <input
-                            class="py-2 px-3 mb-4 bg-light-blue text-white focus:outline-none"
+                            class="custom-input"
                             id="username"
                             type="text"
                             v-model="username"
@@ -147,7 +152,7 @@ onMounted(() => {
                     <div class="flex flex-col">
                         <label for="email">Email</label>
                         <input
-                            class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
+                            class="custom-input"
                             id="email"
                             type="text"
                             :value="user?.email"
@@ -157,17 +162,14 @@ onMounted(() => {
 
                     <div class="flex flex-col">
                         <label for="department">Team</label>
-                        <input
-                            class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
-                            type="text"
-                        />
+                        <input class="custom-input" type="text" />
                     </div>
 
                     <div class="text-right">
                         <input
                             type="submit"
                             @click="updateProfile"
-                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base mt-2"
+                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
                             :value="loading ? 'Loading ...' : 'Opdater profil'"
                             :disabled="loading"
                         />
@@ -175,11 +177,13 @@ onMounted(() => {
                 </form>
             </div>
 
-            <h2 class="text-3xl font-medium pt-10 col-start-2 col-span-8">
+            <h2
+                class="text-3xl font-medium pt-10 col-span-12 lg:col-span-8 lg:col-start-2"
+            >
                 Mine events
             </h2>
 
-            <div class="col-start-2 col-span-2">
+            <div class="lg:col-span-12 col-span-10 lg:col-start-2">
                 <ul>
                     <li v-for="event in profileEvents" :key="event.id">
                         <div class="flex gap-5">
@@ -203,7 +207,7 @@ onMounted(() => {
             </div>
 
             <h2
-                class="text-3xl font-medium pt-10 col-start-2 col-span-8 text-lait-yellow"
+                class="lg:col-start-2 text-3xl font-medium pt-10 col-span-12 text-lait-yellow"
             >
                 Tidligere events
             </h2>

@@ -11,6 +11,7 @@ const selectedTime = ref({
 
 <template>
     <Datepicker
+        class="custom-datepicker"
         v-model="selectedTime"
         timePicker
         hideInputIcon

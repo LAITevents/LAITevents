@@ -4,6 +4,8 @@ definePageMeta({
 });
 
 import { ref } from "vue";
+import { useDateFormatter } from "@/composable/useDateFormatter";
+const { formatDeadlineDate } = useDateFormatter();
 
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
@@ -19,6 +21,7 @@ const imagePath = ref("");
 
 const selectedDate = ref();
 const selectedTime = ref();
+const selectedDeadline = ref();
 const placeInfo = ref();
 const teams = ref([]);
 const categories = ref([]);
@@ -33,7 +36,6 @@ const newDateTime = () => {
     newDate.setUTCMinutes(selectedTime.value.minutes);
     return newDate;
 };
-
 // Generate filepath
 async function setCurrentFile(filePath, file) {
     src.value = URL.createObjectURL(file);
@@ -80,6 +82,7 @@ const addEvent = async () => {
                 userId: user.id,
                 img_url: imagePath.value,
                 selected_date: newDateTime(),
+                deadline_date: formatDeadlineDate(selectedDeadline.value),
                 place_id: placeInfo.value.placeId,
                 place_lat: placeInfo.value.placeLat,
                 place_lng: placeInfo.value.placeLng,
@@ -128,7 +131,7 @@ getCategories();
 </script>
 
 <template>
-    <div class="mx-auto mt-8 p-8 flex flex-col rounded-md shadow-lg container">
+    <div>
         <!-- Status Message -->
         <div
             v-if="statusMsg || errorMsg"
@@ -139,103 +142,151 @@ getCategories();
             </p>
             <p class="text-red-500">{{ errorMsg }}</p>
         </div>
-        <h1 class="text-2xl">Opret event</h1>
 
-        <form @submit.prevent="addEvent" class="flex flex-col gap-y-5 w-full">
-            <div>
-                <img
-                    v-if="src"
-                    :src="src"
-                    class="w-40 h-auto object-fill rounded"
-                />
-
-                <div style="width: 10em; position: relative">
-                    <label class="block button primary" for="single">
-                        {{ uploading ? "Uploading ..." : "Upload" }}
-                    </label>
-                    <input
-                        style=""
-                        type="file"
-                        id="single"
-                        accept="image/*"
-                        @change="uploadImage"
-                        :disabled="uploading"
-                    />
-                </div>
-            </div>
-
-            <div class="flex flex-col">
-                <label for="event-name" class="mb-1">Titel</label>
-                <input
-                    type="text"
-                    required
-                    class="form-control p-2 text-gray-500 focus:outline-none"
-                    id="event-name"
-                    v-model="eventTitle"
-                />
-            </div>
-
-            <div class="flex flex-col">
-                <label for="event-description" class="mb-1">Beskrivelse</label>
-
-                <input
-                    type="text"
-                    required
-                    class="form-control p-2 text-gray-500 focus:outline-none"
-                    id="event-description"
-                    v-model="eventDescription"
-                />
-            </div>
-            <div class="flex flex-row gap-4">
-                <div>
-                    <label class="mb-1">Vælg dato</label>
-                    <DatePicker v-model="selectedDate" />
-                </div>
-                <div>
-                    <label class="mb-1">Vælg tidspunkt</label>
-                    <TimePicker v-model="selectedTime" />
-                </div>
-            </div>
-
-            <AddressField ref="placeInfo" />
-
-            <div class="">
-                <select
-                    v-model="eventDepartment"
-                    class="form-control p-2 text-gray-500 focus:outline-none"
-                >
-                    <option
-                        v-for="team in teams"
-                        :key="team.id"
-                        :value="team.id"
-                    >
-                        {{ team.team_title }}
-                    </option>
-                </select>
-            </div>
-
-            <div class="flex flex-col">
-                <label class="mb-1">Kategori</label>
-                <select
-                    v-model="categoryForEvent"
-                    class="form-control p-2 text-gray-500 focus:outline-none w-40"
-                >
-                    <option
-                        v-for="category in categories"
-                        :key="category.id"
-                        :value="category.id"
-                    >
-                        {{ category.name }}
-                    </option>
-                </select>
-            </div>
-
-            <button
-                type="submit"
-                class="p-2 font-medium bg-blue-500 hover:bg-blue-700 rounded"
+        <div class="grid grid-cols-12 gap-5">
+            <h1
+                class="text-3xl font-medium lg:col-start-2 col-span-10 lg:col-span-3"
             >
-                Opret Event
-            </button>
-        </form>
+                Opret event
+            </h1>
+
+            <div
+                class="col-span-11 md:col-span-5 lg:col-span-3 md:col-start-2 lg:col-start-2"
+            >
+                <p>Upload billede</p>
+                <div>
+                    <label for="single">
+                        <div class="w-full h-auto">
+                            <img v-if="src" :src="src" class="object-fill" />
+                            <svg
+                                v-else
+                                viewBox="0 0 310 300"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <rect
+                                    x="2.5"
+                                    y="2.5"
+                                    width="304.926"
+                                    height="295"
+                                    stroke="#4C757F"
+                                    stroke-width="3"
+                                    stroke-dasharray="10 10"
+                                />
+                                <path
+                                    d="M216.176 159.151V186.874C216.176 194.435 209.905 200.735 202.378 200.735H107.548C100.022 200.735 93.75 194.435 93.75 186.874V159.151C93.75 157.135 95.5061 155.371 97.5131 155.371C99.5201 155.371 101.276 157.135 101.276 159.151V186.874C101.276 190.402 104.036 193.174 107.548 193.174H202.378C205.891 193.174 208.65 190.402 208.65 186.874V159.151C208.65 157.135 210.406 155.371 212.413 155.371C214.42 155.371 216.176 156.883 216.176 159.151ZM162.24 101.186C160.233 99.1697 157.473 98.1616 154.965 98.1616C152.456 98.1616 149.696 99.1697 147.689 101.186L130.128 118.828C128.623 120.34 128.623 122.608 130.128 124.12C131.633 125.632 133.891 125.632 135.397 124.12L151.202 108.243V169.99C151.202 172.006 152.958 173.77 154.965 173.77C156.972 173.77 158.728 172.006 158.728 169.99V108.496L174.533 124.373C176.038 125.886 178.296 125.886 179.801 124.373C181.306 122.861 181.306 120.593 179.801 119.081L162.24 101.186Z"
+                                    fill="#D9D9D9"
+                                />
+                            </svg>
+                        </div>
+                    </label>
+                    <div>
+                        <input
+                            class="file:bg-lait-blue file:text-lait-yellow file:font-bold file:text file:border-none"
+                            type="file"
+                            id="single"
+                            accept="image/*"
+                            @change="uploadImage"
+                            :disabled="uploading"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 md:col-span-6 lg:col-span-5">
+                <form @submit.prevent="addEvent">
+                    <div class="flex flex-col">
+                        <label for="event-name" class="mb-1">Titel</label>
+                        <input
+                            type="text"
+                            required
+                            class="custom-input"
+                            id="event-name"
+                            v-model="eventTitle"
+                        />
+                    </div>
+
+                    <div
+                        class="flex flex-col gap-4 md:flex-col lg:flex-row lg:justify-between"
+                    >
+                        <div class="w-full">
+                            <label class="mb-1">Vælg dato</label>
+                            <DatePicker v-model="selectedDate" />
+                        </div>
+                        <div class="w-full">
+                            <label class="mb-1">Vælg tidspunkt</label>
+                            <TimePicker v-model="selectedTime" />
+                        </div>
+                        <div class="w-full">
+                            <label class="mb-1">Deadline for tilmelding</label>
+                            <DatePicker v-model="selectedDeadline" />
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex flex-col lg:gap-4 md:flex-col lg:flex-row mt-4"
+                    >
+                        <div class="flex flex-col w-full">
+                            <label class="mb-1">Kategori</label>
+                            <select
+                                v-model="categoryForEvent"
+                                class="custom-select"
+                                required
+                            >
+                                <option
+                                    v-for="category in categories"
+                                    :key="category.id"
+                                    :value="category.id"
+                                >
+                                    {{ category.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <label class="mb-1">Afdeling</label>
+                            <select
+                                v-model="eventDepartment"
+                                class="custom-select"
+                            >
+                                <option
+                                    v-for="team in teams"
+                                    :key="team.id"
+                                    :value="team.id"
+                                >
+                                    {{ team.team_title }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <label class="mb-1">Lokation</label>
+                        <AddressField ref="placeInfo" />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="event-description" class="mb-1"
+                            >Beskrivelse</label
+                        >
+                        <textarea
+                            type="text"
+                            required
+                            class="custom-input h-32"
+                            id="event-description"
+                            v-model="eventDescription"
+                        />
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button
+                            class="uppercase cursor-pointer mb-10 text-lait-yellow font-bold text-base"
+                            type="submit"
+                        >
+                            opret event
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </template>

@@ -52,7 +52,7 @@ const filteredEvents = computed(() => {
     <div>
         <div>
             <ul
-                class="flex flex-end space-x-6 space-y-2 flex-wrap lg:justify-end items-end text-lait-yellow font-bold"
+                class="flex flex-end space-x-4 lg:space-x-6 space-y-2 mt-4 flex-wrap lg:justify-end items-end text-lait-yellow font-bold"
             >
                 <li
                     v-for="(hashtag, index) in hashtags"
@@ -60,20 +60,21 @@ const filteredEvents = computed(() => {
                     @click="[setFilter(hashtag.name), setActive(index)]"
                 >
                     <span
-                        class="cursor-pointer"
+                        class="cursor-pointer text-xs lg:text-base"
                         :class="{ 'line-through': activeIndex === index }"
                     >
                         {{ hashtag.name }}
                     </span>
+
                     <span
-                        class="absolute w-full text-[10px] font-regular top-44 ml-0.5"
+                        class="absolute text-[10px] font-medium top-[150px] lg:top-48 ml-0.5"
                         >{{ hashtag.count }}</span
                     >
                 </li>
             </ul>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4">
             <NuxtLink
                 v-for="(event, index) in filteredEvents"
                 :key="index + 1"
