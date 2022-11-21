@@ -1,21 +1,34 @@
 <script setup lang="ts">
-import { useDashify } from "@/composable/dashify";
 import { ref } from "vue";
+import { useUser } from "@/composable/useUser";
+
 definePageMeta({
-	middleware: "auth",
+    middleware: "auth",
 });
+const { getUsername } = useUser();
 const user = useSupabaseUser();
+const userDetails = ref("");
+
+const getDisplayUsername = async () => {
+    await getUsername(user?.value.id).then((result) => {
+        userDetails.value = result;
+    });
+};
+
+onMounted(() => {
+    getDisplayUsername();
+});
 </script>
 
 <template>
-	<div>
-		<p class="text-2xl">
-			Hello
-			<span class="text-lait-yellow text-2xl">{{
-				user?.user_metadata.user_name || user?.email
-			}}</span>
-		</p>
+    <div>
+        <div class="text-2xl font-medium">
+            <p>
+                Hello
+                <span class="text-lait-yellow">{{ userDetails.username }}</span>
+            </p>
+        </div>
 
-		<EventCard />
-	</div>
+        <EventCard />
+    </div>
 </template>

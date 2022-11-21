@@ -3,15 +3,21 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "start": "nuxt start",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
     "@nuxtjs/supabase": "^0.1.25",
-    "@nuxtjs/tailwindcss": "^5.3.3",
-    "autoprefixer": "^10.4.10",
-    "nuxt": "3.0.0-rc.9",
-    "postcss": "^8.4.16"
+    "@nuxtjs/tailwindcss": "^5.3.5",
+    "@types/google.maps": "^3.50.4",
+    "nuxt": "3.0.0-rc.11"
+  },
+  "dependencies": {
+    "@types/googlemaps": "^3.43.3",
+    "@vuepic/vue-datepicker": "^3.5.2",
+    "nuxt-icons": "^2.0.2",
+    "uuid": "^9.0.0"
   }
 }
