@@ -129,7 +129,7 @@ watch(profileEvents, () => {
             <h2
                 class="text-3xl font-medium col-span-8 lg:col-start-2 lg:col-span-10"
             >
-                Din bruger
+                Din profil
             </h2>
 
             <div class="col-span-8 lg:col-span-3 lg:col-start-2">
@@ -181,7 +181,7 @@ watch(profileEvents, () => {
                             type="submit"
                             @click="updateProfile"
                             class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
-                            :value="loading ? 'Loading ...' : 'Opdater bruger'"
+                            :value="loading ? 'Loading ...' : 'Opdater profil'"
                             :disabled="loading"
                         />
                     </div>

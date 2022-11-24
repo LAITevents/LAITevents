@@ -106,7 +106,7 @@ watchEffect(() => {
                     type="submit"
                     class="pt-8 font-medium rounded uppercase"
                 >
-                    <span v-if="isSignUp"> Opret bruger </span>
+                    <span v-if="isSignUp"> Opret profil </span>
                     <span class="uppercase" v-else> Log in </span>
                 </button>
                 <div
@@ -117,7 +117,7 @@ watchEffect(() => {
                         class="my-2 text-center w-60 h-0.5 border-light-blue bg-light-blue mx-auto"
                     />
                     <span v-if="isSignUp"> Klik her for at logge ind </span>
-                    <span v-else> Eller opret bruger </span>
+                    <span v-else> Eller opret profil </span>
                 </div>
             </form>
         </div>
