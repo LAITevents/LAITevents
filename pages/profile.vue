@@ -8,6 +8,8 @@ const { dashify } = useDashify();
 
 const supabase = useSupabaseClient();
 const username = ref("");
+const password = ref("");
+const repeatedPassword = ref("");
 const email = ref("");
 const avatar_path = ref("");
 const loading = ref(true);
@@ -64,15 +66,6 @@ const updateProfile = async () => {
     }
 };
 
-// const getUserDepartment = async () => {
-//     const { data: teams, error } = await supabase
-//         .from("user_teams")
-//         .select("team_id")
-//         .eq("user_id", user?.value.id);
-//     if (error) throw error;
-// };
-// getUserDepartment();
-
 const getEventsForProfile = async () => {
     profileEvents.value = await getEventsForUser(user.value.id);
     dataLoaded.value = true;
@@ -82,6 +75,16 @@ const deleteEvent = async (event_id) => {
     try {
         const { error } = await supabase
             .from("event_participants")
+            .delete()
+            .eq("event_id", event_id);
+        if (error) throw error;
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        const { error } = await supabase
+            .from("comments")
             .delete()
             .eq("event_id", event_id);
         if (error) throw error;
@@ -114,7 +117,7 @@ watch(profileEvents, () => {
     <div>
         <div class="grid grid-cols-12 gap-5">
             <!-- Status Message -->
-            <!-- <div
+            <div
                 v-if="statusMsg || errorMsg"
                 class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
             >
@@ -122,11 +125,11 @@ watch(profileEvents, () => {
                     {{ statusMsg }}
                 </p>
                 <p class="text-red-500">{{ errorMsg }}</p>
-            </div> -->
+            </div>
             <h2
                 class="text-3xl font-medium col-span-8 lg:col-start-2 lg:col-span-10"
             >
-                Din profil
+                Din bruger
             </h2>
 
             <div class="col-span-8 lg:col-span-3 lg:col-start-2">
@@ -138,21 +141,19 @@ watch(profileEvents, () => {
                 />
             </div>
 
-            <div class="col-span-12 lg:col-span-5">
-                <form>
-                    <div class="flex flex-col">
-                        <label for="username">Username</label>
+            <div class="flex flex-col lg:my-6 col-span-12 lg:col-span-5">
+                <form class="">
+                    <div class="">
                         <input
-                            class="custom-input"
+                            class="custom-input w-full"
                             id="username"
                             type="text"
                             v-model="username"
                         />
                     </div>
-                    <div class="flex flex-col">
-                        <label for="email">Email</label>
+                    <div class="">
                         <input
-                            class="custom-input"
+                            class="custom-input w-full"
                             id="email"
                             type="text"
                             :value="user?.email"
@@ -160,9 +161,19 @@ watch(profileEvents, () => {
                         />
                     </div>
 
-                    <div class="flex flex-col">
-                        <label for="department">Team</label>
-                        <input class="custom-input" type="text" />
+                    <div class="flex gap-5 justify-between">
+                        <input
+                            class="custom-input w-full placeholder:text-lait-grey"
+                            type="password"
+                            placeholder="Skift adgangskode"
+                            v-model="password"
+                        />
+                        <input
+                            class="custom-input w-full"
+                            type="password"
+                            placeholder="Gentag adgangskode"
+                            v-model="repeatedPassword"
+                        />
                     </div>
 
                     <div class="text-right">
@@ -170,7 +181,7 @@ watch(profileEvents, () => {
                             type="submit"
                             @click="updateProfile"
                             class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
-                            :value="loading ? 'Loading ...' : 'Opdater profil'"
+                            :value="loading ? 'Loading ...' : 'Opdater bruger'"
                             :disabled="loading"
                         />
                     </div>

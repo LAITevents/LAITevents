@@ -24,7 +24,7 @@ onMounted(() => {
     <div>
         <div class="text-2xl font-medium">
             <p>
-                Hello
+                Hej
                 <span class="text-lait-yellow">{{ userDetails.username }}</span>
             </p>
         </div>
