@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useDashify } from "@/composable/dashify";
 import { ref } from "vue";
-import { useDateFormatter } from "~/composable/useDateFormatter";
+import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useEvent } from "@/composable/useEvent";
 const supabase = useSupabaseClient();
 const { getData } = useEvent();

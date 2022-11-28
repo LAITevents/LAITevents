@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useEvent } from "@/composable/useEvent";
-import { useDashify } from "~~/composable/dashify";
+import { useDashify } from "@/composable/dashify";
 const { getEventsForUser } = useEvent();
-const { getDepartment } = useEvent();
 const { dashify } = useDashify();
 
 const supabase = useSupabaseClient();
+const user = useSupabaseUser();
 const username = ref("");
 const password = ref("");
 const repeatedPassword = ref("");
 const email = ref("");
 const avatar_path = ref("");
-const loading = ref(true);
-const user = useSupabaseUser();
+const profileEvents = ref([]);
+
+const dataLoaded = ref(false);
 const errorMsg = ref(null);
 const statusMsg = ref(null);
-const profileEvents = ref({});
-const dataLoaded = ref(false);
+const loading = ref(true);
 
 definePageMeta({
     middleware: "auth",
@@ -108,7 +108,7 @@ onMounted(() => {
     getProfile();
 });
 
-watch(profileEvents, () => {
+watch(profileEvents.value, () => {
     getEventsForProfile();
 });
 </script>

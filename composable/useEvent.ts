@@ -6,7 +6,6 @@ export function useEvent() {
             const { data: eventData, error } = await supabase
                 .from("events")
                 .select("*, category_id(*)");
-
             if (error) throw error;
             return eventData;
         } catch (error) {
