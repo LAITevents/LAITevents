@@ -9,8 +9,8 @@ const { formatDeadlineDate } = useDateFormatter();
 
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
-const statusMsg = ref(null);
-const errorMsg = ref(null);
+const statusMsg = ref("");
+const errorMsg = ref("");
 
 const uploading = ref(false);
 const files = ref();
@@ -95,12 +95,12 @@ const addEvent = async () => {
         eventTitle.value = null;
         eventDescription.value = null;
         setTimeout(() => {
-            statusMsg.value = false;
+            statusMsg.value = "";
         }, 5000);
     } catch (error) {
         errorMsg.value = `Error: ${error.message}`;
         setTimeout(() => {
-            errorMsg.value = false;
+            errorMsg.value = "";
         }, 5000);
     }
 };
@@ -132,16 +132,7 @@ getCategories();
 
 <template>
     <div>
-        <!-- Status Message -->
-        <div
-            v-if="statusMsg || errorMsg"
-            class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
-        >
-            <p class="">
-                {{ statusMsg }}
-            </p>
-            <p class="text-red-500">{{ errorMsg }}</p>
-        </div>
+        <ErrorMessage :statusMsg="statusMsg" :errorMsg="errorMsg" />
 
         <div class="grid grid-cols-12 gap-5">
             <h1

@@ -8,8 +8,8 @@ const repeatedPassword = ref("");
 const username = ref("");
 const department = ref(null);
 const isSignUp = ref(false);
-const errorMsg = ref(null);
-const statusMsg = ref(null);
+const errorMsg = ref("");
+const statusMsg = ref("");
 const user = useSupabaseUser();
 const router = useRouter();
 
@@ -23,7 +23,7 @@ const handleLogin = async () => {
     } catch (error) {
         errorMsg.value = "Dine login oplysninger er ikke korrekte, prøv igen";
         setTimeout(() => {
-            errorMsg.value = false;
+            errorMsg.value = "";
         }, 5000);
     }
 };
@@ -51,13 +51,13 @@ const signUp = async () => {
         } catch (error) {
             errorMsg.value = error.message;
             setTimeout(() => {
-                errorMsg.value = false;
+                errorMsg.value = "";
             }, 5000);
         }
     } else {
         errorMsg.value = "Adgangskode er ikke ens";
         setTimeout(() => {
-            errorMsg.value = false;
+            errorMsg.value = "";
         }, 10000);
     }
 };
@@ -72,17 +72,8 @@ watchEffect(() => {
 <template>
     <div class="flex flex-col items-center justify-center h-screen">
         <div>
-            <div
-                v-if="statusMsg || errorMsg"
-                class="absolute text-center left-0 right-0 -translate-y-20 mb-5 p-4 bg-light-grey"
-            >
-                <p>
-                    {{ statusMsg }}
-                </p>
-                <p class="text-lait-yellow text-center">
-                    <span class="font-bold">Fejl: </span>{{ errorMsg }}
-                </p>
-            </div>
+            <ErrorMessage :statusMsg="statusMsg" :errorMsg="errorMsg" />
+
             <router-link to="/" class="relative">
                 <svg
                     class="w-28 h-14 mx-auto"
