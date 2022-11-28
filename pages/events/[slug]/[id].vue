@@ -123,7 +123,7 @@ watch(registered, () => {
                     </p>
                     <img
                         :src="data.img_url"
-                        class="lg:w-full h-auto object-cover"
+                        class="lg:w-full h-[350px] object-cover"
                     />
                     <h1 class="font-medium text-2xl mt-4 mb-3">
                         {{ data.title }}
