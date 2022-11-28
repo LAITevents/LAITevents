@@ -8,6 +8,8 @@ const repeatedPassword = ref("");
 const username = ref("");
 const department = ref(null);
 const isSignUp = ref(false);
+const errorMsg = ref("");
+const statusMsg = ref("");
 const user = useSupabaseUser();
 const router = useRouter();
 
@@ -18,24 +20,46 @@ const handleLogin = async () => {
             password: password.value,
         });
         if (error) throw error;
-    } catch (error) {}
+    } catch (error) {
+        errorMsg.value = "Dine login oplysninger er ikke korrekte, prøv igen";
+        setTimeout(() => {
+            errorMsg.value = "";
+        }, 5000);
+    }
 };
 
 const signUp = async () => {
-    const { user, error } = await supabase.auth.signUp(
-        {
-            email: email.value,
-            password: password.value,
-        },
-        {
-            data: {
-                email: email.value,
-                user_name: username.value,
-            },
+    if (password.value === repeatedPassword.value) {
+        try {
+            const { user, error } = await supabase.auth.signUp(
+                {
+                    email: email.value,
+                    password: password.value,
+                },
+                {
+                    data: {
+                        email: email.value,
+                        user_name: username.value,
+                    },
+                }
+            );
+            setTimeout(() => {
+                statusMsg.value =
+                    "Success: Check din mail for bekræftelses link";
+            }, 10000);
+            if (error) throw error;
+        } catch (error) {
+            errorMsg.value = error.message;
+            setTimeout(() => {
+                errorMsg.value = "";
+            }, 5000);
         }
-    );
-    console.log("user", user);
-    console.log("error", error);
+    } else {
+        errorMsg.value = "Adgangskode er ikke ens";
+        setTimeout(() => {
+            errorMsg.value = "";
+        }, 10000);
+    }
 };
 
 watchEffect(() => {
@@ -48,6 +72,8 @@ watchEffect(() => {
 <template>
     <div class="flex flex-col items-center justify-center h-screen">
         <div>
+            <ErrorMessage :statusMsg="statusMsg" :errorMsg="errorMsg" />
+
             <router-link to="/" class="relative">
                 <svg
                     class="w-28 h-14 mx-auto"
@@ -93,7 +119,7 @@ watchEffect(() => {
                 <input
                     v-if="isSignUp"
                     class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
-                    type="repeatedPassword"
+                    type="password"
                     v-model="repeatedPassword"
                 />
 
