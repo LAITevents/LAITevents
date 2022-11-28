@@ -62,7 +62,7 @@ const getParticipants = async () => {
             .eq("event_id", currentId);
         if (error) throw error;
         participants.forEach(async (participant) => {
-            const userDetails = await getUsername(participant.user_id);
+            const userDetails = await getUsername(participant?.user_id);
             eventParticipants.value.push(userDetails);
             if (participant.user_id === user.id) registered.value = true;
         });
