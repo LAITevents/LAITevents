@@ -33,14 +33,16 @@ definePageMeta({
     middleware: "auth",
 });
 
-// const timePicked = () => {
-//     const newDate = new Date(selectedDate.value);
-//     const offset = newDate.getTimezoneOffset() / 60;
-//     newDate.setUTCHours(selectedTime.value.hours + offset);
-//     newDate.setUTCMinutes(selectedTime.value.minutes);
+const timePicked = () => {
+    const newDate = new Date(selectedDate.value);
+    const offset = newDate.getTimezoneOffset() / 60;
+    newDate.setUTCHours(selectedTime.value.hours + offset);
+    newDate.setUTCMinutes(selectedTime.value.minutes);
     
-//     return newDate;
-// }
+    return newDate;
+}
+
+// const choosenTime = selectedTime.value.hours, 
 
 // Get event data
 const getEvent = async () => {
@@ -49,7 +51,7 @@ const getEvent = async () => {
         .select("*")
         .eq("id", currentId)
         .single();
-        console.log(data)
+        console.log(data.selected_date)
    
         if (error) throw error;
     
@@ -58,7 +60,7 @@ const getEvent = async () => {
         eventTitle.value = data.title;
         selectedDate.value = data.selected_date;
         // selectedTime.value = timePicked();
-        // selectedDeadline.value = data.deadline_date;
+        selectedDeadline.value = data.deadline_date;
         eventDepartment.value = data.team_id;
         categoryForEvent.value = data.category_id;
         eventDescription.value = data.description;
