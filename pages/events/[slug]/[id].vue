@@ -114,7 +114,9 @@ watch(registered, () => {
 <template>
     <div>
         <div v-if="dataLoaded" class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            <div class="col-span-12 lg:col-start-2 lg:col-span-5 lg:translate-y-16">
+            <div
+                class="col-span-12 lg:col-start-2 lg:col-span-5 lg:translate-y-16"
+            >
                 <div class="mb-14">
                     <p
                         class="flex flex-end lg:justify-end items-end text-lait-yellow text-xs mb-1 font-bold"
