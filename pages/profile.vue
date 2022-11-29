@@ -96,13 +96,13 @@ const updateProfile = async () => {
 };
 
 const getEventsForProfile = async () => {
-    const date = new Date().toISOString();
+    const date: String = new Date().toISOString();
     profileEvents.value = await getEventsForUser(user.value.id, date);
     dataLoaded.value = true;
 };
 
 const getPastEvents = async () => {
-    const date = new Date().toISOString();
+    const date: String = new Date().toISOString();
     pastEvents.value = await getPastEventsForUser(date);
 };
 
