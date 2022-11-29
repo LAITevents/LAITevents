@@ -20,7 +20,6 @@ watchEffect(async () => {
         .on("*", async (payload) => {
             const user = await getProfile(payload.new.user_id);
             displayComments.value.push({ ...payload.new, ...user });
-            console.log(payload);
         })
         .subscribe();
     return () => supabase.removeSubscription(subscription);
