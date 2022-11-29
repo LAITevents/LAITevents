@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useEvent } from "@/composable/useEvent";
 import { useDashify } from "@/composable/dashify";
-const { getEventsForUser } = useEvent();
+const { getEventsForUser, getPastEventsForUser } = useEvent();
 const { dashify } = useDashify();
 
 const supabase = useSupabaseClient();
@@ -13,6 +13,7 @@ const repeatedPassword = ref("");
 const email = ref("");
 const avatar_path = ref("");
 const profileEvents = ref([]);
+const pastEvents = ref([]);
 
 const dataLoaded = ref(false);
 const errorMsg = ref("");
@@ -95,9 +96,17 @@ const updateProfile = async () => {
 };
 
 const getEventsForProfile = async () => {
-    profileEvents.value = await getEventsForUser(user.value.id);
+    const date = new Date().toISOString();
+    profileEvents.value = await getEventsForUser(user.value.id, date);
     dataLoaded.value = true;
 };
+
+const getPastEvents = async () => {
+    const date = new Date().toISOString();
+    pastEvents.value = await getPastEventsForUser(date);
+};
+
+getPastEvents();
 
 const deleteEvent = async (event_id) => {
     try {
@@ -210,16 +219,13 @@ watch(profileEvents.value, () => {
                 </form>
             </div>
 
-            <h2
-                class="text-3xl font-medium pt-10 col-span-12 lg:col-span-8 lg:col-start-2"
-            >
-                Mine events
-            </h2>
-
             <div class="lg:col-span-12 col-span-10 lg:col-start-2">
+                <h2 class="text-3xl font-medium pt-10 col-span-12 mb-5">
+                    Mine events
+                </h2>
                 <ul>
                     <li v-for="event in profileEvents" :key="event.id">
-                        <div class="flex gap-5">
+                        <div class="flex mb-2 gap-5">
                             <NuxtLink
                                 :to="{
                                     path: `/events/${dashify(event.title)}/${
@@ -239,11 +245,31 @@ watch(profileEvents.value, () => {
                 </ul>
             </div>
 
-            <h2
-                class="lg:col-start-2 text-3xl font-medium pt-10 col-span-12 text-lait-yellow"
-            >
-                Tidligere events
-            </h2>
+            <div class="col-span-12 lg:col-start-2">
+                <h2 class="text-3xl font-medium pt-10 text-lait-yellow mb-5">
+                    Tidligere events
+                </h2>
+                <ul>
+                    <li v-for="event in pastEvents" :key="event.id">
+                        <div class="flex mb-2 gap-5">
+                            <NuxtLink
+                                :to="{
+                                    path: `/events/${dashify(event.title)}/${
+                                        event.id
+                                    }`,
+                                }"
+                            >
+                                <p>{{ event.title }}</p>
+                            </NuxtLink>
+                            <nuxt-icon
+                                @click="deleteEvent(event.id)"
+                                class="text-2xl cursor-pointer"
+                                name="ProfileDelete"
+                            />
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </template>

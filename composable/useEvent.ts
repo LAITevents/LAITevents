@@ -13,11 +13,20 @@ export function useEvent() {
         }
     };
 
-    const getEventsForUser = async (userId?) => {
+    const getEventsForUser = async (userId?, date?) => {
         const { data: events } = await supabase
             .from("events")
             .select("id, title")
+            .gt("selected_date", date)
             .eq("userId", userId);
+        return events;
+    };
+
+    const getPastEventsForUser = async (date?) => {
+        const { data: events } = await supabase
+            .from("events")
+            .select("id, title")
+            .lt("selected_date", date);
         return events;
     };
 
@@ -29,5 +38,5 @@ export function useEvent() {
         return team;
     };
 
-    return { getEventsForUser, getDepartment, getData };
+    return { getEventsForUser, getDepartment, getData, getPastEventsForUser };
 }
