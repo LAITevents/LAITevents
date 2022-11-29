@@ -15,8 +15,8 @@ const props = defineProps({
         <p>
             {{ props.statusMsg }}
         </p>
-        <p class="text-lait-yellow text-center">
-            <span class="font-bold">Fejl: </span>{{ props.errorMsg }}
+        <p class="text-lait-yellow text-center font-bold">
+            {{ props.errorMsg }}
         </p>
     </div>
 </template>

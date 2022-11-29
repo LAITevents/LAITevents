@@ -55,7 +55,7 @@ const signUp = async () => {
             }, 5000);
         }
     } else {
-        errorMsg.value = "Adgangskode er ikke ens";
+        errorMsg.value = "Adgangskoden er ikke ens";
         setTimeout(() => {
             errorMsg.value = "";
         }, 10000);
