@@ -76,7 +76,7 @@ watch(path, () => {
             />
         </svg>
         <div v-if="props.showUpload" style="position: relative">
-            <label class="" for="single">
+            <label for="single">
                 {{ uploading ? "Uploading ..." : "Upload" }}
             </label>
             <input

@@ -62,7 +62,7 @@ const getParticipants = async () => {
             .eq("event_id", currentId);
         if (error) throw error;
         participants.forEach(async (participant) => {
-            const userDetails = await getUsername(participant.user_id);
+            const userDetails = await getUsername(participant?.user_id);
             eventParticipants.value.push(userDetails);
             if (participant.user_id === user.id) registered.value = true;
         });
@@ -106,8 +106,6 @@ const cancelRegistration = async () => {
     }
 };
 
-// Function that returns deadline for signup
-
 watch(registered, () => {
     getParticipants();
 });
@@ -115,8 +113,8 @@ watch(registered, () => {
 
 <template>
     <div>
-        <div v-if="dataLoaded" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="col-start-2 col-span-5 lg:translate-y-16">
+        <div v-if="dataLoaded" class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <div class="col-span-12 lg:col-start-2 lg:col-span-5 lg:translate-y-16">
                 <div class="mb-14">
                     <p
                         class="flex flex-end lg:justify-end items-end text-lait-yellow text-xs mb-1 font-bold"
@@ -125,7 +123,7 @@ watch(registered, () => {
                     </p>
                     <img
                         :src="data.img_url"
-                        class="lg:w-full h-auto object-cover"
+                        class="w-full h-60 md:h-72 lg:w-full lg:h-96 object-cover"
                     />
                     <h1 class="font-medium text-2xl mt-4 mb-3">
                         {{ data.title }}

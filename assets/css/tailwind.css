@@ -17,7 +17,7 @@
 
 @layer components {
     .custom-input {
-      @apply py-2 px-3 mb-4 bg-light-blue text-white font-regular placeholder-lait-grey focus:outline-none
+      @apply py-2 px-3 mb-6 bg-light-blue text-white font-regular placeholder-lait-grey focus:outline-none
     }
 
     .custom-select {

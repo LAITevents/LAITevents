@@ -31,7 +31,7 @@ watch(comments, () => {
     });
 });
 
-const getProfile = async (user_id) => {
+const getProfile = async (user_id: string) => {
     let user = null;
     try {
         const { data, error } = await supabase
@@ -68,14 +68,13 @@ const getProfiles = async () => {
     comments.value.forEach((comment) => {
         users.value.push(comment.user_id);
     });
-    let userdata: [{ id: string }] = null;
+    let userdata = null;
     try {
         const { data, error } = await supabase
             .from("profiles")
             .select("*")
             .in("id", users.value);
         if (error) throw error;
-        // @ts-ignore
         userdata = data;
     } catch (error) {
         console.log(error);
