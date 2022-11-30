@@ -2,9 +2,11 @@
 import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useRoute, useRouter } from "vue-router";
+import { useDashify } from "@/composable/dashify";
+
 
 const { formatDeadlineDate } = useDateFormatter();
-
+const { dashify } = useDashify();
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
 const statusMsg = ref("");
@@ -33,16 +35,13 @@ definePageMeta({
     middleware: "auth",
 });
 
-const timePicked = () => {
-    const newDate = new Date(selectedDate.value);
-    const offset = newDate.getTimezoneOffset() / 60;
-    newDate.setUTCHours(selectedTime.value.hours + offset);
-    newDate.setUTCMinutes(selectedTime.value.minutes);
-    
-    return newDate;
+const pickedTime = () => {
+    const dateCurrent = new Date(selectedDate.value);
+    const timePicked = dateCurrent.getHours() + ':' + dateCurrent.getMinutes();
+    return timePicked;
+    console.log(timePicked)
 }
 
-// const choosenTime = selectedTime.value.hours, 
 
 // Get event data
 const getEvent = async () => {
@@ -51,15 +50,16 @@ const getEvent = async () => {
         .select("*")
         .eq("id", currentId)
         .single();
-        console.log(data.selected_date)
-   
+        
         if (error) throw error;
+
     
+
     if (data) {
         src.value = data.img_url;
         eventTitle.value = data.title;
         selectedDate.value = data.selected_date;
-        // selectedTime.value = timePicked();
+        selectedTime.value = pickedTime();
         selectedDeadline.value = data.deadline_date;
         eventDepartment.value = data.team_id;
         categoryForEvent.value = data.category_id;
@@ -69,13 +69,27 @@ const getEvent = async () => {
 };
 getEvent();
 
-// Update profil
+
+
+// Update event
 const updateEvent = async () => {
     try {
         const { error } = await supabase.from("events").update(
             {
                 id: currentId,
                 updated_at: new Date(),
+                title: eventTitle.value,
+                description: eventDescription.value,
+                userId: user.id,
+                img_url: imagePath.value,
+                selected_date: newDateTime(),
+                deadline_date: formatDeadlineDate(selectedDeadline.value),
+                place_id: placeInfo.value.placeId,
+                place_lat: placeInfo.value.placeLat,
+                place_lng: placeInfo.value.placeLng,
+                team_id: eventDepartment.value,
+                category_id: categoryForEvent.value,
+
             },
             {
                 returning: "minimal",
@@ -96,11 +110,11 @@ const updateEvent = async () => {
 
 // Format selectedDate to use UTC and add value from timepicker
 const newDateTime = () => {
-    const newDate = new Date(selectedDate.value);
+    const date = new Date(selectedDate.value);
     const offset = newDate.getTimezoneOffset() / 60;
     newDate.setUTCHours(selectedTime.value.hours + offset);
     newDate.setUTCMinutes(selectedTime.value.minutes);
-    return newDate;
+    return date;
 };
 // Generate filepath
 async function setCurrentFile(filePath, file) {
@@ -138,50 +152,6 @@ const uploadImage = async (evt) => {
     }
 };
 
-// Create event
-// const addEvent = async () => {
-//     try {
-//         const { error } = await supabase.from("events").insert([
-//             {
-//                 title: eventTitle.value,
-//                 description: eventDescription.value,
-//                 userId: user.id,
-//                 img_url: imagePath.value,
-//                 selected_date: newDateTime(),
-//                 deadline_date: formatDeadlineDate(selectedDeadline.value),
-//                 place_id: placeInfo.value.placeId,
-//                 place_lat: placeInfo.value.placeLat,
-//                 place_lng: placeInfo.value.placeLng,
-//                 team_id: eventDepartment.value,
-//                 category_id: categoryForEvent.value,
-//             },
-//         ]);
-//         if (error) throw error;
-//         statusMsg.value = "Success: Event oprettet";
-//         eventTitle.value = null;
-//         eventDescription.value = null;
-//         setTimeout(() => {
-//             statusMsg.value = "";
-//         }, 5000);
-//     } catch (error) {
-//         errorMsg.value = `Error: ${error.message}`;
-//         setTimeout(() => {
-//             errorMsg.value = "";
-//         }, 5000);
-//     }
-// };
-
-// Get teams
-const getTeams = async () => {
-    try {
-        const { data, error } = await supabase.from("teams").select("*");
-        if (error) throw error;
-        teams.value = data;
-    } catch (error) {
-        console.warn(error.message);
-    }
-};
-getTeams();
 
 // Get categories
 const getCategories = async () => {
@@ -298,21 +268,6 @@ getCategories();
                                 </option>
                             </select>
                         </div>
-                        <div class="flex flex-col w-full">
-                            <label class="mb-1">Afdeling</label>
-                            <select
-                                v-model="eventDepartment"
-                                class="custom-select"
-                            >
-                                <option
-                                    v-for="team in teams"
-                                    :key="team.id"
-                                    :value="team.id"
-                                >
-                                    {{ team.team_title }}
-                                </option>
-                            </select>
-                        </div>
                     </div>
 
                     <div class="w-full">
@@ -334,12 +289,23 @@ getCategories();
                     </div>
 
                     <div class="flex justify-end">
+
+                        <NuxtLink
+                        :to="{
+                                path: `/events/${dashify(eventTitle)}/${
+                                        currentId
+                                    }`
+                            }"
+                        type="submit"
+                        >
+
                         <input
                         type="submit"
                             class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
                             :value="loading ? 'Loading ...' : 'Opdater event'"
                             :disabled="loading"
                         />
+                    </NuxtLink>
                         
                     </div>
                 </form>
