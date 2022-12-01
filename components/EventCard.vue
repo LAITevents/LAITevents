@@ -11,6 +11,7 @@ const { formatDate } = useDateFormatter();
 const activeIndex = ref(0);
 const filterValue = ref("#ALLE");
 const eventsList: any = ref(await getData());
+const updateIndicator = ref(false);
 
 const hashtags = ref([
     { name: "#ALLE", count: counterForHashtags("#ALLE").length },
@@ -36,6 +37,14 @@ function counterForHashtags(filterValue: string) {
         (event) => event.category_id.name === filterValue
     );
 }
+
+const showUpdateIndicator = (created_at: string, updated_at: string) => {
+    if (created_at !== updated_at) {
+        return true;
+    } else {
+        return false;
+    }
+};
 
 const filteredEvents = computed(() => {
     if (filterValue.value == "#ALLE") {
@@ -109,7 +118,17 @@ const filteredEvents = computed(() => {
                                 {{ formatDate(event.selected_date) }}
                             </p>
                         </div>
-                        <nuxt-icon name="EventAlert" fill />
+                        <nuxt-icon
+                            v-if="
+                                showUpdateIndicator(
+                                    event.updated_at,
+                                    event.created_at
+                                )
+                            "
+                            name="EventAlert"
+                            title="Dette event er blevet opdateret for nyligt"
+                            fill
+                        />
                     </div>
                     <img
                         class="object-cover w-full max-h-72"
