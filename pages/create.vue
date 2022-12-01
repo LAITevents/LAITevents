@@ -173,7 +173,7 @@ getCategories();
                     </label>
                     <div>
                         <input
-                            class="file:bg-lait-blue file:text-lait-yellow file:font-bold file:text file:border-none"
+                            class="file:bg-lait-blue file:text-lait-yellow file:font-bold file:text file:border-none w-full"
                             type="file"
                             id="single"
                             accept="image/*"
@@ -230,21 +230,6 @@ getCategories();
                                     :value="category.id"
                                 >
                                     {{ category.name }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="flex flex-col w-full">
-                            <label class="mb-1">Afdeling</label>
-                            <select
-                                v-model="eventDepartment"
-                                class="custom-select"
-                            >
-                                <option
-                                    v-for="team in teams"
-                                    :key="team.id"
-                                    :value="team.id"
-                                >
-                                    {{ team.team_title }}
                                 </option>
                             </select>
                         </div>
