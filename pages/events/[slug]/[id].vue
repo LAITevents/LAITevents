@@ -8,25 +8,23 @@ import { useDateFormatter } from "@/composable/useDateFormatter";
 const { formatDate, formatTime } = useDateFormatter();
 const { getDepartment } = useEvent();
 const { getUsername } = useUser();
+const route = useRoute();
 
 const supabase = useSupabaseClient();
 const dataLoaded = ref(null);
+const currentId = route.params.id;
 const data = ref({});
 const departmentName = ref();
 
 const statusMsg = ref(null);
 const errorMsg = ref(null);
-const route = useRoute();
 const user = supabase.auth.user();
 const eventParticipants = ref([]);
-
 const registered = ref(false);
 
 definePageMeta({
     middleware: "auth",
 });
-
-const currentId = route.params.id;
 
 // Gets event data from supabase
 const getEvents = async () => {
@@ -50,7 +48,6 @@ const getEvents = async () => {
         }, 5000);
     }
 };
-getEvents();
 
 // Gets participants for the specific event id
 const getParticipants = async () => {
@@ -64,7 +61,9 @@ const getParticipants = async () => {
         participants.forEach(async (participant) => {
             const userDetails = await getUsername(participant?.user_id);
             eventParticipants.value.push(userDetails);
-            if (participant.user_id === user.id) registered.value = true;
+            if (participant.user_id === user.id) {
+                registered.value = true;
+            }
         });
     } catch (error) {
         errorMsg.value = error.message;
@@ -73,7 +72,6 @@ const getParticipants = async () => {
         }, 5000);
     }
 };
-getParticipants();
 
 // Register an event
 const registerEvent = async () => {
@@ -85,6 +83,7 @@ const registerEvent = async () => {
         });
         if (error) throw error;
         registered.value = true;
+        getParticipants();
     } catch (error) {
         errorMsg.value = error.message;
     }
@@ -101,12 +100,14 @@ const cancelRegistration = async () => {
 
         if (error) throw error;
         registered.value = false;
+        getParticipants();
     } catch (error) {
         errorMsg.value = error.message;
     }
 };
 
-watch(registered, () => {
+onMounted(() => {
+    getEvents();
     getParticipants();
 });
 </script>
@@ -114,7 +115,9 @@ watch(registered, () => {
 <template>
     <div>
         <div v-if="dataLoaded" class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            <div class="col-span-12 lg:col-start-2 lg:col-span-5 lg:translate-y-16">
+            <div
+                class="col-span-12 lg:col-start-2 lg:col-span-5 lg:translate-y-16"
+            >
                 <div class="mb-14">
                     <p
                         class="flex flex-end lg:justify-end items-end text-lait-yellow text-xs mb-1 font-bold"
@@ -174,7 +177,6 @@ watch(registered, () => {
 
                         Kl: {{ formatTime(data.selected_date) }}
                     </div>
-                    <!-- <div>Event for: {{ departmentName || "Alle" }}</div> -->
 
                     <MapsView
                         v-if="data.place_lat && data.place_lng && data.place_id"
