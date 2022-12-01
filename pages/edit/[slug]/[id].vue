@@ -11,7 +11,7 @@ const supabase = useSupabaseClient();
 const user = supabase.auth.user();
 const statusMsg = ref("");
 const errorMsg = ref("");
-
+const checkUpdated = ref(false)
 const uploading = ref(false);
 const files = ref();
 const src = ref("");
@@ -37,9 +37,10 @@ definePageMeta({
 
 const pickedTime = () => {
     const dateCurrent = new Date(selectedDate.value);
-    const timePicked = dateCurrent.getHours() + ':' + dateCurrent.getMinutes();
-    return timePicked;
-    
+    const hours = dateCurrent.getHours();
+    const minutes = dateCurrent.getMinutes();
+    console.log(hours, minutes)
+    return {hours, minutes};
 }
 
 
@@ -50,7 +51,6 @@ const getEvent = async () => {
         .select("*")
         .eq("id", currentId)
         .single();
-        
         if (error) throw error;
 
     
@@ -59,13 +59,14 @@ const getEvent = async () => {
         src.value = data.img_url;
         eventTitle.value = data.title;
         selectedDate.value = data.selected_date;
-        selectedTime.value = pickedTime();
+        selectedTime.value = pickedTime();  
         selectedDeadline.value = data.deadline_date;
         eventDepartment.value = data.team_id;
         categoryForEvent.value = data.category_id;
         eventDescription.value = data.description;
     }
     loading.value = false;
+    
 };
 getEvent();
 
@@ -95,6 +96,7 @@ const updateEvent = async () => {
                 returning: "minimal",
             }
         );
+        checkUpdated.value = true;
         statusMsg.value = "Success: Event opdateret!";
         setTimeout(() => {
             statusMsg.value = "";
@@ -110,11 +112,11 @@ const updateEvent = async () => {
 
 // Format selectedDate to use UTC and add value from timepicker
 const newDateTime = () => {
-    const date = new Date(selectedDate.value);
+    const newDate = new Date(selectedDate.value);
     const offset = newDate.getTimezoneOffset() / 60;
     newDate.setUTCHours(selectedTime.value.hours + offset);
     newDate.setUTCMinutes(selectedTime.value.minutes);
-    return date;
+    return newDate;
 };
 // Generate filepath
 async function setCurrentFile(filePath, file) {
@@ -164,6 +166,9 @@ const getCategories = async () => {
     }
 };
 getCategories();
+
+watch
+
 </script>
 
 <template>
@@ -288,25 +293,30 @@ getCategories();
                         />
                     </div>
 
-                    <div class="flex justify-end">
-
-                        <NuxtLink
-                        :to="{
-                                path: `/events/${dashify(eventTitle)}/${
-                                        currentId
-                                    }`
-                            }"
-                        type="submit"
-                        >
-
-                        <input
+                    <div class="flex flex-col items-end">
+                        
+                        <div>
+                            <input
                         type="submit"
                             class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
                             :value="loading ? 'Loading ...' : 'Opdater event'"
                             :disabled="loading"
+                            
                         />
-                    </NuxtLink>
-                        
+                        </div>
+                        <div v-if="checkUpdated">
+                            <NuxtLink
+                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                            :to="{
+                                    path: `/events/${dashify(eventTitle)}/${
+                                            currentId
+                                        }`
+                                }"
+                            
+                            >
+                                Gå til Event
+                            </NuxtLink>
+                        </div>
                     </div>
                 </form>
             </div>
