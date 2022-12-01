@@ -97,7 +97,6 @@ watchEffect(async () => {
             if (Object.keys(payload.new).length !== 0) {
                 displayComments.value.push({ ...payload.new, ...user });
                 comments.value.push({ ...payload.new, ...user });
-                console.log(payload);
             }
         })
         .subscribe();
