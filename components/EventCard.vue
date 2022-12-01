@@ -11,7 +11,6 @@ const { formatDate } = useDateFormatter();
 const activeIndex = ref(0);
 const filterValue = ref("#ALLE");
 const eventsList: any = ref(await getData());
-const updateIndicator = ref(false);
 
 const hashtags = ref([
     { name: "#ALLE", count: counterForHashtags("#ALLE").length },
