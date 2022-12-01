@@ -202,7 +202,7 @@ watch(registered, () => {
                         </button>
                     </div>
                 </div>
-                <div class="bg-light-blue mt-12 p-7">
+                <div class="bg-light-blue my-12 p-7">
                     <CommentSection
                         v-if="data.comments"
                         :comments="data.comments"

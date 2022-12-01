@@ -14,23 +14,6 @@ const comments = ref(props.comments);
 const displayComments = ref([]);
 const users = ref([]);
 
-watchEffect(async () => {
-    const subscription = supabase
-        .from("comments")
-        .on("*", async (payload) => {
-            const user = await getProfile(payload.new.user_id);
-            displayComments.value.push({ ...payload.new, ...user });
-        })
-        .subscribe();
-    return () => supabase.removeSubscription(subscription);
-});
-
-watch(comments, () => {
-    comments.value.forEach((comment) => {
-        comment.user_id;
-    });
-});
-
 const getProfile = async (user_id: string) => {
     let user = null;
     try {
@@ -79,7 +62,6 @@ const getProfiles = async () => {
     } catch (error) {
         console.log(error);
     }
-
     if (userdata) {
         displayComments.value = comments.value.map((comment) => {
             return {
@@ -99,10 +81,34 @@ const deleteUserComment = async (comment_id) => {
             .delete()
             .eq("comment_id", comment_id);
         if (error) throw error;
+        displayComments.value = displayComments.value.filter(
+            (comment) => comment.comment_id !== comment_id
+        );
     } catch (error) {
         console.log(error);
     }
 };
+
+watchEffect(async () => {
+    const subscription = supabase
+        .from("comments")
+        .on("*", async (payload) => {
+            const user = await getProfile(payload.new.user_id);
+            if (Object.keys(payload.new).length !== 0) {
+                displayComments.value.push({ ...payload.new, ...user });
+                comments.value.push({ ...payload.new, ...user });
+                console.log(payload);
+            }
+        })
+        .subscribe();
+    return () => supabase.removeSubscription(subscription);
+});
+
+watch(comments, () => {
+    comments.value.forEach((comment) => {
+        comment.user_id;
+    });
+});
 </script>
 
 <template>
