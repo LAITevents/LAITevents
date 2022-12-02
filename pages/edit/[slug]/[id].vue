@@ -3,32 +3,31 @@ import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useRoute, useRouter } from "vue-router";
 import { useDashify } from "@/composable/dashify";
-
-
 const { formatDeadlineDate } = useDateFormatter();
 const { dashify } = useDashify();
+
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
+const data = ref({});
+const categories = ref([]);
+
 const statusMsg = ref("");
 const errorMsg = ref("");
-const checkUpdated = ref(false)
 const uploading = ref(false);
+const loading = ref(true);
+
 const files = ref();
 const src = ref("");
 const imagePath = ref("");
-const route = useRoute();
 const eventTitle = ref("");
 const eventDescription = ref("");
 const selectedDate = ref();
 const selectedTime = ref();
 const selectedDeadline = ref();
 const placeInfo = ref();
-const teams = ref([]);
-const categories = ref([]);
-const eventDepartment = ref(null);
 const categoryForEvent = ref("");
-const loading = ref(true);
 
+const route = useRoute();
 const currentId = route.params.id;
 
 definePageMeta({
@@ -39,37 +38,30 @@ const pickedTime = () => {
     const dateCurrent = new Date(selectedDate.value);
     const hours = dateCurrent.getHours();
     const minutes = dateCurrent.getMinutes();
-    return {hours, minutes};
-}
-
+    return { hours, minutes };
+};
 
 // Get event data
 const getEvent = async () => {
-    const { data, error } = await supabase
+    const { data: event, error } = await supabase
         .from("events")
         .select("*")
         .eq("id", currentId)
         .single();
-        if (error) throw error;
+    if (error) throw error;
+    data.value = event;
 
-    
-
-    if (data) {
-        src.value = data.img_url;
-        eventTitle.value = data.title;
-        selectedDate.value = data.selected_date;
-        selectedTime.value = pickedTime();  
-        selectedDeadline.value = data.deadline_date;
-        eventDepartment.value = data.team_id;
-        categoryForEvent.value = data.category_id;
-        eventDescription.value = data.description;
+    if (event) {
+        src.value = event.img_url;
+        eventTitle.value = event.title;
+        selectedDate.value = event.selected_date;
+        selectedTime.value = pickedTime();
+        selectedDeadline.value = event.deadline_date;
+        categoryForEvent.value = event.category_id;
+        eventDescription.value = event.description;
     }
     loading.value = false;
-    
 };
-getEvent();
-
-
 
 // Update event
 const updateEvent = async () => {
@@ -87,15 +79,12 @@ const updateEvent = async () => {
                 place_id: placeInfo.value.placeId,
                 place_lat: placeInfo.value.placeLat,
                 place_lng: placeInfo.value.placeLng,
-                team_id: eventDepartment.value,
                 category_id: categoryForEvent.value,
-
             },
             {
                 returning: "minimal",
             }
         );
-        checkUpdated.value = true;
         statusMsg.value = "Success: Event opdateret!";
         setTimeout(() => {
             statusMsg.value = "";
@@ -117,6 +106,7 @@ const newDateTime = () => {
     newDate.setUTCMinutes(selectedTime.value.minutes);
     return newDate;
 };
+
 // Generate filepath
 async function setCurrentFile(filePath, file) {
     src.value = URL.createObjectURL(file);
@@ -153,7 +143,6 @@ const uploadImage = async (evt) => {
     }
 };
 
-
 // Get categories
 const getCategories = async () => {
     try {
@@ -164,10 +153,11 @@ const getCategories = async () => {
         console.warn(error.message);
     }
 };
-getCategories();
 
-watch
-
+onMounted(() => {
+    getCategories();
+    getEvent();
+});
 </script>
 
 <template>
@@ -178,7 +168,7 @@ watch
             <h1
                 class="text-3xl font-medium lg:col-start-2 col-span-10 lg:col-span-3"
             >
-                Opdater event
+                Opdater {{ data.title }}
             </h1>
 
             <div
@@ -293,25 +283,24 @@ watch
                     </div>
 
                     <div class="flex flex-col items-end">
-                        
                         <div>
                             <input
-                        type="submit"
-                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
-                            :value="loading ? 'Loading ...' : 'Opdater event'"
-                            :disabled="loading"
-                            
-                        />
+                                type="submit"
+                                class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                                :value="
+                                    loading ? 'Loading ...' : 'Opdater event'
+                                "
+                                :disabled="loading"
+                            />
                         </div>
-                        <div v-if="checkUpdated">
+                        <div>
                             <NuxtLink
-                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
-                            :to="{
-                                    path: `/events/${dashify(eventTitle)}/${
-                                            currentId
-                                        }`
+                                class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                                :to="{
+                                    path: `/events/${dashify(
+                                        eventTitle
+                                    )}/${currentId}`,
                                 }"
-                            
                             >
                                 Gå til Event
                             </NuxtLink>
