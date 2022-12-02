@@ -144,7 +144,6 @@ getCategories();
             <div
                 class="col-span-11 md:col-span-5 lg:col-span-3 md:col-start-2 lg:col-start-2"
             >
-                <p>Upload billede</p>
                 <div>
                     <label for="single">
                         <div class="w-full h-auto">
@@ -187,8 +186,8 @@ getCategories();
             <div class="col-span-12 md:col-span-6 lg:col-span-5">
                 <form @submit.prevent="addEvent">
                     <div class="flex flex-col">
-                        <label for="event-name" class="mb-1">Titel</label>
                         <input
+                            placeholder="Titel"
                             type="text"
                             required
                             class="custom-input"
@@ -201,15 +200,12 @@ getCategories();
                         class="flex flex-col gap-4 md:flex-col lg:flex-row lg:justify-between"
                     >
                         <div class="w-full">
-                            <label class="mb-1">Vælg dato</label>
                             <DatePicker v-model="selectedDate" />
                         </div>
                         <div class="w-full">
-                            <label class="mb-1">Vælg tidspunkt</label>
                             <TimePicker v-model="selectedTime" />
                         </div>
                         <div class="w-full">
-                            <label class="mb-1">Deadline for tilmelding</label>
                             <DatePicker v-model="selectedDeadline" />
                         </div>
                     </div>
@@ -218,12 +214,19 @@ getCategories();
                         class="flex flex-col lg:gap-4 md:flex-col lg:flex-row mt-4"
                     >
                         <div class="flex flex-col w-full">
-                            <label class="mb-1">Kategori</label>
                             <select
                                 v-model="categoryForEvent"
-                                class="custom-select"
+                                class="custom-select invalid:text-gray-200"
                                 required
                             >
+                                <option
+                                    value=""
+                                    disabled
+                                    selected
+                                    class="opacity-50 text-gray-400"
+                                >
+                                    Kategori
+                                </option>
                                 <option
                                     v-for="category in categories"
                                     :key="category.id"
@@ -236,15 +239,12 @@ getCategories();
                     </div>
 
                     <div class="w-full">
-                        <label class="mb-1">Lokation</label>
                         <AddressField ref="placeInfo" />
                     </div>
 
                     <div class="flex flex-col">
-                        <label for="event-description" class="mb-1"
-                            >Beskrivelse</label
-                        >
                         <textarea
+                            placeholder="Din Beskrivelse..."
                             type="text"
                             required
                             class="custom-input h-32"
