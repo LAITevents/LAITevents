@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import IComments from "@/interfaces/comments";
+import { useDateFormatter } from "@/composable/useDateFormatter";
+const { formatCommentDate } = useDateFormatter();
 
 const props = defineProps({
     comments: { type: Object as () => IComments[], default: [] },
@@ -140,6 +142,11 @@ watch(comments, () => {
                         </div>
                     </div>
                 </div>
+                <p
+                    class="flex flex-end justify-end font-bold text-[10px] text-lait-yellow"
+                >
+                    {{ formatCommentDate(comment.created_at) }}
+                </p>
 
                 <hr
                     class="my-5 text-center w-60 h-0.5 border-lait-grey opacity-30 mx-auto"

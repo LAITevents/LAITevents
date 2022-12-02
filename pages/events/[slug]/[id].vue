@@ -140,17 +140,18 @@ onMounted(() => {
                             >({{ eventParticipants.length }})</span
                         >
                     </h3>
-                    <div class="flex gap-4 col-span-5">
+                    <div class="flex flex-wrap gap-4 lg:col-span-5 mb-20">
                         <template
                             v-for="participant in eventParticipants"
                             :key="participant"
                         >
-                            <div class="flex resize-image mb-20">
+                            <div class="flex bg-light-blue h-10 flex-row">
                                 <ProfileAvatar
                                     :showUpload="false"
                                     v-model:path="participant.avatar_url"
+                                    class="w-10 h-auto"
                                 />
-                                <p class="bg-light-blue px-4 py-2">
+                                <p class="px-4 py-2">
                                     {{ participant.username }}
                                 </p>
                             </div>
