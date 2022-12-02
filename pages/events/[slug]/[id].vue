@@ -145,11 +145,11 @@ onMounted(() => {
                             v-for="participant in eventParticipants"
                             :key="participant"
                         >
-                            <div class="flex bg-light-blue h-10 flex-row">
+                            <div class="flex bg-light-blue max-h-10 flex-row">
                                 <ProfileAvatar
                                     :showUpload="false"
                                     v-model:path="participant.avatar_url"
-                                    class="w-10 h-auto"
+                                    class="custom-image-resize"
                                 />
                                 <p class="px-4 py-2">
                                     {{ participant.username }}

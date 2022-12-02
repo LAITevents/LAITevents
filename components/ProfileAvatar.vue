@@ -54,7 +54,7 @@ watch(path, () => {
 
 <template>
     <label for="single" class="flex flex-col">
-        <img class="object-cover h-32 md:h-56 lg:h-72" v-if="path" :src="src" />
+        <img class="object-cover" v-if="path" :src="src" />
         <div
             v-else
             class="border-[5px] w-full border-light-blue flex justify-center items-center h-32 md:h-56 lg:h-72"
@@ -66,13 +66,6 @@ watch(path, () => {
             />
         </div>
 
-        <p
-            class="uppercase font-bold text-lait-grey text-[8px] text-center lg:text-[11px]"
-        >
-            {{
-                uploading ? "Uploading ..." : "klik her for at uploade billede"
-            }}
-        </p>
         <div v-if="props.showUpload">
             <input
                 class="absolute hidden"
@@ -82,6 +75,15 @@ watch(path, () => {
                 @change="uploadAvatar"
                 :disabled="uploading"
             />
+            <p
+                class="uppercase font-bold text-lait-grey text-[8px] text-center lg:text-[11px]"
+            >
+                {{
+                    uploading
+                        ? "Uploading ..."
+                        : "klik her for at uploade billede"
+                }}
+            </p>
         </div>
     </label>
 </template>

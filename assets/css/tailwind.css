@@ -33,6 +33,10 @@
         @apply fill-lait-grey 
     }
 
+    .custom-image-resize img {
+        @apply max-h-[40px] w-10 object-cover
+    }
+
   }
 
 @layer base {

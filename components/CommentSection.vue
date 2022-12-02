@@ -121,6 +121,7 @@ watch(comments, () => {
                         <ProfileAvatar
                             :showUpload="false"
                             v-model:path="comment.avatar_url"
+                            class="max-h-[40px]"
                         />
                     </div>
                     <div

@@ -157,7 +157,7 @@ watch(profileEvents.value, () => {
                 Din profil
             </h2>
 
-            <div class="col-span-6 md:col-span-4 lg:col-span-3 lg:col-start-2">
+            <div class="col-span-6 lg:col-span-3 lg:col-start-2">
                 <ProfileAvatar
                     v-model:path="avatar_path"
                     @upload="updateProfile"
@@ -165,7 +165,7 @@ watch(profileEvents.value, () => {
                 />
             </div>
 
-            <div class="flex flex-col lg:my-6 col-span-12 lg:col-span-5">
+            <div class="flex flex-col lg:mb-6 col-span-12 lg:col-span-5">
                 <ErrorMessage
                     class="-translate-y-12"
                     :statusMsg="statusMsg"
@@ -173,7 +173,6 @@ watch(profileEvents.value, () => {
                 />
                 <form @submit.prevent="updateProfile">
                     <div>
-
                         <input
                             class="custom-input w-full"
                             id="username"
@@ -233,17 +232,17 @@ watch(profileEvents.value, () => {
                             >
                                 <p>{{ event.title }}</p>
                             </NuxtLink>
-                            <NuxtLink 
+                            <NuxtLink
                                 :to="{
-                                    path:`/edit/${dashify(event.title)}/${
+                                    path: `/edit/${dashify(event.title)}/${
                                         event.id
-                                    }`
+                                    }`,
                                 }"
                                 class="flex items-center"
                             >
-                                <nuxt-icon 
-                                class="cursor-pointer align-middle"
-                                name="ProfileEdit"
+                                <nuxt-icon
+                                    class="cursor-pointer align-middle"
+                                    name="ProfileEdit"
                                 />
                             </NuxtLink>
                             <nuxt-icon
