@@ -39,7 +39,6 @@ const pickedTime = () => {
     const dateCurrent = new Date(selectedDate.value);
     const hours = dateCurrent.getHours();
     const minutes = dateCurrent.getMinutes();
-    console.log(hours, minutes)
     return {hours, minutes};
 }
 
