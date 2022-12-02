@@ -4,14 +4,13 @@ import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useRoute, useRouter } from "vue-router";
 import { useDashify } from "@/composable/dashify";
 
-
 const { formatDeadlineDate } = useDateFormatter();
 const { dashify } = useDashify();
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
 const statusMsg = ref("");
 const errorMsg = ref("");
-const checkUpdated = ref(false)
+const checkUpdated = ref(false);
 const uploading = ref(false);
 const files = ref();
 const src = ref("");
@@ -23,7 +22,6 @@ const selectedDate = ref();
 const selectedTime = ref();
 const selectedDeadline = ref();
 const placeInfo = ref();
-const teams = ref([]);
 const categories = ref([]);
 const eventDepartment = ref(null);
 const categoryForEvent = ref("");
@@ -39,9 +37,8 @@ const pickedTime = () => {
     const dateCurrent = new Date(selectedDate.value);
     const hours = dateCurrent.getHours();
     const minutes = dateCurrent.getMinutes();
-    return {hours, minutes};
-}
-
+    return { hours, minutes };
+};
 
 // Get event data
 const getEvent = async () => {
@@ -50,26 +47,21 @@ const getEvent = async () => {
         .select("*")
         .eq("id", currentId)
         .single();
-        if (error) throw error;
-
-    
+    if (error) throw error;
 
     if (data) {
         src.value = data.img_url;
         eventTitle.value = data.title;
         selectedDate.value = data.selected_date;
-        selectedTime.value = pickedTime();  
+        selectedTime.value = pickedTime();
         selectedDeadline.value = data.deadline_date;
         eventDepartment.value = data.team_id;
         categoryForEvent.value = data.category_id;
         eventDescription.value = data.description;
     }
     loading.value = false;
-    
 };
 getEvent();
-
-
 
 // Update event
 const updateEvent = async () => {
@@ -89,7 +81,6 @@ const updateEvent = async () => {
                 place_lng: placeInfo.value.placeLng,
                 team_id: eventDepartment.value,
                 category_id: categoryForEvent.value,
-
             },
             {
                 returning: "minimal",
@@ -153,7 +144,6 @@ const uploadImage = async (evt) => {
     }
 };
 
-
 // Get categories
 const getCategories = async () => {
     try {
@@ -165,9 +155,6 @@ const getCategories = async () => {
     }
 };
 getCategories();
-
-watch
-
 </script>
 
 <template>
@@ -293,25 +280,24 @@ watch
                     </div>
 
                     <div class="flex flex-col items-end">
-                        
                         <div>
                             <input
-                        type="submit"
-                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
-                            :value="loading ? 'Loading ...' : 'Opdater event'"
-                            :disabled="loading"
-                            
-                        />
+                                type="submit"
+                                class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                                :value="
+                                    loading ? 'Loading ...' : 'Opdater event'
+                                "
+                                :disabled="loading"
+                            />
                         </div>
                         <div v-if="checkUpdated">
                             <NuxtLink
-                            class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
-                            :to="{
-                                    path: `/events/${dashify(eventTitle)}/${
-                                            currentId
-                                        }`
+                                class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                                :to="{
+                                    path: `/events/${dashify(
+                                        eventTitle
+                                    )}/${currentId}`,
                                 }"
-                            
                             >
                                 Gå til Event
                             </NuxtLink>
