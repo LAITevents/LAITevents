@@ -37,6 +37,14 @@ function counterForHashtags(filterValue: string) {
     );
 }
 
+const showUpdateIndicator = (created_at: string, updated_at: string) => {
+    if (created_at !== updated_at) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
 const filteredEvents = computed(() => {
     if (filterValue.value == "#ALLE") {
         return eventsList.value;
@@ -109,7 +117,17 @@ const filteredEvents = computed(() => {
                                 {{ formatDate(event.selected_date) }}
                             </p>
                         </div>
-                        <nuxt-icon name="EventAlert" fill />
+                        <nuxt-icon
+                            v-if="
+                                showUpdateIndicator(
+                                    event.updated_at,
+                                    event.created_at
+                                )
+                            "
+                            name="EventAlert"
+                            title="Dette event er blevet opdateret for nyligt"
+                            fill
+                        />
                     </div>
                     <img
                         class="object-cover w-full max-h-72"
