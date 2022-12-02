@@ -39,6 +39,33 @@
 
   }
 
+  @layer utilities {
+
+    .scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 20px;
+    }
+  
+    .scrollbar::-webkit-scrollbar-track {
+      border-radius: 100vh;
+    }
+  
+    .scrollbar::-webkit-scrollbar-thumb {
+      background: #1b323886;
+      border-radius: 100vh;
+      height: 60px;
+    }
+  
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #1B3238;
+    }
+
+    .scrollbar::-webkit-scrollbar{
+        height: 40px;
+    }
+  }
+  
+
 @layer base {
 
     body {

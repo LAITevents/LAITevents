@@ -114,25 +114,25 @@ watch(comments, () => {
 
 <template>
     <div>
-        <ul>
+        <ul class="max-h-[500px] overflow-scroll overflow-x-hidden scrollbar">
             <li v-for="comment in displayComments" :key="comment.id">
                 <div class="flex flex-row gap-4">
                     <div class="w-10 min-w-[40px] h-10">
                         <ProfileAvatar
                             :showUpload="false"
                             v-model:path="comment.avatar_url"
-                            class="max-h-[40px]"
+                            class="custom-image-resize"
                         />
                     </div>
                     <div
                         class="flex flex-row justify-between w-full items-center gap-2"
                     >
                         <div>
-                            <p class="text-lait-yellow text-xs">
+                            <p class="text-lait-yellow font-bold text-xs">
                                 {{ comment.username }}
                             </p>
 
-                            <p>{{ comment.content }}</p>
+                            <p class="text-xs">{{ comment.content }}</p>
                         </div>
                         <div
                             v-if="comment.user_id === user.id"
