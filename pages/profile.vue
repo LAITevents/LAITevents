@@ -152,13 +152,12 @@ watch(profileEvents.value, () => {
     <div>
         <div class="grid grid-cols-12 gap-5">
             <h2
-                class="text-3xl font-medium col-span-8 lg:col-start-2 lg:col-span-10"
+                class="text-3xl font-medium col-span-12 lg:col-start-2 lg:col-span-10"
             >
                 Din profil
             </h2>
 
-            <div class="col-span-8 lg:col-span-3 lg:col-start-2">
-                <p class="">Upload / skift billede</p>
+            <div class="col-span-6 md:col-span-4 lg:col-span-3 lg:col-start-2">
                 <ProfileAvatar
                     v-model:path="avatar_path"
                     @upload="updateProfile"
@@ -174,6 +173,7 @@ watch(profileEvents.value, () => {
                 />
                 <form @submit.prevent="updateProfile">
                     <div>
+
                         <input
                             class="custom-input w-full"
                             id="username"
