@@ -14,23 +14,6 @@ const comments = ref(props.comments);
 const displayComments = ref([]);
 const users = ref([]);
 
-watchEffect(async () => {
-    const subscription = supabase
-        .from("comments")
-        .on("INSERT", async (payload) => {
-            const user = await getProfile(payload.new.user_id);
-            displayComments.value.push({ ...payload.new, ...user });
-        })
-        .subscribe();
-    return () => supabase.removeSubscription(subscription);
-});
-
-watch(comments, () => {
-    comments.value.forEach((comment) => {
-        comment.user_id;
-    });
-});
-
 const getProfile = async (user_id: string) => {
     let user = null;
     try {
@@ -79,7 +62,6 @@ const getProfiles = async () => {
     } catch (error) {
         console.log(error);
     }
-
     if (userdata) {
         displayComments.value = comments.value.map((comment) => {
             return {
@@ -90,25 +72,72 @@ const getProfiles = async () => {
     }
 };
 getProfiles();
+
+// Delete comment
+const deleteUserComment = async (comment_id) => {
+    try {
+        const { error } = await supabase
+            .from("comments")
+            .delete()
+            .eq("comment_id", comment_id);
+        if (error) throw error;
+        displayComments.value = displayComments.value.filter(
+            (comment) => comment.comment_id !== comment_id
+        );
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+watchEffect(async () => {
+    const subscription = supabase
+        .from("comments")
+        .on("*", async (payload) => {
+            const user = await getProfile(payload.new.user_id);
+            if (Object.keys(payload.new).length !== 0) {
+                displayComments.value.push({ ...payload.new, ...user });
+                comments.value.push({ ...payload.new, ...user });
+            }
+        })
+        .subscribe();
+    return () => supabase.removeSubscription(subscription);
+});
+
+watch(comments, () => {
+    comments.value.forEach((comment) => {
+        comment.user_id;
+    });
+});
 </script>
 
 <template>
     <div>
         <ul>
             <li v-for="comment in displayComments" :key="comment.id">
-                <div class="flex gap-4">
+                <div class="flex flex-row gap-4">
                     <div class="w-10 min-w-[40px] h-10">
                         <ProfileAvatar
                             :showUpload="false"
                             v-model:path="comment.avatar_url"
                         />
                     </div>
-                    <div class="flex-row">
-                        <p class="text-lait-yellow text-xs">
-                            {{ comment.username }}
-                        </p>
+                    <div
+                        class="flex flex-row justify-between w-full items-center gap-2"
+                    >
+                        <div>
+                            <p class="text-lait-yellow text-xs">
+                                {{ comment.username }}
+                            </p>
 
-                        <p>{{ comment.content }}</p>
+                            <p>{{ comment.content }}</p>
+                        </div>
+                        <div
+                            v-if="comment.user_id === user.id"
+                            class="cursor-pointer text-lait-grey"
+                            @click="deleteUserComment(comment.comment_id)"
+                        >
+                            x
+                        </div>
                     </div>
                 </div>
 
@@ -127,7 +156,7 @@ getProfiles();
                     v-model="commentFromUser"
                 />
                 <button
-                    class="text-white absolute right-4 bottom-2"
+                    class="text-white pl-1.5 absolute right-4 bottom-2 bg-[#87A3AA]"
                     type="submit"
                 >
                     Send

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useEvent } from "@/composable/useEvent";
 import { useDashify } from "@/composable/dashify";
-const { getEventsForUser } = useEvent();
+const { getEventsForUser, getPastEventsForUser } = useEvent();
 const { dashify } = useDashify();
 
 const supabase = useSupabaseClient();
@@ -13,10 +13,11 @@ const repeatedPassword = ref("");
 const email = ref("");
 const avatar_path = ref("");
 const profileEvents = ref([]);
+const pastEvents = ref([]);
 
 const dataLoaded = ref(false);
-const errorMsg = ref(null);
-const statusMsg = ref(null);
+const errorMsg = ref("");
+const statusMsg = ref("");
 const loading = ref(true);
 
 definePageMeta({
@@ -44,6 +45,31 @@ const getProfile = async () => {
 
 // Update profil
 const updateProfile = async () => {
+    if (repeatedPassword.value.length && password.value.length) {
+        if (password.value === repeatedPassword.value) {
+            try {
+                const { data, error } = await supabase.auth.update({
+                    password: password.value,
+                });
+                statusMsg.value = "Success: Adgangskoden blev opdateret!";
+                setTimeout(() => {
+                    statusMsg.value = "";
+                }, 5000);
+            } catch (error) {
+                errorMsg.value = error.message;
+                setTimeout(() => {
+                    errorMsg.value = "";
+                }, 5000);
+            }
+        } else {
+            errorMsg.value = "Adgangskoden er ikke ens";
+            setTimeout(() => {
+                errorMsg.value = "";
+            }, 10000);
+        }
+        return;
+    }
+
     try {
         const { error } = await supabase.from("profiles").update(
             {
@@ -56,13 +82,16 @@ const updateProfile = async () => {
                 returning: "minimal",
             }
         );
-        if (error) throw error;
-        statusMsg.value = "Success: Profile Updated!";
+        statusMsg.value = "Success: Profil opdateret!";
         setTimeout(() => {
-            statusMsg.value = false;
+            statusMsg.value = "";
         }, 5000);
+        if (error) throw error;
     } catch (error) {
-        console.log(error);
+        errorMsg.value = error.message;
+        setTimeout(() => {
+            errorMsg.value = "";
+        }, 5000);
     }
 };
 
@@ -70,6 +99,12 @@ const getEventsForProfile = async () => {
     profileEvents.value = await getEventsForUser(user.value.id);
     dataLoaded.value = true;
 };
+
+const getPastEvents = async () => {
+    pastEvents.value = await getPastEventsForUser();
+};
+
+getPastEvents();
 
 const deleteEvent = async (event_id) => {
     try {
@@ -116,16 +151,6 @@ watch(profileEvents.value, () => {
 <template>
     <div>
         <div class="grid grid-cols-12 gap-5">
-            <!-- Status Message -->
-            <div
-                v-if="statusMsg || errorMsg"
-                class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
-            >
-                <p class="text-at-light-green">
-                    {{ statusMsg }}
-                </p>
-                <p class="text-red-500">{{ errorMsg }}</p>
-            </div>
             <h2
                 class="text-3xl font-medium col-span-12 lg:col-start-2 lg:col-span-10"
             >
@@ -140,9 +165,15 @@ watch(profileEvents.value, () => {
                 />
             </div>
 
-            <div class="flex flex-col col-span-12 lg:col-span-5">
-                <form class="">
-                    <div class="">
+            <div class="flex flex-col lg:my-6 col-span-12 lg:col-span-5">
+                <ErrorMessage
+                    class="-translate-y-12"
+                    :statusMsg="statusMsg"
+                    :errorMsg="errorMsg"
+                />
+                <form @submit.prevent="updateProfile">
+                    <div>
+
                         <input
                             class="custom-input w-full"
                             id="username"
@@ -150,7 +181,7 @@ watch(profileEvents.value, () => {
                             v-model="username"
                         />
                     </div>
-                    <div class="">
+                    <div>
                         <input
                             class="custom-input w-full"
                             id="email"
@@ -178,7 +209,6 @@ watch(profileEvents.value, () => {
                     <div class="text-right">
                         <input
                             type="submit"
-                            @click="updateProfile"
                             class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
                             :value="loading ? 'Loading ...' : 'Opdater profil'"
                             :disabled="loading"
@@ -187,16 +217,52 @@ watch(profileEvents.value, () => {
                 </form>
             </div>
 
-            <h2
-                class="text-3xl font-medium pt-10 col-span-12 lg:col-span-8 lg:col-start-2"
-            >
-                Mine events
-            </h2>
-
             <div class="lg:col-span-12 col-span-10 lg:col-start-2">
+                <h2 class="text-3xl font-medium pt-10 col-span-12 mb-5">
+                    Mine events
+                </h2>
                 <ul>
                     <li v-for="event in profileEvents" :key="event.id">
-                        <div class="flex gap-5">
+                        <div class="flex mb-2 gap-5">
+                            <NuxtLink
+                                :to="{
+                                    path: `/events/${dashify(event.title)}/${
+                                        event.id
+                                    }`,
+                                }"
+                            >
+                                <p>{{ event.title }}</p>
+                            </NuxtLink>
+                            <NuxtLink 
+                                :to="{
+                                    path:`/edit/${dashify(event.title)}/${
+                                        event.id
+                                    }`
+                                }"
+                                class="flex items-center"
+                            >
+                                <nuxt-icon 
+                                class="cursor-pointer align-middle"
+                                name="ProfileEdit"
+                                />
+                            </NuxtLink>
+                            <nuxt-icon
+                                @click="deleteEvent(event.id)"
+                                class="text-2xl cursor-pointer"
+                                name="ProfileDelete"
+                            />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-span-12 lg:col-start-2">
+                <h2 class="text-3xl font-medium pt-10 text-lait-yellow mb-5">
+                    Tidligere events
+                </h2>
+                <ul>
+                    <li v-for="event in pastEvents" :key="event.id">
+                        <div class="flex mb-2 gap-5">
                             <NuxtLink
                                 :to="{
                                     path: `/events/${dashify(event.title)}/${
@@ -215,12 +281,6 @@ watch(profileEvents.value, () => {
                     </li>
                 </ul>
             </div>
-
-            <h2
-                class="lg:col-start-2 text-3xl font-medium pt-10 col-span-12 text-lait-yellow"
-            >
-                Tidligere events
-            </h2>
         </div>
     </div>
 </template>

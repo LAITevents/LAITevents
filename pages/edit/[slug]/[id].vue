@@ -1,32 +1,102 @@
 <script setup lang="ts">
-definePageMeta({
-    middleware: "auth",
-});
-
 import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
+import { useRoute, useRouter } from "vue-router";
+import { useDashify } from "@/composable/dashify";
 const { formatDeadlineDate } = useDateFormatter();
+const { dashify } = useDashify();
 
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
+const data = ref({});
+const categories = ref([]);
+
 const statusMsg = ref("");
 const errorMsg = ref("");
-
 const uploading = ref(false);
+const loading = ref(true);
+
 const files = ref();
 const src = ref("");
 const imagePath = ref("");
-
 const eventTitle = ref("");
 const eventDescription = ref("");
 const selectedDate = ref();
 const selectedTime = ref();
 const selectedDeadline = ref();
 const placeInfo = ref();
-const teams = ref([]);
-const categories = ref([]);
-const eventDepartment = ref(null);
 const categoryForEvent = ref("");
+
+const route = useRoute();
+const currentId = route.params.id;
+
+definePageMeta({
+    middleware: "auth",
+});
+
+const pickedTime = () => {
+    const dateCurrent = new Date(selectedDate.value);
+    const hours = dateCurrent.getHours();
+    const minutes = dateCurrent.getMinutes();
+    return { hours, minutes };
+};
+
+// Get event data
+const getEvent = async () => {
+    const { data: event, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("id", currentId)
+        .single();
+    if (error) throw error;
+    data.value = event;
+
+    if (event) {
+        src.value = event.img_url;
+        eventTitle.value = event.title;
+        selectedDate.value = event.selected_date;
+        selectedTime.value = pickedTime();
+        selectedDeadline.value = event.deadline_date;
+        categoryForEvent.value = event.category_id;
+        eventDescription.value = event.description;
+    }
+    loading.value = false;
+};
+
+// Update event
+const updateEvent = async () => {
+    try {
+        const { error } = await supabase.from("events").update(
+            {
+                id: currentId,
+                updated_at: new Date(),
+                title: eventTitle.value,
+                description: eventDescription.value,
+                userId: user.id,
+                img_url: imagePath.value,
+                selected_date: newDateTime(),
+                deadline_date: formatDeadlineDate(selectedDeadline.value),
+                place_id: placeInfo.value.placeId,
+                place_lat: placeInfo.value.placeLat,
+                place_lng: placeInfo.value.placeLng,
+                category_id: categoryForEvent.value,
+            },
+            {
+                returning: "minimal",
+            }
+        );
+        statusMsg.value = "Success: Event opdateret!";
+        setTimeout(() => {
+            statusMsg.value = "";
+        }, 5000);
+        if (error) throw error;
+    } catch (error) {
+        errorMsg.value = error.message;
+        setTimeout(() => {
+            errorMsg.value = "";
+        }, 5000);
+    }
+};
 
 // Format selectedDate to use UTC and add value from timepicker
 const newDateTime = () => {
@@ -36,6 +106,7 @@ const newDateTime = () => {
     newDate.setUTCMinutes(selectedTime.value.minutes);
     return newDate;
 };
+
 // Generate filepath
 async function setCurrentFile(filePath, file) {
     src.value = URL.createObjectURL(file);
@@ -72,51 +143,6 @@ const uploadImage = async (evt) => {
     }
 };
 
-// Create event
-const addEvent = async () => {
-    try {
-        const { error } = await supabase.from("events").insert([
-            {
-                title: eventTitle.value,
-                description: eventDescription.value,
-                userId: user.id,
-                img_url: imagePath.value,
-                selected_date: newDateTime(),
-                deadline_date: formatDeadlineDate(selectedDeadline.value),
-                place_id: placeInfo.value.placeId,
-                place_lat: placeInfo.value.placeLat,
-                place_lng: placeInfo.value.placeLng,
-                team_id: eventDepartment.value,
-                category_id: categoryForEvent.value,
-            },
-        ]);
-        if (error) throw error;
-        statusMsg.value = "Success: Event oprettet";
-        eventTitle.value = null;
-        eventDescription.value = null;
-        setTimeout(() => {
-            statusMsg.value = "";
-        }, 5000);
-    } catch (error) {
-        errorMsg.value = `Error: ${error.message}`;
-        setTimeout(() => {
-            errorMsg.value = "";
-        }, 5000);
-    }
-};
-
-// Get teams
-const getTeams = async () => {
-    try {
-        const { data, error } = await supabase.from("teams").select("*");
-        if (error) throw error;
-        teams.value = data;
-    } catch (error) {
-        console.warn(error.message);
-    }
-};
-getTeams();
-
 // Get categories
 const getCategories = async () => {
     try {
@@ -127,7 +153,11 @@ const getCategories = async () => {
         console.warn(error.message);
     }
 };
-getCategories();
+
+onMounted(() => {
+    getCategories();
+    getEvent();
+});
 </script>
 
 <template>
@@ -138,13 +168,12 @@ getCategories();
             <h1
                 class="text-3xl font-medium lg:col-start-2 col-span-10 lg:col-span-3"
             >
-                Opret event
+                Opdater {{ data.title }}
             </h1>
 
             <div
                 class="col-span-11 md:col-span-5 lg:col-span-3 md:col-start-2 lg:col-start-2"
             >
-                <p>Upload billede</p>
                 <div>
                     <label for="single">
                         <div class="w-full h-auto">
@@ -173,7 +202,7 @@ getCategories();
                     </label>
                     <div>
                         <input
-                            class="file:bg-lait-blue file:text-lait-yellow file:font-bold file:text file:border-none w-full"
+                            class="file:bg-lait-blue file:text-lait-yellow file:font-bold file:text file:border-none"
                             type="file"
                             id="single"
                             accept="image/*"
@@ -185,7 +214,7 @@ getCategories();
             </div>
 
             <div class="col-span-12 md:col-span-6 lg:col-span-5">
-                <form @submit.prevent="addEvent">
+                <form @submit.prevent="updateEvent">
                     <div class="flex flex-col">
                         <label for="event-name" class="mb-1">Titel</label>
                         <input
@@ -253,13 +282,29 @@ getCategories();
                         />
                     </div>
 
-                    <div class="flex justify-end">
-                        <button
-                            class="uppercase cursor-pointer mb-10 text-lait-yellow font-bold text-base"
-                            type="submit"
-                        >
-                            opret event
-                        </button>
+                    <div class="flex flex-col items-end">
+                        <div>
+                            <input
+                                type="submit"
+                                class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                                :value="
+                                    loading ? 'Loading ...' : 'Opdater event'
+                                "
+                                :disabled="loading"
+                            />
+                        </div>
+                        <div>
+                            <NuxtLink
+                                class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                                :to="{
+                                    path: `/events/${dashify(
+                                        eventTitle
+                                    )}/${currentId}`,
+                                }"
+                            >
+                                Gå til Event
+                            </NuxtLink>
+                        </div>
                     </div>
                 </form>
             </div>

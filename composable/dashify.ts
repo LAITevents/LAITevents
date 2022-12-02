@@ -1,5 +1,5 @@
 export function useDashify() {
-	const dashify = (str, options) => {
+	const dashify = (str, options?) => {
 		if (typeof str !== "string") throw new TypeError("expected a string");
 		return str
 			.trim()
