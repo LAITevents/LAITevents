@@ -233,6 +233,19 @@ watch(profileEvents.value, () => {
                             >
                                 <p>{{ event.title }}</p>
                             </NuxtLink>
+                            <NuxtLink 
+                                :to="{
+                                    path:`/edit/${dashify(event.title)}/${
+                                        event.id
+                                    }`
+                                }"
+                                class="flex items-center"
+                            >
+                                <nuxt-icon 
+                                class="cursor-pointer align-middle"
+                                name="ProfileEdit"
+                                />
+                            </NuxtLink>
                             <nuxt-icon
                                 @click="deleteEvent(event.id)"
                                 class="text-2xl cursor-pointer"
