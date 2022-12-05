@@ -48,6 +48,7 @@ const getEvent = async () => {
         .select("*")
         .eq("id", currentId)
         .single();
+
     if (error) throw error;
     data.value = event;
 

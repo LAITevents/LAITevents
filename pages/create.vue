@@ -5,19 +5,26 @@ definePageMeta({
 
 import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
+import { useDashify } from "@/composable/dashify";
+const { dashify } = useDashify();
+
 const { formatDeadlineDate } = useDateFormatter();
 
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
 const statusMsg = ref("");
 const errorMsg = ref("");
+const data = ref({});
+const eventPage = ref(false);
 
 const uploading = ref(false);
 const files = ref();
 const src = ref("");
 const imagePath = ref("");
 
+const eventId = ref();
 const eventTitle = ref("");
+const titleOnCreatedEvent = ref("");
 const eventDescription = ref("");
 const selectedDate = ref();
 const selectedTime = ref();
@@ -102,6 +109,28 @@ const addEvent = async () => {
         setTimeout(() => {
             errorMsg.value = "";
         }, 5000);
+    }
+
+    eventPage.value = true;
+    getEvent();
+};
+
+// Get created event
+const getEvent = async () => {
+    try {
+        const { data, error } = await supabase
+            .from("events")
+            .select("id, title")
+            .order("id", { ascending: false });
+
+        if (error) throw error;
+
+        if (data) {
+            eventId.value = data[0].id;
+            titleOnCreatedEvent.value = data[0].title;
+        }
+    } catch (error) {
+        console.log(error.message);
     }
 };
 
@@ -257,13 +286,25 @@ getCategories();
                         />
                     </div>
 
-                    <div class="flex justify-end">
+                    <div class="flex flex-col items-end">
                         <button
-                            class="uppercase cursor-pointer mb-10 text-lait-yellow font-bold text-base"
+                            class="uppercase cursor-pointer text-lait-yellow font-bold text-base"
                             type="submit"
                         >
                             opret event
                         </button>
+
+                        <NuxtLink
+                            class="cursor-pointer mb-10 text-lait-yellow uppercase font-bold text-base"
+                            :to="{
+                                path: `/events/${dashify(
+                                    titleOnCreatedEvent
+                                )}/${eventId}`,
+                            }"
+                            v-if="eventPage"
+                        >
+                            Gå til Event
+                        </NuxtLink>
                     </div>
                 </form>
             </div>
