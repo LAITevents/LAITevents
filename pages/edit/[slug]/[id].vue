@@ -236,7 +236,10 @@ onMounted(() => {
                     >
                         <div class="w-full">
                             <label class="mb-1">Vælg dato</label>
-                            <DatePicker v-model="selectedDate" />
+                            <DatePicker
+                                v-model="selectedDate"
+                                :placeholderText="'Vælg dato'"
+                            />
                         </div>
                         <div class="w-full">
                             <label class="mb-1">Vælg tidspunkt</label>
@@ -244,7 +247,10 @@ onMounted(() => {
                         </div>
                         <div class="w-full">
                             <label class="mb-1">Deadline for tilmelding</label>
-                            <DatePicker v-model="selectedDeadline" />
+                            <DatePicker
+                                v-model="selectedDeadline"
+                                :placeholderText="'Vælg deadline dato'"
+                            />
                         </div>
                     </div>
 

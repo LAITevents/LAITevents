@@ -125,6 +125,7 @@ onMounted(() => {
                         {{ data.category_id.name }}
                     </p>
                     <nuxt-img
+                        v-if="data.img_url"
                         :src="data.img_url"
                         class="w-full h-60 md:h-72 lg:w-full lg:h-96 object-cover"
                     />
