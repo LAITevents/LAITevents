@@ -174,10 +174,11 @@ watch(profileEvents.value, () => {
                 <form @submit.prevent="updateProfile">
                     <div>
                         <input
-                            class="custom-input w-full"
+                            class="custom-input w-full custom-input-focus"
                             id="username"
                             type="text"
                             v-model="username"
+                            placeholder="Skift brugernavn"
                         />
                     </div>
                     <div>
@@ -192,13 +193,13 @@ watch(profileEvents.value, () => {
 
                     <div class="flex gap-5 justify-between">
                         <input
-                            class="custom-input w-full placeholder:text-lait-grey"
+                            class="custom-input w-full placeholder:text-lait-grey custom-input-focus"
                             type="password"
                             placeholder="Skift adgangskode"
                             v-model="password"
                         />
                         <input
-                            class="custom-input w-full"
+                            class="custom-input w-full custom-input-focus"
                             type="password"
                             placeholder="Gentag adgangskode"
                             v-model="repeatedPassword"

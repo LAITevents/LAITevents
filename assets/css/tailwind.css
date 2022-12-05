@@ -1,14 +1,14 @@
 @font-face {
     font-family: "gordita-regular";
-    src: url('@/assets/fonts/gordita-regular.woff') format('woff');
+    src: url("@/assets/fonts/gordita-regular.woff") format("woff");
 }
 @font-face {
     font-family: "gordita-medium";
-    src: url('@/assets/fonts/gordita-medium.woff') format('woff');
+    src: url("@/assets/fonts/gordita-medium.woff") format("woff");
 }
 @font-face {
     font-family: "gordita-bold";
-    src: url('@/assets/fonts/gordita-bold.woff') format('woff');
+    src: url("@/assets/fonts/gordita-bold.woff") format("woff");
 }
 
 @tailwind base;
@@ -17,63 +17,75 @@
 
 @layer components {
     .custom-input {
-      @apply py-2 px-3 mb-6 bg-light-blue text-white font-regular placeholder-lait-grey focus:outline-none
+        @apply py-2 px-3 mb-6 bg-light-blue text-white font-regular placeholder-lait-grey focus:outline-none;
     }
 
     .custom-select {
-        @apply bg-light-blue py-2 px-3 mb-4 text-white font-regular placeholder-lait-grey focus:outline-none
+        @apply bg-light-blue py-2 px-3 mb-4 text-white font-regular placeholder-lait-grey focus:outline-none;
     }
 
-
     .custom-datepicker input {
-        @apply bg-light-blue border-none py-2 text-white placeholder-lait-grey rounded-none focus:outline-none
+        @apply bg-light-blue border-none py-2 text-white placeholder-lait-grey rounded-none focus:outline-none;
     }
 
     .custom-datepicker .dp__input_wrap svg {
-        @apply fill-lait-grey 
+        @apply fill-lait-grey;
     }
 
     .custom-image-resize img {
-        @apply max-h-[40px] w-10 object-cover
+        @apply max-h-[40px] w-10 object-cover;
     }
 
-  }
+    .custom-input-focus {
+        @apply focus:ring-1 focus:ring-lait-yellow focus:ring-inset focus:outline-none;
+    }
+}
 
-  @layer utilities {
+@layer utilities {
+    .scrollbar::-webkit-scrollbar {
+        width: 5px;
+        height: 20px;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        border-radius: 100vh;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        background: #1b323886;
+        border-radius: 100vh;
+        height: 60px;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #1b3238;
+    }
 
     .scrollbar::-webkit-scrollbar {
-      width: 5px;
-      height: 20px;
-    }
-  
-    .scrollbar::-webkit-scrollbar-track {
-      border-radius: 100vh;
-    }
-  
-    .scrollbar::-webkit-scrollbar-thumb {
-      background: #1b323886;
-      border-radius: 100vh;
-      height: 60px;
-    }
-  
-    .scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #1B3238;
-    }
-
-    .scrollbar::-webkit-scrollbar{
         height: 40px;
     }
-  }
-  
 
-@layer base {
-
-    body {
-        background-color: #376570;
-        color: #fff
+    input:-webkit-autofill {
+        background-color: #4c757f !important;
+        -webkit-box-shadow: 0 0 0 50px #4c757f inset;
+        -webkit-text-fill-color: #ffffff;
     }
 
-    .translate-event:nth-of-type(3n+2) {
+    input:-webkit-autofill:focus {
+        background-color: #4c757f !important;
+        -webkit-box-shadow: 0 0 0 50px #4c757f inset;
+
+        border: 0.5px solid #ecc865;
+    }
+}
+
+@layer base {
+    body {
+        background-color: #376570;
+        color: #fff;
+    }
+
+    .translate-event:nth-of-type(3n + 2) {
         transform: translateY(6rem);
     }
 
@@ -82,7 +94,7 @@
         width: auto;
     }
 
-   .content-wrap {
+    .content-wrap {
         display: block;
         position: relative;
     }
@@ -94,11 +106,13 @@
         width: 100%;
         background-color: #4c757f;
         transform: scale(1);
-        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+        transition-property: color, background-color, border-color,
+            text-decoration-color, fill, stroke, opacity, box-shadow, transform,
+            filter, backdrop-filter;
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         transition-duration: 150ms;
     }
-    
+
     .event-content {
         padding: 3rem 3rem 2rem 3rem;
         position: relative;
@@ -110,7 +124,3 @@
         transform: scale(0.94);
     }
 }
-
-
-
-
