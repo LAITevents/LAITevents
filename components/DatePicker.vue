@@ -2,6 +2,10 @@
 import { ref } from "vue";
 import Datepicker from "@vuepic/vue-datepicker";
 
+const props = defineProps({
+    placeholderText: String,
+});
+
 const selectedDate = ref();
 
 const format = (selectedDate) => {
@@ -18,7 +22,7 @@ const format = (selectedDate) => {
         class="custom-datepicker"
         v-model="selectedDate"
         :enableTimePicker="false"
-        placeholder="Vælg dato"
+        :placeholder="props.placeholderText"
         :format="format"
         utc
     ></Datepicker>

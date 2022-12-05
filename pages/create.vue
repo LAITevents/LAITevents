@@ -204,13 +204,19 @@ getCategories();
                         class="flex flex-col gap-4 md:flex-col lg:flex-row lg:justify-between"
                     >
                         <div class="w-full">
-                            <DatePicker v-model="selectedDate" />
+                            <DatePicker
+                                v-model="selectedDate"
+                                :placeholderText="'Vælg dato'"
+                            />
                         </div>
                         <div class="w-full">
                             <TimePicker v-model="selectedTime" />
                         </div>
                         <div class="w-full">
-                            <DatePicker v-model="selectedDeadline" />
+                            <DatePicker
+                                v-model="selectedDeadline"
+                                :placeholderText="'Deadline dato'"
+                            />
                         </div>
                     </div>
 

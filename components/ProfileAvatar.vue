@@ -54,17 +54,8 @@ watch(path, () => {
 
 <template>
     <label for="single" class="flex flex-col">
-        <img v-if="path" :src="src" class="object-cover" />
-        <div
-            v-else
-            class="border-[5px] w-full border-light-blue flex justify-center items-center h-32 md:h-56 lg:h-72"
-        >
-            <nuxt-icon
-                name="CreatePlaceholder"
-                class="text-[60px] md:text-[70px] lg:text-[100px]"
-                fill
-            />
-        </div>
+        <img v-if="path" :src="src" class="object-cover h-72" />
+        <img v-else src="/assets/placeholder.jpg" class="h-72 object-cover" />
 
         <div v-if="props.showUpload">
             <input
@@ -76,7 +67,7 @@ watch(path, () => {
                 :disabled="uploading"
             />
             <p
-                class="uppercase font-bold text-lait-grey text-[8px] text-center lg:text-[11px]"
+                class="uppercase font-bold text-lait-grey text-[8px] text-center mt-2 lg:text-xs"
             >
                 {{
                     uploading
