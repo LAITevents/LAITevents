@@ -129,7 +129,6 @@ onMounted(() => {
                         :src="data.img_url"
                         class="w-full h-60 md:h-72 lg:w-full lg:h-96 object-cover"
                     />
-
                     <h1 class="font-medium text-2xl mt-4 mb-3">
                         {{ data.title }}
                     </h1>
