@@ -147,7 +147,11 @@ getCategories();
                 <div>
                     <label for="single">
                         <div class="w-full h-auto">
-                            <img v-if="src" :src="src" class="object-fill" />
+                            <nuxt-img
+                                v-if="src"
+                                :src="src"
+                                class="object-fill"
+                            />
                             <svg
                                 v-else
                                 viewBox="0 0 310 300"

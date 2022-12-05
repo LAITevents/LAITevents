@@ -132,11 +132,12 @@ const filteredEvents = computed(() => {
                             fill
                         />
                     </div>
-                    <img
+                    <nuxt-img
                         class="object-cover w-full h-72"
                         v-if="event.img_url"
                         :src="event.img_url"
                     />
+                    <div v-else></div>
                 </div>
             </NuxtLink>
         </div>

@@ -54,7 +54,7 @@ watch(path, () => {
 
 <template>
     <label for="single" class="flex flex-col">
-        <img class="object-cover" v-if="path" :src="src" />
+        <img v-if="path" :src="src" class="object-cover" />
         <div
             v-else
             class="border-[5px] w-full border-light-blue flex justify-center items-center h-32 md:h-56 lg:h-72"
