@@ -101,7 +101,7 @@ const getEventsForProfile = async () => {
 };
 
 const getPastEvents = async () => {
-    pastEvents.value = await getPastEventsForUser();
+    pastEvents.value = await getPastEventsForUser(user.value.id);
 };
 
 getPastEvents();

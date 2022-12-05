@@ -9,7 +9,7 @@ export function useEvent() {
                 .from("events")
                 .select("*, category_id(*)")
                 .gt("selected_date", currentDate)
-                .order("selected_date", {ascending: true})
+                .order("selected_date", { ascending: true });
             if (error) throw error;
             return eventData;
         } catch (error) {
@@ -26,11 +26,12 @@ export function useEvent() {
         return events;
     };
 
-    const getPastEventsForUser = async () => {
+    const getPastEventsForUser = async (userId?) => {
         const { data: events } = await supabase
             .from("events")
             .select("id, title")
-            .lt("selected_date", currentDate);
+            .lt("selected_date", currentDate)
+            .eq("userId", userId);
         return events;
     };
 
