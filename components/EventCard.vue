@@ -137,7 +137,7 @@ const filteredEvents = computed(() => {
                         v-if="event.img_url"
                         :src="event.img_url"
                     />
-                    <div v-else></div>
+                    <div v-else class="h-72"></div>
                 </div>
             </NuxtLink>
         </div>
