@@ -225,7 +225,7 @@ onMounted(() => {
                         <input
                             type="text"
                             required
-                            class="custom-input"
+                            class="custom-input custom-input-focus"
                             id="event-name"
                             v-model="eventTitle"
                         />
@@ -255,7 +255,7 @@ onMounted(() => {
                             <label class="mb-1">Kategori</label>
                             <select
                                 v-model="categoryForEvent"
-                                class="custom-select"
+                                class="custom-select custom-input-focus"
                                 required
                             >
                                 <option
@@ -275,13 +275,15 @@ onMounted(() => {
                     </div>
 
                     <div class="flex flex-col">
-                        <label for="event-description" class="mb-1"
+                        <label
+                            for="event-description"
+                            class="mb-1 custom-input-focus"
                             >Beskrivelse</label
                         >
                         <textarea
                             type="text"
                             required
-                            class="custom-input h-32"
+                            class="custom-input h-32 custom-input-focus"
                             id="event-description"
                             v-model="eventDescription"
                         />

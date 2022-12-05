@@ -223,7 +223,7 @@ getCategories();
                             placeholder="Titel"
                             type="text"
                             required
-                            class="custom-input"
+                            class="custom-input custom-input-focus"
                             id="event-name"
                             v-model="eventTitle"
                         />
@@ -249,7 +249,7 @@ getCategories();
                         <div class="flex flex-col w-full">
                             <select
                                 v-model="categoryForEvent"
-                                class="custom-select invalid:text-gray-200"
+                                class="custom-select invalid:text-gray-200 custom-input-focus"
                                 required
                             >
                                 <option
@@ -280,7 +280,7 @@ getCategories();
                             placeholder="Din Beskrivelse..."
                             type="text"
                             required
-                            class="custom-input h-32"
+                            class="custom-input h-32 custom-input-focus"
                             id="event-description"
                             v-model="eventDescription"
                         />
