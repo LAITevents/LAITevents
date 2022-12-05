@@ -130,7 +130,7 @@ const filteredEvents = computed(() => {
                         />
                     </div>
                     <img
-                        class="object-cover w-full max-h-72"
+                        class="object-cover w-full h-72"
                         v-if="event.img_url"
                         :src="event.img_url"
                     />
