@@ -82,7 +82,10 @@ const filteredEvents = computed(() => {
             </ul>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4">
+        <div
+            v-if="filteredEvents.length"
+            class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4"
+        >
             <NuxtLink
                 v-for="(event, index) in filteredEvents"
                 :key="index + 1"
@@ -136,6 +139,16 @@ const filteredEvents = computed(() => {
                     />
                 </div>
             </NuxtLink>
+        </div>
+        <div v-else class="mt-10">
+            <h1 class="text-xl">
+                Der er endnu ikke oprettet et event med denne kategori😢
+            </h1>
+            <nuxt-link
+                to="/create"
+                class="text-lait-yellow font-medium text-base"
+                >Klik her for at oprette event</nuxt-link
+            >
         </div>
     </div>
 </template>
