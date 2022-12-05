@@ -66,13 +66,13 @@
     }
 
     input:-webkit-autofill {
-        background-color: #4c757f !important;
+        background-color: #4c757f;
         -webkit-box-shadow: 0 0 0 50px #4c757f inset;
         -webkit-text-fill-color: #ffffff;
     }
 
     input:-webkit-autofill:focus {
-        background-color: #4c757f !important;
+        background-color: #4c757f;
         -webkit-box-shadow: 0 0 0 50px #4c757f inset;
 
         border: 0.5px solid #ecc865;
