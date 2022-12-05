@@ -122,6 +122,7 @@ const getEvent = async () => {
             .from("events")
             .select("id, title")
             .order("id", { ascending: false });
+
         if (error) throw error;
 
         if (data) {
@@ -156,8 +157,6 @@ const getCategories = async () => {
     }
 };
 getCategories();
-
-console.log(eventTitle);
 </script>
 
 <template>
