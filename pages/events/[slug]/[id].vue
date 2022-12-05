@@ -162,12 +162,6 @@ onMounted(() => {
 
             <div class="lg:col-start-8 col-span-12 lg:col-span-4">
                 <div class="p-7 bg-light-blue">
-                    <h3 class="text-center font-medium mb-4">
-                        Sidste chance for tilmelding:
-                        <span class="capitalize text-lait-yellow">{{
-                            formatDate(data.deadline_date)
-                        }}</span>
-                    </h3>
                     <div class="flex gap-2 capitalize">
                         <nuxt-icon class="text-xl" name="EventCalendar" />
 
@@ -185,6 +179,13 @@ onMounted(() => {
                         :placeLng="data.place_lng"
                         :placeId="data.place_id"
                     />
+
+                    <h3 class="text-center font-medium mt-4">
+                        Sidste chance for tilmelding:
+                        <span class="capitalize text-lait-yellow">{{
+                            formatDate(data.deadline_date)
+                        }}</span>
+                    </h3>
 
                     <div class="text-lait-yellow text-center">
                         <button
