@@ -1,39 +1,22 @@
 <script setup lang="ts">
-definePageMeta({
-    middleware: "auth",
-});
-
 import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
+import { useCategories } from "@/composable/useCategories";
 import { useDashify } from "@/composable/dashify";
+
 const { dashify } = useDashify();
 const { formatDeadlineDate } = useDateFormatter();
-
+const { getCategoriesFromDb } = useCategories();
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
+
 const statusMsg = ref("");
 const errorMsg = ref("");
-const data = ref({});
-const eventPage = ref(false);
-
-const uploading = ref(false);
-const files = ref();
-const src = ref("");
-const imagePath = ref("");
-
-const eventId = ref();
-const eventTitle = ref("");
-const titleOnCreatedEvent = ref("");
-const eventDescription = ref("");
-const selectedDate = ref();
-const selectedTime = ref();
-const selectedDeadline = ref();
-const placeInfo = ref();
-const categories = ref([]);
-const eventDepartment = ref(null);
-const categoryForEvent = ref("");
 
 // Format selectedDate to use UTC and add value from timepicker
+const selectedDate = ref();
+const selectedTime = ref();
+
 const newDateTime = () => {
     const newDate = new Date(selectedDate.value);
     const offset = newDate.getTimezoneOffset() / 60;
@@ -42,7 +25,9 @@ const newDateTime = () => {
     return newDate;
 };
 
-// Generate filepath
+// Generate filepath for image
+const imagePath = ref("");
+
 async function setCurrentFile(filePath, file) {
     src.value = URL.createObjectURL(file);
     const { data } = await supabase.storage
@@ -52,7 +37,11 @@ async function setCurrentFile(filePath, file) {
     imagePath.value = data.publicURL;
 }
 
-// Upload image
+// Upload image to supabase
+const uploading = ref(false);
+const files = ref();
+const src = ref("");
+
 const uploadImage = async (evt) => {
     files.value = evt.target.files;
     try {
@@ -78,6 +67,16 @@ const uploadImage = async (evt) => {
 };
 
 // Create event
+const showEventPageButton = ref(false);
+const eventId = ref();
+const eventTitle = ref("");
+const titleOnCreatedEvent = ref("");
+const eventDescription = ref("");
+const selectedDeadline = ref();
+const placeInfo = ref();
+const eventDepartment = ref(null);
+const categoryForEvent = ref("");
+
 const addEvent = async () => {
     try {
         const { error } = await supabase.from("events").insert([
@@ -108,21 +107,23 @@ const addEvent = async () => {
             errorMsg.value = "";
         }, 5000);
     }
-    eventPage.value = true;
-    getEvent();
+    showEventPageButton.value = true;
+    getCreatedEvent();
 };
 
 // Get created event
-const getEvent = async () => {
+const createdEvent = ref({});
+
+const getCreatedEvent = async () => {
     try {
-        const { data, error } = await supabase
+        const { data: createdEvent, error } = await supabase
             .from("events")
             .select("id, title")
             .order("id", { ascending: false });
         if (error) throw error;
-        if (data) {
-            eventId.value = data[0].id;
-            titleOnCreatedEvent.value = data[0].title;
+        if (createdEvent) {
+            eventId.value = createdEvent[0].id;
+            titleOnCreatedEvent.value = createdEvent[0].title;
         }
     } catch (error) {
         console.log(error.message);
@@ -130,16 +131,19 @@ const getEvent = async () => {
 };
 
 // Get categories
-const getCategories = async () => {
-    try {
-        const { data, error } = await supabase.from("categories").select("*");
-        if (error) throw error;
-        categories.value = data;
-    } catch (error) {
-        console.warn(error.message);
-    }
+const categories = ref([]);
+
+const getCategoriesForSelect = async () => {
+    categories.value = await getCategoriesFromDb();
 };
-getCategories();
+
+onMounted(() => {
+    getCategoriesForSelect();
+});
+
+definePageMeta({
+    middleware: "auth",
+});
 </script>
 
 <template>

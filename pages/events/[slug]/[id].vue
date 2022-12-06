@@ -1,34 +1,26 @@
 <script setup lang="ts">
-import { useUser } from "@/composable/useUser";
-import { useEvent } from "@/composable/useEvent";
-import { useRoute, useRouter } from "vue-router";
-
 import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useDateFormatter } from "@/composable/useDateFormatter";
+import { useUser } from "@/composable/useUser";
+import { useRegistration } from "@/composable/useRegistration";
 const { formatDate, formatTime } = useDateFormatter();
-const { getDepartment } = useEvent();
+const { registerEvent, deleteUserRegistration } = useRegistration();
 const { getUsername } = useUser();
-const route = useRoute();
 
+const route = useRoute();
 const supabase = useSupabaseClient();
-const dataLoaded = ref(null);
-const currentId = route.params.id;
-const data = ref({});
-const departmentName = ref();
-const hideText = ref(false);
+const user = supabase.auth.user();
 
 const statusMsg = ref(null);
 const errorMsg = ref(null);
-const user = supabase.auth.user();
-const eventParticipants = ref([]);
-const registered = ref(false);
-
-definePageMeta({
-    middleware: "auth",
-});
 
 // Gets event data from supabase
-const getEvents = async () => {
+const data = ref({});
+const currentId = route.params.id;
+const dataLoaded = ref(null);
+
+const getEventForRouteId = async () => {
     try {
         const { data: events, error } = await supabase
             .from("events")
@@ -38,11 +30,6 @@ const getEvents = async () => {
         if (error) throw error;
         dataLoaded.value = true;
         data.value = events[0];
-        if (events[0].team_id) {
-            await getDepartment(events[0].team_id).then(
-                (result) => (departmentName.value = result[0].team_title)
-            );
-        }
     } catch (error) {
         errorMsg.value = error.message;
         setTimeout(() => {
@@ -52,6 +39,9 @@ const getEvents = async () => {
 };
 
 // Gets participants for the specific event id
+const eventParticipants = ref([]);
+const registered = ref(false);
+
 const getParticipants = async () => {
     eventParticipants.value = [];
     try {
@@ -76,42 +66,25 @@ const getParticipants = async () => {
 };
 
 // Register an event
-const registerEvent = async () => {
+const registerCurrentEvent = async () => {
     if (registered.value) return;
-    try {
-        const { error } = await supabase.from("event_participants").insert({
-            event_id: currentId,
-            user_id: user.id,
-        });
-        if (error) throw error;
-        registered.value = true;
-        getParticipants();
-    } catch (error) {
-        errorMsg.value = error.message;
-    }
+    await registerEvent(currentId, user.id);
+    registered.value = true;
+    getParticipants();
 };
 
 // Cancel event registration
 const cancelRegistration = async () => {
-    try {
-        const { error } = await supabase
-            .from("event_participants")
-            .delete()
-            .match({ event_id: currentId, user_id: user.id })
-            .select();
-
-        if (error) throw error;
-        registered.value = false;
-        getParticipants();
-    } catch (error) {
-        errorMsg.value = error.message;
-    }
+    await deleteUserRegistration(currentId, user.id);
+    registered.value = false;
+    getParticipants();
 };
 
 // Read more button
+const hideText = ref(false);
+
 const eventDescription = () => {
     const description: String = data.value.description;
-
     if (hideText.value) {
         return `${description.slice(0, 250)}...`;
     }
@@ -119,8 +92,12 @@ const eventDescription = () => {
 };
 
 onMounted(() => {
-    getEvents();
+    getEventForRouteId();
     getParticipants();
+});
+
+definePageMeta({
+    middleware: "auth",
 });
 </script>
 
@@ -214,7 +191,7 @@ onMounted(() => {
                     <div class="text-lait-yellow text-center">
                         <button
                             v-if="!registered"
-                            @click="registerEvent()"
+                            @click="registerCurrentEvent()"
                             class="uppercase border-lait-yellow border-2 font-medium px-4 py-1 mt-7"
                         >
                             Tilmeld event

@@ -2,6 +2,8 @@
 import { ref } from "vue";
 import IComments from "@/interfaces/comments";
 import { useDateFormatter } from "@/composable/useDateFormatter";
+import { useUser } from "@/composable/useUser";
+const { getProfileInformation } = useUser();
 const { formatCommentDate } = useDateFormatter();
 
 const props = defineProps({
@@ -10,28 +12,12 @@ const props = defineProps({
 });
 
 const supabase = useSupabaseClient();
-const commentFromUser = ref("");
 const user = supabase.auth.user();
-const comments = ref(props.comments);
-const displayComments = ref([]);
-const users = ref([]);
-
-const getProfile = async (user_id: string) => {
-    let user = null;
-    try {
-        const { data, error } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", user_id);
-        if (error) throw error;
-        user = data[0];
-    } catch (error) {
-        console.log(error);
-    }
-    return user;
-};
 
 // Send comment to database
+const commentFromUser = ref("");
+const comments = ref(props.comments);
+
 const sendComment = async (evt) => {
     evt.preventDefault();
     if (commentFromUser.value.length > 0) {
@@ -48,6 +34,10 @@ const sendComment = async (evt) => {
         }
     }
 };
+
+// get profileinfo on users from comments and add to displayComments
+const users = ref([]);
+const displayComments = ref([]);
 
 const getProfiles = async () => {
     comments.value.forEach((comment) => {
@@ -95,7 +85,7 @@ watchEffect(async () => {
     const subscription = supabase
         .from("comments")
         .on("*", async (payload) => {
-            const user = await getProfile(payload.new.user_id);
+            const user = await getProfileInformation(payload.new.user_id);
             if (Object.keys(payload.new).length !== 0) {
                 displayComments.value.push({ ...payload.new, ...user });
                 comments.value.push({ ...payload.new, ...user });
@@ -114,7 +104,7 @@ watch(comments, () => {
 
 <template>
     <div>
-        <ul class="max-h-[500px] overflow-scroll overflow-x-hidden scrollbar">
+        <ul class="max-h-[500px] overflow-y-scroll overflow-x-hidden scrollbar">
             <li v-for="comment in displayComments" :key="comment.id">
                 <div class="flex flex-row gap-4">
                     <div class="w-10 min-w-[40px] h-10">
@@ -132,7 +122,9 @@ watch(comments, () => {
                                 {{ comment.username }}
                             </p>
 
-                            <p class="text-xs">{{ comment.content }}</p>
+                            <p class="text-xs">
+                                {{ comment.content }}
+                            </p>
                         </div>
                         <div
                             v-if="comment.user_id === user.id"

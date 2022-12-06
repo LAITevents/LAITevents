@@ -2,9 +2,6 @@
 import { ref } from "vue";
 import { useUser } from "@/composable/useUser";
 
-definePageMeta({
-    middleware: "auth",
-});
 const { getUsername } = useUser();
 const user = useSupabaseUser();
 const userDetails = ref("");
@@ -17,6 +14,10 @@ const getDisplayUsername = async () => {
 
 onMounted(() => {
     getDisplayUsername();
+});
+
+definePageMeta({
+    middleware: "auth",
 });
 </script>
 
