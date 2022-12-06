@@ -15,6 +15,7 @@ const dataLoaded = ref(null);
 const currentId = route.params.id;
 const data = ref({});
 const departmentName = ref();
+const hideText = ref(true);
 
 const statusMsg = ref(null);
 const errorMsg = ref(null);
@@ -33,6 +34,7 @@ const getEvents = async () => {
             .from("events")
             .select("*, event_participants(*), comments(*), category_id(*)")
             .eq("id", currentId);
+
         if (error) throw error;
         dataLoaded.value = true;
         data.value = events[0];
@@ -106,6 +108,16 @@ const cancelRegistration = async () => {
     }
 };
 
+// Read more button
+const eventDescription = () => {
+    const description = data.value.description;
+
+    if (hideText.value) {
+        return `${description.slice(0, 250)}...`;
+    }
+    return description;
+};
+
 onMounted(() => {
     getEvents();
     getParticipants();
@@ -132,7 +144,17 @@ onMounted(() => {
                     <h1 class="font-medium text-2xl mt-4 mb-3">
                         {{ data.title }}
                     </h1>
-                    <p class="">{{ data.description }}</p>
+                    <div class="flex flex-col items-start gap-3">
+                        <p class="">
+                            {{ eventDescription() }}
+                        </p>
+                        <button
+                            @click="hideText = !hideText"
+                            class="text-lait-yellow uppercase font-bold text-xs"
+                        >
+                            Læs {{ hideText ? "Mere" : "Mindre" }}
+                        </button>
+                    </div>
                 </div>
                 <div>
                     <h3 class="font-medium text-2xl mb-3">
