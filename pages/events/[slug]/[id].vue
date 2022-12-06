@@ -110,7 +110,7 @@ const cancelRegistration = async () => {
 
 // Read more button
 const eventDescription = () => {
-    const description = data.value.description;
+    const description: string = data.value.description;
 
     if (hideText.value) {
         return `${description.slice(0, 250)}...`;
@@ -145,7 +145,7 @@ onMounted(() => {
                         {{ data.title }}
                     </h1>
                     <div class="flex flex-col items-start gap-3">
-                        <p class="">
+                        <p>
                             {{ eventDescription() }}
                         </p>
                         <button
