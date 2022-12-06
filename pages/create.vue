@@ -7,7 +7,6 @@ import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useDashify } from "@/composable/dashify";
 const { dashify } = useDashify();
-
 const { formatDeadlineDate } = useDateFormatter();
 
 const supabase = useSupabaseClient();
@@ -30,7 +29,6 @@ const selectedDate = ref();
 const selectedTime = ref();
 const selectedDeadline = ref();
 const placeInfo = ref();
-const teams = ref([]);
 const categories = ref([]);
 const eventDepartment = ref(null);
 const categoryForEvent = ref("");
@@ -43,10 +41,10 @@ const newDateTime = () => {
     newDate.setUTCMinutes(selectedTime.value.minutes);
     return newDate;
 };
+
 // Generate filepath
 async function setCurrentFile(filePath, file) {
     src.value = URL.createObjectURL(file);
-
     const { data } = await supabase.storage
         .from("images")
         .getPublicUrl("events/" + filePath);
@@ -110,7 +108,6 @@ const addEvent = async () => {
             errorMsg.value = "";
         }, 5000);
     }
-
     eventPage.value = true;
     getEvent();
 };
@@ -122,9 +119,7 @@ const getEvent = async () => {
             .from("events")
             .select("id, title")
             .order("id", { ascending: false });
-
         if (error) throw error;
-
         if (data) {
             eventId.value = data[0].id;
             titleOnCreatedEvent.value = data[0].title;
@@ -133,18 +128,6 @@ const getEvent = async () => {
         console.log(error.message);
     }
 };
-
-// Get teams
-const getTeams = async () => {
-    try {
-        const { data, error } = await supabase.from("teams").select("*");
-        if (error) throw error;
-        teams.value = data;
-    } catch (error) {
-        console.warn(error.message);
-    }
-};
-getTeams();
 
 // Get categories
 const getCategories = async () => {

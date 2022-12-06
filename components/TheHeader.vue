@@ -15,7 +15,7 @@ const signOut = async () => {
         v-if="user"
         class="flex flex-row relative py-8 lg:py-12 items-end justify-between"
     >
-        <router-link to="/" class="relative w-20 lg:w-28">
+        <nuxt-link to="/" class="relative w-20 lg:w-28">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 100">
                 <path
                     fill="#fff"
@@ -23,7 +23,7 @@ const signOut = async () => {
                     transform="translate(-195 -70)"
                 ></path>
             </svg>
-        </router-link>
+        </nuxt-link>
         <div>
             <ul class="flex gap-4 lg:gap-10 cursor-pointer font-bold">
                 <nuxt-link to="/create">Opret event</nuxt-link>

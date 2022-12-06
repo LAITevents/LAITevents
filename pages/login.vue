@@ -74,7 +74,7 @@ watchEffect(() => {
         <div>
             <ErrorMessage :statusMsg="statusMsg" :errorMsg="errorMsg" />
 
-            <router-link to="/" class="relative">
+            <nuxt-link to="/" class="relative">
                 <svg
                     class="w-28 h-14 mx-auto"
                     xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@ watchEffect(() => {
                         transform="translate(-195 -70)"
                     ></path>
                 </svg>
-            </router-link>
+            </nuxt-link>
             <form
                 @submit.prevent="() => (isSignUp ? signUp() : handleLogin())"
                 class="flex flex-col mt-5"
