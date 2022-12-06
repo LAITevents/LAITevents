@@ -15,7 +15,7 @@ const dataLoaded = ref(null);
 const currentId = route.params.id;
 const data = ref({});
 const departmentName = ref();
-const hideText = ref(true);
+const hideText = ref(false);
 
 const statusMsg = ref(null);
 const errorMsg = ref(null);
@@ -110,7 +110,7 @@ const cancelRegistration = async () => {
 
 // Read more button
 const eventDescription = () => {
-    const description: string = data.value.description;
+    const description: String = data.value.description;
 
     if (hideText.value) {
         return `${description.slice(0, 250)}...`;
@@ -149,6 +149,7 @@ onMounted(() => {
                             {{ eventDescription() }}
                         </p>
                         <button
+                            v-if="data.description.length > 249"
                             @click="hideText = !hideText"
                             class="text-lait-yellow uppercase font-bold text-xs"
                         >
