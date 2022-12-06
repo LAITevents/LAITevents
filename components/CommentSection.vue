@@ -41,7 +41,7 @@ const displayComments = ref([]);
 
 const getProfiles = async () => {
     comments.value.forEach((comment) => {
-        users.value.push(comment.user_id);
+        users.value.push(comment?.user_id);
     });
     let userdata = null;
     try {
@@ -128,7 +128,7 @@ watch(comments, () => {
                         </div>
                         <div
                             v-if="comment.user_id === user.id"
-                            class="cursor-pointer text-lait-grey"
+                            class="cursor-pointer text-lait-grey mr-4"
                             @click="deleteUserComment(comment.comment_id)"
                         >
                             x
@@ -136,7 +136,7 @@ watch(comments, () => {
                     </div>
                 </div>
                 <p
-                    class="flex flex-end justify-end font-bold text-[10px] text-lait-yellow"
+                    class="flex flex-end justify-end mr-4 font-bold text-[10px] text-lait-yellow"
                 >
                     {{ formatCommentDate(comment.created_at) }}
                 </p>
@@ -149,14 +149,14 @@ watch(comments, () => {
 
         <form @submit.prevent="sendComment" class="flex flex-row">
             <div class="relative w-full">
-                <input
-                    class="py-2 px-3 w-full bg-[#87A3AA] text-white focus:outline-none placeholder-white flex-grow"
+                <textarea
+                    class="py-2 h-24 px-3 w-full bg-[#87A3AA] text-white focus:outline-none placeholder-white flex-grow"
                     type="text"
                     placeholder="Skriv din kommentar her"
                     v-model="commentFromUser"
                 />
                 <button
-                    class="text-white pl-1.5 absolute right-4 bottom-2 bg-[#87A3AA]"
+                    class="text-white pl-1.5 absolute right-4 bottom-4 bg-[#87A3AA]"
                     type="submit"
                 >
                     Send

@@ -91,9 +91,23 @@ const eventDescription = () => {
     return description;
 };
 
+// Save view to localstorage
+const logEventView = () => {
+    let viewed = JSON.parse(localStorage.getItem("viewedEvents") || "[]");
+    localStorage.setItem(
+        "viewedEvents",
+        JSON.stringify({
+            eventId: currentId,
+            viewed_at: new Date().toISOString(),
+        })
+    );
+    console.log(localStorage.getItem("viewedEvents"));
+};
+
 onMounted(() => {
     getEventForRouteId();
     getParticipants();
+    logEventView();
 });
 
 definePageMeta({

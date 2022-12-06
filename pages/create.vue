@@ -90,7 +90,6 @@ const addEvent = async () => {
                 place_id: placeInfo.value.placeId,
                 place_lat: placeInfo.value.placeLat,
                 place_lng: placeInfo.value.placeLng,
-                team_id: eventDepartment.value,
                 category_id: categoryForEvent.value,
             },
         ]);
@@ -296,7 +295,7 @@ definePageMeta({
                                     titleOnCreatedEvent
                                 )}/${eventId}`,
                             }"
-                            v-if="eventPage"
+                            v-if="showEventPageButton"
                         >
                             Gå til Event
                         </NuxtLink>

@@ -8,10 +8,10 @@ const props = defineProps({
 
 const selectedDate = ref();
 
-const format = (selectedDate) => {
-    const day = selectedDate.getDate();
-    const month = selectedDate.getMonth() + 1;
-    const year = selectedDate.getFullYear();
+const format = (selectedDate: Date) => {
+    const day: Number = selectedDate.getDate();
+    const month: Number = selectedDate.getMonth() + 1;
+    const year: Number = selectedDate.getFullYear();
 
     return `${day}/${month}/${year}`;
 };
