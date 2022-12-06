@@ -239,17 +239,19 @@ onMounted(() => {
                             <DatePicker
                                 v-model="selectedDate"
                                 :placeholderText="'Vælg dato'"
+                                required
                             />
                         </div>
                         <div class="w-full">
                             <label class="mb-1">Vælg tidspunkt</label>
-                            <TimePicker v-model="selectedTime" />
+                            <TimePicker v-model="selectedTime" required />
                         </div>
                         <div class="w-full">
                             <label class="mb-1">Deadline for tilmelding</label>
                             <DatePicker
                                 v-model="selectedDeadline"
                                 :placeholderText="'Vælg deadline dato'"
+                                required
                             />
                         </div>
                     </div>

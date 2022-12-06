@@ -57,6 +57,7 @@ onUnmounted(() => {
             placeholder="Søg efter en adresse.."
             aria-label="Search"
             ref="addressInput"
+            required
         />
     </div>
 </template>

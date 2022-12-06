@@ -93,6 +93,7 @@ watchEffect(() => {
             >
                 <label for="email" class="">LAIT Mail</label>
                 <input
+                    required
                     class="py-2 px-3 mb-2 lg:w-96 bg-light-blue text-white custom-input-focus"
                     type="email"
                     v-model="email"
@@ -101,6 +102,7 @@ watchEffect(() => {
                 <label v-if="isSignUp" for="username">Brugernavn</label>
                 <input
                     v-if="isSignUp"
+                    required
                     class="py-2 px-3 mb-2 bg-light-blue text-white custom-input-focus"
                     type="username"
                     v-model="username"
@@ -108,6 +110,7 @@ watchEffect(() => {
 
                 <label for="password" class="">Adgangskode</label>
                 <input
+                    required
                     class="py-2 px-3 mb-2 bg-light-blue text-white custom-input-focus"
                     type="password"
                     v-model="password"
@@ -118,6 +121,7 @@ watchEffect(() => {
                 >
                 <input
                     v-if="isSignUp"
+                    required
                     class="py-2 px-3 mb-2 bg-light-blue text-white custom-input-focus"
                     type="password"
                     v-model="repeatedPassword"
