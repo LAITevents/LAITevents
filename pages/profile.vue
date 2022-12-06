@@ -174,6 +174,7 @@ watch(profileEvents.value, () => {
                 <form @submit.prevent="updateProfile">
                     <div>
                         <input
+                            required
                             class="custom-input w-full custom-input-focus"
                             id="username"
                             type="text"
@@ -183,7 +184,7 @@ watch(profileEvents.value, () => {
                     </div>
                     <div>
                         <input
-                            class="custom-input w-full"
+                            class="w-full bg-light-blue py-2 px-3 mb-4 text-gray-400 font-regular focus:outline-none"
                             id="email"
                             type="text"
                             :value="user?.email"

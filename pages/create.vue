@@ -236,15 +236,17 @@ getCategories();
                             <DatePicker
                                 v-model="selectedDate"
                                 :placeholderText="'Vælg dato'"
+                                required
                             />
                         </div>
                         <div class="w-full">
-                            <TimePicker v-model="selectedTime" />
+                            <TimePicker v-model="selectedTime" required />
                         </div>
                         <div class="w-full">
                             <DatePicker
                                 v-model="selectedDeadline"
                                 :placeholderText="'Deadline dato'"
+                                required
                             />
                         </div>
                     </div>
