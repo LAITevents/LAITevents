@@ -94,16 +94,26 @@ const eventDescription = () => {
 // Save view to localstorage
 const logEventView = () => {
     let storedArray = JSON.parse(localStorage.getItem("viewedEvents"));
+    let objArray = {
+        eventId: currentId,
+        viewed_at: new Date().getTime(),
+    };
 
     if (storedArray === null) {
         storedArray = [];
     }
-    let obj = {
-        eventId: currentId,
-        viewed_at: new Date().getTime(),
-    };
-    storedArray.push(obj);
-    localStorage.setItem("viewedEvents", JSON.stringify(storedArray));
+
+    let objIndex = storedArray.findIndex((obj) => obj.eventId == currentId);
+    console.log(objIndex);
+    if (objIndex > 0) {
+        console.log("Before update: ", storedArray[objIndex]);
+        storedArray[objIndex].viewed_at = new Date().getTime();
+        console.log("After update: ", storedArray[objIndex]);
+        localStorage.setItem("viewedEvents", JSON.stringify(storedArray));
+    } else {
+        storedArray.push(objArray);
+        localStorage.setItem("viewedEvents", JSON.stringify(storedArray));
+    }
 };
 
 onMounted(() => {
