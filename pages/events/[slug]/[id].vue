@@ -93,15 +93,17 @@ const eventDescription = () => {
 
 // Save view to localstorage
 const logEventView = () => {
-    let viewed = JSON.parse(localStorage.getItem("viewedEvents") || "[]");
-    localStorage.setItem(
-        "viewedEvents",
-        JSON.stringify({
-            eventId: currentId,
-            viewed_at: new Date().toISOString(),
-        })
-    );
-    console.log(localStorage.getItem("viewedEvents"));
+    let storedArray = JSON.parse(localStorage.getItem("viewedEvents"));
+
+    if (storedArray === null) {
+        storedArray = [];
+    }
+    let obj = {
+        eventId: currentId,
+        viewed_at: new Date().getTime(),
+    };
+    storedArray.push(obj);
+    localStorage.setItem("viewedEvents", JSON.stringify(storedArray));
 };
 
 onMounted(() => {

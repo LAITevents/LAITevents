@@ -3,11 +3,16 @@ import { ref } from "vue";
 import { useDashify } from "@/composable/dashify";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useEvent } from "@/composable/useEvent";
+import IStorage from "@/interfaces/storageArray";
 const supabase = useSupabaseClient();
 const { getData } = useEvent();
 const { dashify } = useDashify();
 const { formatDate } = useDateFormatter();
 const eventsList = ref(await getData());
+
+const props = defineProps({
+    localstorageArr: { type: Object as () => IStorage[], default: [] },
+});
 
 // Array of hashtags to filter from
 const hashtags = ref([
@@ -40,10 +45,22 @@ function counterForHashtags(filterValue: string) {
     );
 }
 
-// Show if update indicator if event is updated
-const showUpdateIndicator = (created_at: string, updated_at: string) => {
+const updateIndicator = (event_id, updated_at, created_at) => {
     if (created_at !== updated_at) {
-        return true;
+        const date = new Date(updated_at);
+        const timestamp = date.getTime();
+        let localStorageData = props.localstorageArr;
+
+        if (localStorageData !== null) {
+            return !(
+                localStorageData.filter(
+                    (event) =>
+                        event.eventId == event_id && event.viewed_at > timestamp
+                ).length > 0
+            );
+        } else {
+            return true;
+        }
     } else {
         return false;
     }
@@ -127,7 +144,8 @@ const filteredEvents = computed(() => {
                         </div>
                         <nuxt-icon
                             v-if="
-                                showUpdateIndicator(
+                                updateIndicator(
+                                    event.id,
                                     event.updated_at,
                                     event.created_at
                                 )

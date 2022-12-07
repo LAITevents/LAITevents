@@ -12,8 +12,14 @@ const getDisplayUsername = async () => {
     });
 };
 
+const localstorageArr = ref();
+const getStorageData = () => {
+    localstorageArr.value = JSON.parse(localStorage.getItem("viewedEvents"));
+};
+
 onMounted(() => {
     getDisplayUsername();
+    getStorageData();
 });
 
 definePageMeta({
@@ -30,6 +36,6 @@ definePageMeta({
             </p>
         </div>
 
-        <EventCard />
+        <EventCard :localstorageArr="localstorageArr" />
     </div>
 </template>
