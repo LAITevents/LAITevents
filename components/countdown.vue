@@ -5,25 +5,23 @@ const props = defineProps({
     date: String,
 });
 
-const deadlineDate = ref(props.date);
+const dateToday = new Date();
+const dateTodayFormat = dayjs(dateToday);
+const dateDeadline = ref(props.date);
+const dateDeadlineFormat = dayjs(dateDeadline.value);
 
-const today = new Date();
-const date1 = dayjs(today);
-
-const date2 = dayjs(deadlineDate.value);
-
-const diff = date2.diff(date1, "day", true);
-const days = Math.floor(diff);
-const hours = Math.floor((diff - days) * 24);
+const diff = dateDeadlineFormat.diff(dateTodayFormat, "day", true);
+const diffDays = Math.floor(diff);
+const diffHours = Math.floor((diff - diffDays) * 24);
 
 // change dag or dage "string"
 
 const changeString = ref("");
 
 const changeDayOrDays = () => {
-    if (days > 1) {
+    if (diffDays > 1) {
         changeString.value = "dage og";
-    } else if (days === 1) {
+    } else if (diffDays === 1) {
         changeString.value = "dag og";
     } else {
         changeString.value = "";
@@ -32,22 +30,22 @@ const changeDayOrDays = () => {
 };
 changeDayOrDays();
 
-// show if more than 0 days diff
-const showDays = ref();
+// show if more than 0 diffDays diff
+const showdiffDays = ref();
 
-const checkDays = () => {
-    if (days > 0) {
-        showDays.value = days;
+const checkDiffDays = () => {
+    if (diffDays > 0) {
+        showdiffDays.value = diffDays;
     } else {
-        showDays.value = "";
+        showdiffDays.value = "";
     }
-    return showDays;
+    return showdiffDays;
 };
-checkDays();
+checkDiffDays();
 
 // change time or timer "string"
 const changeTimeOrTimer = () => {
-    if (hours === 1) {
+    if (diffHours === 1) {
         return "time";
     } else {
         return "timer";
@@ -62,13 +60,13 @@ changeTimeOrTimer();
         class="relative lg:bottom-14 flex justify-center items-center bg-lait-yellow h-9 w-64"
     >
         <p class="text-xs font-bold text-lait-blue">
-            Tilmeldingfrist: {{ showDays }} {{ changeString }}
-            {{ hours }}
+            Tilmeldingfrist: {{ showdiffDays }} {{ changeString }}
+            {{ diffHours }}
             {{ changeTimeOrTimer() }}
         </p>
     </div>
     <div
-        v-else-if="date1 >= date2"
+        v-else-if="dateTodayFormat >= dateDeadlineFormat"
         class="relative lg:bottom-14 flex justify-center items-center bg-lait-yellow font-bold h-9 w-64"
     >
         <p class="text-xs text-lait-blue">Tilmelding lukket</p>
