@@ -1,22 +1,97 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
-import { useCategories } from "@/composable/useCategories";
+import { useRoute, useRouter } from "vue-router";
 import { useDashify } from "@/composable/dashify";
-
-const { dashify } = useDashify();
-const { formatDeadlineDate } = useDateFormatter();
+import { useCategories } from "@/composable/useCategories";
 const { getCategoriesFromDb } = useCategories();
+const { formatDeadlineDate } = useDateFormatter();
+const { dashify } = useDashify();
 const supabase = useSupabaseClient();
+const route = useRoute();
 const user = supabase.auth.user();
 
 const statusMsg = ref("");
 const errorMsg = ref("");
+const uploading = ref(false);
+const loading = ref(true);
 
-// Format selectedDate to use UTC and add value from timepicker
+const currentId = route.params.id;
+
+// Show selected date in input field
+const pickedTime = () => {
+    const dateCurrent: Date = new Date(selectedDate.value);
+    const hours: Number = dateCurrent.getHours();
+    const minutes: Number = dateCurrent.getMinutes();
+    return { hours, minutes };
+};
+
+// Get event for current id
+const eventData = ref({});
+const eventTitle = ref("");
+const eventDescription = ref("");
 const selectedDate = ref();
 const selectedTime = ref();
+const selectedDeadline = ref();
+const placeInfo = ref();
+const categoryForEvent = ref("");
 
+const getEvent = async () => {
+    const { data: event, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("id", currentId)
+        .single();
+    if (error) throw error;
+    eventData.value = event;
+    if (event) {
+        src.value = event.img_url;
+        eventTitle.value = event.title;
+        selectedDate.value = event.selected_date;
+        selectedTime.value = pickedTime();
+        selectedDeadline.value = event.deadline_date;
+        categoryForEvent.value = event.category_id;
+        eventDescription.value = event.description;
+    }
+    loading.value = false;
+};
+
+// Update event with new values
+const updateEvent = async () => {
+    try {
+        const { error } = await supabase.from("events").update(
+            {
+                id: currentId,
+                updated_at: new Date(),
+                title: eventTitle.value,
+                description: eventDescription.value,
+                userId: user.id,
+                img_url: imagePath.value,
+                selected_date: newDateTime(),
+                deadline_date: formatDeadlineDate(selectedDeadline.value),
+                place_id: placeInfo.value.placeId,
+                place_lat: placeInfo.value.placeLat,
+                place_lng: placeInfo.value.placeLng,
+                category_id: categoryForEvent.value,
+            },
+            {
+                returning: "minimal",
+            }
+        );
+        statusMsg.value = "Success: Event opdateret!";
+        setTimeout(() => {
+            statusMsg.value = "";
+        }, 5000);
+        if (error) throw error;
+    } catch (error) {
+        errorMsg.value = error.message;
+        setTimeout(() => {
+            errorMsg.value = "";
+        }, 5000);
+    }
+};
+
+// Format selectedDate to use UTC and add value from timepicker
 const newDateTime = () => {
     const newDate = new Date(selectedDate.value);
     const offset = newDate.getTimezoneOffset() / 60;
@@ -25,7 +100,9 @@ const newDateTime = () => {
     return newDate;
 };
 
-// Generate filepath for image
+// Generate filepath
+const files = ref();
+const src = ref("");
 const imagePath = ref("");
 
 async function setCurrentFile(filePath, file) {
@@ -37,11 +114,7 @@ async function setCurrentFile(filePath, file) {
     imagePath.value = data.publicURL;
 }
 
-// Upload image to supabase
-const uploading = ref(false);
-const files = ref();
-const src = ref("");
-
+// Upload image
 const uploadImage = async (evt) => {
     files.value = evt.target.files;
     try {
@@ -57,87 +130,24 @@ const uploadImage = async (evt) => {
             .from("images")
             .upload("events/" + filePath, file);
         if (uploadError) throw uploadError;
-
         setCurrentFile(filePath, file);
     } catch (error) {
-        alert(error.message);
+        errorMsg.value = error.message;
     } finally {
         uploading.value = false;
-    }
-};
-
-// Create event
-const showEventPageButton = ref(false);
-const eventId = ref();
-const eventTitle = ref("");
-const titleOnCreatedEvent = ref("");
-const eventDescription = ref("");
-const selectedDeadline = ref();
-const placeInfo = ref();
-const eventDepartment = ref(null);
-const categoryForEvent = ref("");
-
-const addEvent = async () => {
-    try {
-        const { error } = await supabase.from("events").insert([
-            {
-                title: eventTitle.value,
-                description: eventDescription.value,
-                userId: user.id,
-                img_url: imagePath.value,
-                selected_date: newDateTime(),
-                deadline_date: formatDeadlineDate(selectedDeadline.value),
-                place_id: placeInfo.value.placeId,
-                place_lat: placeInfo.value.placeLat,
-                place_lng: placeInfo.value.placeLng,
-                category_id: categoryForEvent.value,
-            },
-        ]);
-        if (error) throw error;
-        statusMsg.value = "Success: Event oprettet";
-        eventTitle.value = null;
-        eventDescription.value = null;
-        setTimeout(() => {
-            statusMsg.value = "";
-        }, 5000);
-    } catch (error) {
-        errorMsg.value = `Error: ${error.message}`;
-        setTimeout(() => {
-            errorMsg.value = "";
-        }, 5000);
-    }
-    showEventPageButton.value = true;
-    getCreatedEvent();
-};
-
-// Get created event
-const createdEvent = ref({});
-
-const getCreatedEvent = async () => {
-    try {
-        const { data: createdEvent, error } = await supabase
-            .from("events")
-            .select("id, title")
-            .order("id", { ascending: false });
-        if (error) throw error;
-        if (createdEvent) {
-            eventId.value = createdEvent[0].id;
-            titleOnCreatedEvent.value = createdEvent[0].title;
-        }
-    } catch (error) {
-        console.log(error.message);
     }
 };
 
 // Get categories
 const categories = ref([]);
 
-const getCategoriesForSelect = async () => {
+const getCategories = async () => {
     categories.value = await getCategoriesFromDb();
 };
 
 onMounted(() => {
-    getCategoriesForSelect();
+    getCategories();
+    getEvent();
 });
 
 definePageMeta({
@@ -153,7 +163,7 @@ definePageMeta({
             <h1
                 class="text-3xl font-medium lg:col-start-2 col-span-10 lg:col-span-3"
             >
-                Opret event
+                Opdater {{ eventData.title }}
             </h1>
 
             <div
@@ -191,7 +201,7 @@ definePageMeta({
                     </label>
                     <div>
                         <input
-                            class="file:bg-lait-blue file:text-lait-yellow file:font-bold file:text file:border-none w-full"
+                            class="file:bg-lait-blue file:text-lait-yellow file:font-bold file:text file:border-none"
                             type="file"
                             id="single"
                             accept="image/*"
@@ -203,10 +213,10 @@ definePageMeta({
             </div>
 
             <div class="col-span-12 md:col-span-6 lg:col-span-5">
-                <form @submit.prevent="addEvent">
+                <form @submit.prevent="updateEvent">
                     <div class="flex flex-col">
+                        <label for="event-name" class="mb-1">Titel</label>
                         <input
-                            placeholder="Titel"
                             type="text"
                             required
                             class="custom-input custom-input-focus"
@@ -219,6 +229,7 @@ definePageMeta({
                         class="flex flex-col gap-4 md:flex-col lg:flex-row lg:justify-between"
                     >
                         <div class="w-full">
+                            <label class="mb-1">Vælg dato</label>
                             <DatePicker
                                 v-model="selectedDate"
                                 :placeholderText="'Vælg dato'"
@@ -226,12 +237,14 @@ definePageMeta({
                             />
                         </div>
                         <div class="w-full">
+                            <label class="mb-1">Vælg tidspunkt</label>
                             <TimePicker v-model="selectedTime" required />
                         </div>
                         <div class="w-full">
+                            <label class="mb-1">Deadline for tilmelding</label>
                             <DatePicker
                                 v-model="selectedDeadline"
-                                :placeholderText="'Deadline dato'"
+                                :placeholderText="'Vælg deadline dato'"
                                 required
                             />
                         </div>
@@ -241,19 +254,12 @@ definePageMeta({
                         class="flex flex-col lg:gap-4 md:flex-col lg:flex-row mt-4"
                     >
                         <div class="flex flex-col w-full">
+                            <label class="mb-1">Kategori</label>
                             <select
                                 v-model="categoryForEvent"
-                                class="custom-select invalid:text-gray-200 custom-input-focus"
+                                class="custom-select custom-input-focus"
                                 required
                             >
-                                <option
-                                    value=""
-                                    disabled
-                                    selected
-                                    class="opacity-50 text-gray-400"
-                                >
-                                    Kategori
-                                </option>
                                 <option
                                     v-for="category in categories"
                                     :key="category.id"
@@ -266,12 +272,17 @@ definePageMeta({
                     </div>
 
                     <div class="w-full">
+                        <label class="mb-1">Lokation</label>
                         <AddressField ref="placeInfo" />
                     </div>
 
                     <div class="flex flex-col">
+                        <label
+                            for="event-description"
+                            class="mb-1 custom-input-focus"
+                            >Beskrivelse</label
+                        >
                         <textarea
-                            placeholder="Din Beskrivelse..."
                             type="text"
                             required
                             class="custom-input h-32 custom-input-focus"
@@ -281,24 +292,28 @@ definePageMeta({
                     </div>
 
                     <div class="flex flex-col items-end">
-                        <button
-                            class="uppercase cursor-pointer text-lait-yellow font-bold text-base"
-                            type="submit"
-                        >
-                            opret event
-                        </button>
-
-                        <NuxtLink
-                            class="cursor-pointer mb-10 text-lait-yellow uppercase font-bold text-base"
-                            :to="{
-                                path: `/events/${dashify(
-                                    titleOnCreatedEvent
-                                )}/${eventId}`,
-                            }"
-                            v-if="showEventPageButton"
-                        >
-                            Gå til Event
-                        </NuxtLink>
+                        <div>
+                            <input
+                                type="submit"
+                                class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                                :value="
+                                    loading ? 'Loading ...' : 'Opdater event'
+                                "
+                                :disabled="loading"
+                            />
+                        </div>
+                        <div>
+                            <NuxtLink
+                                class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                                :to="{
+                                    path: `/events/${dashify(
+                                        eventTitle
+                                    )}/${currentId}`,
+                                }"
+                            >
+                                Gå til Event
+                            </NuxtLink>
+                        </div>
                     </div>
                 </form>
             </div>

@@ -96,14 +96,12 @@ const updateProfile = async () => {
 };
 
 const getEventsForProfile = async () => {
-    const date: String = new Date().toISOString();
-    profileEvents.value = await getEventsForUser(user.value.id, date);
+    profileEvents.value = await getEventsForUser(user.value.id);
     dataLoaded.value = true;
 };
 
 const getPastEvents = async () => {
-    const date: String = new Date().toISOString();
-    pastEvents.value = await getPastEventsForUser(date);
+    pastEvents.value = await getPastEventsForUser(user.value.id);
 };
 
 getPastEvents();
@@ -154,13 +152,12 @@ watch(profileEvents.value, () => {
     <div>
         <div class="grid grid-cols-12 gap-5">
             <h2
-                class="text-3xl font-medium col-span-8 lg:col-start-2 lg:col-span-10"
+                class="text-3xl font-medium col-span-12 lg:col-start-2 lg:col-span-10"
             >
                 Din profil
             </h2>
 
-            <div class="col-span-8 lg:col-span-3 lg:col-start-2">
-                <p class="">Upload / skift billede</p>
+            <div class="col-span-6 lg:col-span-3 lg:col-start-2">
                 <ProfileAvatar
                     v-model:path="avatar_path"
                     @upload="updateProfile"
@@ -168,7 +165,7 @@ watch(profileEvents.value, () => {
                 />
             </div>
 
-            <div class="flex flex-col lg:my-6 col-span-12 lg:col-span-5">
+            <div class="flex flex-col lg:mb-6 col-span-12 lg:col-span-5">
                 <ErrorMessage
                     class="-translate-y-12"
                     :statusMsg="statusMsg"
@@ -177,15 +174,17 @@ watch(profileEvents.value, () => {
                 <form @submit.prevent="updateProfile">
                     <div>
                         <input
-                            class="custom-input w-full"
+                            required
+                            class="custom-input w-full custom-input-focus"
                             id="username"
                             type="text"
                             v-model="username"
+                            placeholder="Skift brugernavn"
                         />
                     </div>
                     <div>
                         <input
-                            class="custom-input w-full"
+                            class="w-full bg-light-blue py-2 px-3 mb-4 text-gray-400 font-regular focus:outline-none"
                             id="email"
                             type="text"
                             :value="user?.email"
@@ -195,13 +194,13 @@ watch(profileEvents.value, () => {
 
                     <div class="flex gap-5 justify-between">
                         <input
-                            class="custom-input w-full placeholder:text-lait-grey"
+                            class="custom-input w-full placeholder:text-lait-grey custom-input-focus"
                             type="password"
                             placeholder="Skift adgangskode"
                             v-model="password"
                         />
                         <input
-                            class="custom-input w-full"
+                            class="custom-input w-full custom-input-focus"
                             type="password"
                             placeholder="Gentag adgangskode"
                             v-model="repeatedPassword"
@@ -234,6 +233,19 @@ watch(profileEvents.value, () => {
                                 }"
                             >
                                 <p>{{ event.title }}</p>
+                            </NuxtLink>
+                            <NuxtLink
+                                :to="{
+                                    path: `/edit/${dashify(event.title)}/${
+                                        event.id
+                                    }`,
+                                }"
+                                class="flex items-center"
+                            >
+                                <nuxt-icon
+                                    class="cursor-pointer align-middle"
+                                    name="ProfileEdit"
+                                />
                             </NuxtLink>
                             <nuxt-icon
                                 @click="deleteEvent(event.id)"

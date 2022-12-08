@@ -53,10 +53,11 @@ onUnmounted(() => {
     <div>
         <input
             type="search"
-            class="custom-input w-full"
+            class="custom-input w-full custom-input-focus"
             placeholder="Søg efter en adresse.."
             aria-label="Search"
             ref="addressInput"
+            required
         />
     </div>
 </template>

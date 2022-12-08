@@ -1,5 +1,9 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import * as locale from "dayjs/locale/da";
+
 export function useDateFormatter() {
-    const formatDate = (date) => {
+    const formatDate = (date: string) => {
         const formattedDate = new Date(date);
 
         return formattedDate.toLocaleString("Da-DK", {
@@ -9,7 +13,7 @@ export function useDateFormatter() {
         });
     };
 
-    const formatTime = (date) => {
+    const formatTime = (date: string) => {
         const formattedDate = new Date(date);
 
         return formattedDate
@@ -19,10 +23,16 @@ export function useDateFormatter() {
             .replace(".", ":");
     };
 
-    const formatDeadlineDate = (date) => {
+    const formatDeadlineDate = (date: string) => {
         const newDate = new Date(date);
         return newDate;
     };
 
-    return { formatDate, formatTime, formatDeadlineDate };
+    const formatCommentDate = (date: string) => {
+        dayjs.extend(relativeTime);
+        const formattedDate = dayjs(date).locale(locale).fromNow();
+        return formattedDate;
+    };
+
+    return { formatDate, formatTime, formatDeadlineDate, formatCommentDate };
 }

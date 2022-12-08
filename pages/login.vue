@@ -2,16 +2,15 @@
 import { ref } from "vue";
 
 const supabase = useSupabaseClient();
+const user = useSupabaseUser();
+const errorMsg = ref("");
+const statusMsg = ref("");
+const router = useRouter();
+
+// Login functionality
 const email = ref("");
 const password = ref("");
 const repeatedPassword = ref("");
-const username = ref("");
-const department = ref(null);
-const isSignUp = ref(false);
-const errorMsg = ref("");
-const statusMsg = ref("");
-const user = useSupabaseUser();
-const router = useRouter();
 
 const handleLogin = async () => {
     try {
@@ -27,6 +26,10 @@ const handleLogin = async () => {
         }, 5000);
     }
 };
+
+// Signup functionality
+const username = ref("");
+const isSignUp = ref(false);
 
 const signUp = async () => {
     if (password.value === repeatedPassword.value) {
@@ -74,7 +77,7 @@ watchEffect(() => {
         <div>
             <ErrorMessage :statusMsg="statusMsg" :errorMsg="errorMsg" />
 
-            <router-link to="/" class="relative">
+            <nuxt-link to="/" class="relative">
                 <svg
                     class="w-28 h-14 mx-auto"
                     xmlns="http://www.w3.org/2000/svg"
@@ -86,14 +89,15 @@ watchEffect(() => {
                         transform="translate(-195 -70)"
                     ></path>
                 </svg>
-            </router-link>
+            </nuxt-link>
             <form
                 @submit.prevent="() => (isSignUp ? signUp() : handleLogin())"
                 class="flex flex-col mt-5"
             >
                 <label for="email" class="">LAIT Mail</label>
                 <input
-                    class="py-2 px-3 mb-2 lg:w-96 bg-light-blue text-white focus:outline-none"
+                    required
+                    class="py-2 px-3 mb-2 lg:w-96 bg-light-blue text-white custom-input-focus"
                     type="email"
                     v-model="email"
                 />
@@ -101,14 +105,16 @@ watchEffect(() => {
                 <label v-if="isSignUp" for="username">Brugernavn</label>
                 <input
                     v-if="isSignUp"
-                    class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
+                    required
+                    class="py-2 px-3 mb-2 bg-light-blue text-white custom-input-focus"
                     type="username"
                     v-model="username"
                 />
 
                 <label for="password" class="">Adgangskode</label>
                 <input
-                    class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
+                    required
+                    class="py-2 px-3 mb-2 bg-light-blue text-white custom-input-focus"
                     type="password"
                     v-model="password"
                 />
@@ -118,7 +124,8 @@ watchEffect(() => {
                 >
                 <input
                     v-if="isSignUp"
-                    class="py-2 px-3 mb-2 bg-light-blue text-white focus:outline-none"
+                    required
+                    class="py-2 px-3 mb-2 bg-light-blue text-white custom-input-focus"
                     type="password"
                     v-model="repeatedPassword"
                 />

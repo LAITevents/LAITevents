@@ -4,13 +4,13 @@ export default interface IEvents {
     description: string;
     created_at: string;
     updated_at: string;
+    deadline_date: string;
     userId: string;
     img_url: string;
     selected_date: string;
     place_id: string;
     place_lat: string;
     place_lng: string;
-    team_id: number;
     category_id: object;
     filter: Function;
 }
