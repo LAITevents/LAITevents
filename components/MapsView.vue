@@ -79,7 +79,7 @@ onMounted(() => {
 
 <template>
     <div class="flex gap-2 mb-4">
-        <nuxt-icon class="text-xl" name="EventLocation" />
+        <Icon size="24" name="ic:baseline-location-on" />
         <p>{{ placeTitel }}</p>
     </div>
     <div ref="mapDiv" class="h-96"></div>

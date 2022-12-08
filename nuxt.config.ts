@@ -3,8 +3,8 @@ export default defineNuxtConfig({
     modules: [
         "@nuxtjs/supabase",
         "@nuxtjs/tailwindcss",
-        "nuxt-icons",
         "@nuxt/image-edge",
+        "nuxt-icon",
     ],
 
     runtimeConfig: {
