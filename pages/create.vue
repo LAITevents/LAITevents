@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import axios from "axios";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useCategories } from "@/composable/useCategories";
 import { useDashify } from "@/composable/dashify";
@@ -127,6 +128,23 @@ const getCreatedEvent = async () => {
     } catch (error) {
         console.log(error.message);
     }
+};
+
+// post a slack notification
+const postSlackNotification = async () => {
+    await axios
+        .post(
+            "https://hooks.slack.com/services/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",
+            {
+                text: "Hello, world.",
+            }
+        )
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 // Get categories
@@ -286,6 +304,10 @@ definePageMeta({
                             type="submit"
                         >
                             opret event
+                        </button>
+
+                        <button @click="postSlackNotification()" type="button">
+                            TEst slack
                         </button>
 
                         <NuxtLink
