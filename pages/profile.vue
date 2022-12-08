@@ -242,15 +242,17 @@ watch(profileEvents.value, () => {
                                 }"
                                 class="flex items-center"
                             >
-                                <nuxt-icon
+                                <Icon
                                     class="cursor-pointer align-middle"
-                                    name="ProfileEdit"
+                                    name="ic:baseline-edit"
+                                    size="24"
                                 />
                             </NuxtLink>
-                            <nuxt-icon
+                            <Icon
                                 @click="deleteEvent(event.id)"
-                                class="text-2xl cursor-pointer"
-                                name="ProfileDelete"
+                                class="cursor-pointer"
+                                size="24"
+                                name="ic:baseline-delete-forever"
                             />
                         </div>
                     </li>
@@ -273,10 +275,10 @@ watch(profileEvents.value, () => {
                             >
                                 <p>{{ event.title }}</p>
                             </NuxtLink>
-                            <nuxt-icon
+                            <Icon
                                 @click="deleteEvent(event.id)"
                                 class="text-2xl cursor-pointer"
-                                name="ProfileDelete"
+                                name="profile/delete"
                             />
                         </div>
                     </li>

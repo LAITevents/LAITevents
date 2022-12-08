@@ -132,17 +132,13 @@ const filteredEvents = computed(() => {
                     </div>
 
                     <div class="flex mb-2 justify-between">
-                        <div class="flex items-center gap-3">
-                            <nuxt-icon
-                                class="w-4 text-xl m-0"
-                                name="EventCalendar"
-                                fill
-                            />
+                        <div class="flex items-center gap-2">
+                            <Icon size="24" name="ic:baseline-calendar-month" />
                             <p class="capitalize text-sm">
                                 {{ formatDate(event.selected_date) }}
                             </p>
                         </div>
-                        <nuxt-icon
+                        <Icon
                             v-if="
                                 updateIndicator(
                                     event.id,
@@ -150,9 +146,10 @@ const filteredEvents = computed(() => {
                                     event.created_at
                                 )
                             "
-                            name="EventAlert"
+                            name="ic:baseline-notification-important"
                             title="Dette event er blevet opdateret for nyligt"
-                            fill
+                            class="text-lait-yellow"
+                            size="24"
                         />
                     </div>
                     <nuxt-img

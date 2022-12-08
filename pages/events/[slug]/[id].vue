@@ -187,12 +187,12 @@ definePageMeta({
             <div class="lg:col-start-8 col-span-12 lg:col-span-4">
                 <div class="p-7 bg-light-blue">
                     <div class="flex gap-2 capitalize">
-                        <nuxt-icon class="text-xl" name="EventCalendar" />
+                        <Icon size="24" name="ic:baseline-calendar-month" />
 
                         {{ formatDate(data.selected_date) }}
                     </div>
                     <div class="flex gap-2 capitalize my-2">
-                        <nuxt-icon class="text-2xl -ml-0.5" name="EventClock" />
+                        <Icon size="24" name="ic:baseline-access-time" />
 
                         Kl: {{ formatTime(data.selected_date) }}
                     </div>

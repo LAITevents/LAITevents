@@ -55,7 +55,7 @@ watch(path, () => {
 <template>
     <label for="single" class="flex flex-col">
         <img v-if="path" :src="src" class="object-cover h-72" />
-        <img v-else src="/assets/placeholder.jpg" class="h-72 object-cover" />
+        <img v-else src="@/assets/placeholder.jpg" class="h-72 object-cover" />
 
         <div v-if="props.showUpload">
             <input
