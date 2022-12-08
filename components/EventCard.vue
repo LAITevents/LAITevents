@@ -148,7 +148,7 @@ const filteredEvents = computed(() => {
                             "
                             name="ic:baseline-notification-important"
                             title="Dette event er blevet opdateret for nyligt"
-                            class="text-lait-yellow"
+                            class="text-lait-yellow animate-bounce"
                             size="24"
                         />
                     </div>
@@ -158,6 +158,11 @@ const filteredEvents = computed(() => {
                         :src="event.img_url"
                     />
                     <div v-else class="h-72"></div>
+                    <div class="flex justify-end">
+                        <div class="">
+                            <countdown :date="event.deadline_date" />
+                        </div>
+                    </div>
                 </div>
             </NuxtLink>
         </div>
