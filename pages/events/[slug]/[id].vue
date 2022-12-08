@@ -105,7 +105,7 @@ const logEventView = () => {
 
     let objIndex = storedArray.findIndex((obj) => obj.eventId == currentId);
     console.log(objIndex);
-    if (objIndex > 0) {
+    if (objIndex >= 0) {
         console.log("Before update: ", storedArray[objIndex]);
         storedArray[objIndex].viewed_at = new Date().getTime();
         console.log("After update: ", storedArray[objIndex]);
