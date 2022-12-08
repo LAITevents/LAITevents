@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { useDashify } from "@/composable/dashify";
 import { ref } from "vue";
+import { useDashify } from "@/composable/dashify";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useEvent } from "@/composable/useEvent";
+import IStorage from "@/interfaces/storageArray";
 const supabase = useSupabaseClient();
 const { getData } = useEvent();
 const { dashify } = useDashify();
 const { formatDate } = useDateFormatter();
+const eventsList = ref(await getData());
 
-const activeIndex = ref(0);
-const filterValue = ref("#ALLE");
-const eventsList: any = ref(await getData());
+const props = defineProps({
+    localstorageArr: { type: Object as () => IStorage[], default: [] },
+});
 
+// Array of hashtags to filter from
 const hashtags = ref([
     { name: "#ALLE", count: counterForHashtags("#ALLE").length },
     { name: "#FEST", count: counterForHashtags("#FEST").length },
@@ -20,14 +23,19 @@ const hashtags = ref([
     { name: "#HYGGE", count: counterForHashtags("#HYGGE").length },
 ]);
 
+// Set filter value
+const filterValue = ref("#ALLE");
 const setFilter = (hashtag: string) => {
     filterValue.value = hashtag;
 };
 
+// Get active index
+const activeIndex = ref(0);
 const setActive = (index: number) => {
     activeIndex.value = index;
 };
 
+// function for counting hashtags
 function counterForHashtags(filterValue: string) {
     if (filterValue == "#ALLE") {
         return eventsList.value;
@@ -37,14 +45,28 @@ function counterForHashtags(filterValue: string) {
     );
 }
 
-const showUpdateIndicator = (created_at: string, updated_at: string) => {
+const updateIndicator = (event_id, updated_at, created_at) => {
     if (created_at !== updated_at) {
-        return true;
+        const date = new Date(updated_at);
+        const timestamp = date.getTime();
+        let localStorageData = props.localstorageArr;
+
+        if (localStorageData !== null) {
+            return !(
+                localStorageData.filter(
+                    (event) =>
+                        event.eventId == event_id && event.viewed_at > timestamp
+                ).length > 0
+            );
+        } else {
+            return true;
+        }
     } else {
         return false;
     }
 };
 
+// Functions to filter events for display
 const filteredEvents = computed(() => {
     if (filterValue.value == "#ALLE") {
         return eventsList.value;
@@ -60,7 +82,7 @@ const filteredEvents = computed(() => {
     <div>
         <div>
             <ul
-                class="flex flex-end space-x-4 lg:space-x-8 lg:space-y-1.5 mt-4 flex-wrap lg:justify-end items-end text-lait-yellow font-bold"
+                class="flex flex-end space-x-4 lg:space-x-10 lg:space-y-1.5 mt-4 flex-wrap lg:justify-end items-end text-lait-yellow font-bold"
             >
                 <li
                     v-for="(hashtag, index) in hashtags"
@@ -122,7 +144,8 @@ const filteredEvents = computed(() => {
                         </div>
                         <nuxt-icon
                             v-if="
-                                showUpdateIndicator(
+                                updateIndicator(
+                                    event.id,
                                     event.updated_at,
                                     event.created_at
                                 )

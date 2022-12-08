@@ -3,22 +3,31 @@ import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useRoute, useRouter } from "vue-router";
 import { useDashify } from "@/composable/dashify";
+import { useCategories } from "@/composable/useCategories";
+const { getCategoriesFromDb } = useCategories();
 const { formatDeadlineDate } = useDateFormatter();
 const { dashify } = useDashify();
-
 const supabase = useSupabaseClient();
+const route = useRoute();
 const user = supabase.auth.user();
-const data = ref({});
-const categories = ref([]);
 
 const statusMsg = ref("");
 const errorMsg = ref("");
 const uploading = ref(false);
 const loading = ref(true);
 
-const files = ref();
-const src = ref("");
-const imagePath = ref("");
+const currentId = route.params.id;
+
+// Show selected date in input field
+const pickedTime = () => {
+    const dateCurrent: Date = new Date(selectedDate.value);
+    const hours: Number = dateCurrent.getHours();
+    const minutes: Number = dateCurrent.getMinutes();
+    return { hours, minutes };
+};
+
+// Get event for current id
+const eventData = ref({});
 const eventTitle = ref("");
 const eventDescription = ref("");
 const selectedDate = ref();
@@ -27,31 +36,14 @@ const selectedDeadline = ref();
 const placeInfo = ref();
 const categoryForEvent = ref("");
 
-const route = useRoute();
-const currentId = route.params.id;
-
-definePageMeta({
-    middleware: "auth",
-});
-
-const pickedTime = () => {
-    const dateCurrent = new Date(selectedDate.value);
-    const hours = dateCurrent.getHours();
-    const minutes = dateCurrent.getMinutes();
-    return { hours, minutes };
-};
-
-// Get event data
 const getEvent = async () => {
     const { data: event, error } = await supabase
         .from("events")
         .select("*")
         .eq("id", currentId)
         .single();
-
     if (error) throw error;
-    data.value = event;
-
+    eventData.value = event;
     if (event) {
         src.value = event.img_url;
         eventTitle.value = event.title;
@@ -64,7 +56,7 @@ const getEvent = async () => {
     loading.value = false;
 };
 
-// Update event
+// Update event with new values
 const updateEvent = async () => {
     try {
         const { error } = await supabase.from("events").update(
@@ -109,9 +101,12 @@ const newDateTime = () => {
 };
 
 // Generate filepath
+const files = ref();
+const src = ref("");
+const imagePath = ref("");
+
 async function setCurrentFile(filePath, file) {
     src.value = URL.createObjectURL(file);
-
     const { data } = await supabase.storage
         .from("images")
         .getPublicUrl("events/" + filePath);
@@ -135,29 +130,28 @@ const uploadImage = async (evt) => {
             .from("images")
             .upload("events/" + filePath, file);
         if (uploadError) throw uploadError;
-
         setCurrentFile(filePath, file);
     } catch (error) {
-        alert(error.message);
+        errorMsg.value = error.message;
     } finally {
         uploading.value = false;
     }
 };
 
 // Get categories
+const categories = ref([]);
+
 const getCategories = async () => {
-    try {
-        const { data, error } = await supabase.from("categories").select("*");
-        if (error) throw error;
-        categories.value = data;
-    } catch (error) {
-        console.warn(error.message);
-    }
+    categories.value = await getCategoriesFromDb();
 };
 
 onMounted(() => {
     getCategories();
     getEvent();
+});
+
+definePageMeta({
+    middleware: "auth",
 });
 </script>
 
@@ -169,7 +163,7 @@ onMounted(() => {
             <h1
                 class="text-3xl font-medium lg:col-start-2 col-span-10 lg:col-span-3"
             >
-                Opdater {{ data.title }}
+                Opdater {{ eventData.title }}
             </h1>
 
             <div

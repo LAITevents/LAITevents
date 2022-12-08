@@ -35,13 +35,5 @@ export function useEvent() {
         return events;
     };
 
-    const getDepartment = async (teamId?) => {
-        const { data: team } = await supabase
-            .from("teams")
-            .select("team_title")
-            .eq("id", teamId);
-        return team;
-    };
-
-    return { getEventsForUser, getDepartment, getData, getPastEventsForUser };
+    return { getEventsForUser, getData, getPastEventsForUser };
 }

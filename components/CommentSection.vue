@@ -2,6 +2,8 @@
 import { ref } from "vue";
 import IComments from "@/interfaces/comments";
 import { useDateFormatter } from "@/composable/useDateFormatter";
+import { useUser } from "@/composable/useUser";
+const { getProfileInformation } = useUser();
 const { formatCommentDate } = useDateFormatter();
 
 const props = defineProps({
@@ -10,28 +12,12 @@ const props = defineProps({
 });
 
 const supabase = useSupabaseClient();
-const commentFromUser = ref("");
 const user = supabase.auth.user();
-const comments = ref(props.comments);
-const displayComments = ref([]);
-const users = ref([]);
-
-const getProfile = async (user_id: string) => {
-    let user = null;
-    try {
-        const { data, error } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", user_id);
-        if (error) throw error;
-        user = data[0];
-    } catch (error) {
-        console.log(error);
-    }
-    return user;
-};
 
 // Send comment to database
+const commentFromUser = ref("");
+const comments = ref(props.comments);
+
 const sendComment = async (evt) => {
     evt.preventDefault();
     if (commentFromUser.value.length > 0) {
@@ -49,9 +35,13 @@ const sendComment = async (evt) => {
     }
 };
 
+// get profileinfo on users from comments and add to displayComments
+const users = ref([]);
+const displayComments = ref([]);
+
 const getProfiles = async () => {
     comments.value.forEach((comment) => {
-        users.value.push(comment.user_id);
+        users.value.push(comment?.user_id);
     });
     let userdata = null;
     try {
@@ -95,7 +85,7 @@ watchEffect(async () => {
     const subscription = supabase
         .from("comments")
         .on("*", async (payload) => {
-            const user = await getProfile(payload.new.user_id);
+            const user = await getProfileInformation(payload.new.user_id);
             if (Object.keys(payload.new).length !== 0) {
                 displayComments.value.push({ ...payload.new, ...user });
                 comments.value.push({ ...payload.new, ...user });
@@ -114,7 +104,7 @@ watch(comments, () => {
 
 <template>
     <div>
-        <ul class="max-h-[500px] overflow-scroll overflow-x-hidden scrollbar">
+        <ul class="max-h-[500px] overflow-y-scroll overflow-x-hidden scrollbar">
             <li v-for="comment in displayComments" :key="comment.id">
                 <div class="flex flex-row gap-4">
                     <div class="w-10 min-w-[40px] h-10">
@@ -132,11 +122,13 @@ watch(comments, () => {
                                 {{ comment.username }}
                             </p>
 
-                            <p class="text-xs">{{ comment.content }}</p>
+                            <p class="text-xs">
+                                {{ comment.content }}
+                            </p>
                         </div>
                         <div
                             v-if="comment.user_id === user.id"
-                            class="cursor-pointer text-lait-grey"
+                            class="cursor-pointer text-lait-grey mr-4"
                             @click="deleteUserComment(comment.comment_id)"
                         >
                             x
@@ -144,7 +136,7 @@ watch(comments, () => {
                     </div>
                 </div>
                 <p
-                    class="flex flex-end justify-end font-bold text-[10px] text-lait-yellow"
+                    class="flex flex-end justify-end mr-4 font-bold text-[10px] text-lait-yellow"
                 >
                     {{ formatCommentDate(comment.created_at) }}
                 </p>
@@ -157,14 +149,14 @@ watch(comments, () => {
 
         <form @submit.prevent="sendComment" class="flex flex-row">
             <div class="relative w-full">
-                <input
-                    class="py-2 px-3 w-full bg-[#87A3AA] text-white focus:outline-none placeholder-white flex-grow"
+                <textarea
+                    class="py-2 h-24 px-3 w-full bg-[#87A3AA] text-white focus:outline-none placeholder-white flex-grow"
                     type="text"
                     placeholder="Skriv din kommentar her"
                     v-model="commentFromUser"
                 />
                 <button
-                    class="text-white pl-1.5 absolute right-4 bottom-2 bg-[#87A3AA]"
+                    class="text-white pl-1.5 absolute right-4 bottom-4 bg-[#87A3AA]"
                     type="submit"
                 >
                     Send

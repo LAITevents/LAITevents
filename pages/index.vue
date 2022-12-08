@@ -2,11 +2,10 @@
 import { ref } from "vue";
 import { useUser } from "@/composable/useUser";
 
-definePageMeta({
-    middleware: "auth",
-});
 const { getUsername } = useUser();
 const user = useSupabaseUser();
+
+// Gets username for display
 const userDetails = ref("");
 
 const getDisplayUsername = async () => {
@@ -15,8 +14,19 @@ const getDisplayUsername = async () => {
     });
 };
 
+// Get viewed events from user' localstorage
+const localstorageArr = ref();
+const getStorageData = () => {
+    localstorageArr.value = JSON.parse(localStorage.getItem("viewedEvents"));
+};
+
 onMounted(() => {
     getDisplayUsername();
+    getStorageData();
+});
+
+definePageMeta({
+    middleware: "auth",
 });
 </script>
 
@@ -29,6 +39,6 @@ onMounted(() => {
             </p>
         </div>
 
-        <EventCard />
+        <EventCard :localstorageArr="localstorageArr" />
     </div>
 </template>
