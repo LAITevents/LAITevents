@@ -66,7 +66,7 @@ const updateEvent = async () => {
                 title: eventTitle.value,
                 description: eventDescription.value,
                 userId: user.id,
-                img_url: imagePath.value,
+                img_url: src.value,
                 selected_date: newDateTime(),
                 deadline_date: formatDeadlineDate(selectedDeadline.value),
                 place_id: placeInfo.value.placeId,
@@ -78,7 +78,7 @@ const updateEvent = async () => {
                 returning: "minimal",
             }
         );
-        statusMsg.value = "Success: Event opdateret!";
+        statusMsg.value = "Success: Eventet blev opdateret!";
         setTimeout(() => {
             statusMsg.value = "";
         }, 5000);
@@ -100,7 +100,7 @@ const newDateTime = () => {
     return newDate;
 };
 
-// Generate filepath
+// Generate filepath for new image file
 const files = ref();
 const src = ref("");
 const imagePath = ref("");
@@ -215,8 +215,8 @@ definePageMeta({
             <div class="col-span-12 md:col-span-6 lg:col-span-5">
                 <form @submit.prevent="updateEvent">
                     <div class="flex flex-col">
-                        <label for="event-name" class="mb-1">Titel</label>
                         <input
+                            placeholder="Titel"
                             type="text"
                             required
                             class="custom-input custom-input-focus"
@@ -229,7 +229,6 @@ definePageMeta({
                         class="flex flex-col gap-4 md:flex-col lg:flex-row lg:justify-between"
                     >
                         <div class="w-full">
-                            <label class="mb-1">Vælg dato</label>
                             <DatePicker
                                 v-model="selectedDate"
                                 :placeholderText="'Vælg dato'"
@@ -237,11 +236,9 @@ definePageMeta({
                             />
                         </div>
                         <div class="w-full">
-                            <label class="mb-1">Vælg tidspunkt</label>
                             <TimePicker v-model="selectedTime" required />
                         </div>
                         <div class="w-full">
-                            <label class="mb-1">Deadline for tilmelding</label>
                             <DatePicker
                                 v-model="selectedDeadline"
                                 :placeholderText="'Vælg deadline dato'"
@@ -254,7 +251,6 @@ definePageMeta({
                         class="flex flex-col lg:gap-4 md:flex-col lg:flex-row mt-4"
                     >
                         <div class="flex flex-col w-full">
-                            <label class="mb-1">Kategori</label>
                             <select
                                 v-model="categoryForEvent"
                                 class="custom-select custom-input-focus"
@@ -272,17 +268,12 @@ definePageMeta({
                     </div>
 
                     <div class="w-full">
-                        <label class="mb-1">Lokation</label>
                         <AddressField ref="placeInfo" />
                     </div>
 
                     <div class="flex flex-col">
-                        <label
-                            for="event-description"
-                            class="mb-1 custom-input-focus"
-                            >Beskrivelse</label
-                        >
                         <textarea
+                            placeholder="Beskrivelse"
                             type="text"
                             required
                             class="custom-input h-32 custom-input-focus"
@@ -295,7 +286,7 @@ definePageMeta({
                         <div>
                             <input
                                 type="submit"
-                                class="cursor-pointer text-lait-yellow uppercase font-bold text-base"
+                                class="cursor-pointer text-lait-yellow uppercase mb-2 font-bold text-base"
                                 :value="
                                     loading ? 'Loading ...' : 'Opdater event'
                                 "
