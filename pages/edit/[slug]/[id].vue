@@ -10,7 +10,6 @@ const { dashify } = useDashify();
 const supabase = useSupabaseClient();
 const route = useRoute();
 const user = supabase.auth.user();
-const eventData = ref({});
 
 const statusMsg = ref("");
 const errorMsg = ref("");
@@ -28,6 +27,7 @@ const pickedTime = () => {
 };
 
 // Get event for current id
+const eventData = ref({});
 const eventTitle = ref("");
 const eventDescription = ref("");
 const selectedDate = ref();

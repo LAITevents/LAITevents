@@ -4,6 +4,8 @@ import { useUser } from "@/composable/useUser";
 
 const { getUsername } = useUser();
 const user = useSupabaseUser();
+
+// Gets username for display
 const userDetails = ref("");
 
 const getDisplayUsername = async () => {
@@ -12,6 +14,7 @@ const getDisplayUsername = async () => {
     });
 };
 
+// Get viewed events from user' localstorage
 const localstorageArr = ref();
 const getStorageData = () => {
     localstorageArr.value = JSON.parse(localStorage.getItem("viewedEvents"));

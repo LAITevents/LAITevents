@@ -2,16 +2,15 @@
 import { ref } from "vue";
 
 const supabase = useSupabaseClient();
+const user = useSupabaseUser();
+const errorMsg = ref("");
+const statusMsg = ref("");
+const router = useRouter();
+
+// Login functionality
 const email = ref("");
 const password = ref("");
 const repeatedPassword = ref("");
-const username = ref("");
-const department = ref(null);
-const isSignUp = ref(false);
-const errorMsg = ref("");
-const statusMsg = ref("");
-const user = useSupabaseUser();
-const router = useRouter();
 
 const handleLogin = async () => {
     try {
@@ -27,6 +26,10 @@ const handleLogin = async () => {
         }, 5000);
     }
 };
+
+// Signup functionality
+const username = ref("");
+const isSignUp = ref(false);
 
 const signUp = async () => {
     if (password.value === repeatedPassword.value) {
