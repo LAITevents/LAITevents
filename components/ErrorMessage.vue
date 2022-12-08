@@ -10,7 +10,7 @@ const props = defineProps({
 <template>
     <div
         v-if="props.statusMsg || props.errorMsg"
-        class="absolute text-center left-0 right-0 -translate-y-20 mb-5 p-4 bg-light-grey"
+        class="absolute text-center left-0 right-0 -translate-y-15 mb-5 p-4 bg-light-grey"
     >
         <p>
             {{ props.statusMsg }}
