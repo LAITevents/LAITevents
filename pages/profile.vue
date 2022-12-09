@@ -104,8 +104,6 @@ const getPastEvents = async () => {
     pastEvents.value = await getPastEventsForUser(user.value.id);
 };
 
-getPastEvents();
-
 const deleteEvent = async (event_id: string) => {
     try {
         const { error } = await supabase
@@ -136,15 +134,13 @@ const deleteEvent = async (event_id: string) => {
     } catch (error) {
         console.log(error);
     }
+    getEventsForProfile();
 };
 
 onMounted(() => {
     getEventsForProfile();
     getProfile();
-});
-
-watch(profileEvents.value, () => {
-    getEventsForProfile();
+    getPastEvents();
 });
 </script>
 
@@ -278,7 +274,7 @@ watch(profileEvents.value, () => {
                             <Icon
                                 @click="deleteEvent(event.id)"
                                 class="text-2xl cursor-pointer"
-                                name="profile/delete"
+                                name="ic:baseline-delete-forever"
                             />
                         </div>
                     </li>
