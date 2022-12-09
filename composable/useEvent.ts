@@ -13,11 +13,11 @@ export function useEvent() {
             if (error) throw error;
             return eventData;
         } catch (error) {
-            console.warn(error.message);
+            console.warn(error);
         }
     };
 
-    const getEventsForUser = async (userId?) => {
+    const getEventsForUser = async (userId?: string) => {
         const { data: events } = await supabase
             .from("events")
             .select("id, title")
@@ -26,7 +26,7 @@ export function useEvent() {
         return events;
     };
 
-    const getPastEventsForUser = async (userId?) => {
+    const getPastEventsForUser = async (userId?: string) => {
         const { data: events } = await supabase
             .from("events")
             .select("id, title")

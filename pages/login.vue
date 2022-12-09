@@ -51,7 +51,7 @@ const signUp = async () => {
                     "Success: Check din mail for bekræftelses link";
             }, 10000);
             if (error) throw error;
-        } catch (error) {
+        } catch (error: any) {
             errorMsg.value = error.message;
             setTimeout(() => {
                 errorMsg.value = "";

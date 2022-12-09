@@ -37,7 +37,7 @@ const uploadAvatar = async (evt) => {
         emit("update:path", filePath);
         emit("upload");
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     } finally {
         uploading.value = false;
     }

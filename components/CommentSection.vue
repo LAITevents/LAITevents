@@ -18,7 +18,7 @@ const user = supabase.auth.user();
 const commentFromUser = ref("");
 const comments = ref(props.comments);
 
-const sendComment = async (evt) => {
+const sendComment = async (evt: Event) => {
     evt.preventDefault();
     if (commentFromUser.value.length > 0) {
         try {
@@ -26,7 +26,7 @@ const sendComment = async (evt) => {
             await supabase
                 .from("comments")
                 .insert([
-                    { content, user_id: user.id, event_id: props.currentId },
+                    { content, user_id: user?.id, event_id: props.currentId },
                 ]);
             commentFromUser.value = "";
         } catch (err) {
@@ -37,13 +37,13 @@ const sendComment = async (evt) => {
 
 // get profileinfo on users from comments and add to displayComments
 const users = ref([]);
-const displayComments = ref([]);
+const displayComments = ref();
 
 const getProfiles = async () => {
     comments.value.forEach((comment) => {
-        users.value.push(comment?.user_id);
+        users.value.push(comment.user_id);
     });
-    let userdata = null;
+    let userdata: any = null;
     try {
         const { data, error } = await supabase
             .from("profiles")
@@ -58,7 +58,7 @@ const getProfiles = async () => {
         displayComments.value = comments.value.map((comment) => {
             return {
                 ...comment,
-                ...userdata.find((obj) => obj.id === comment.user_id),
+                ...userdata.find((obj: any) => obj.id === comment.user_id),
             };
         });
     }
@@ -66,7 +66,7 @@ const getProfiles = async () => {
 getProfiles();
 
 // Delete comment
-const deleteUserComment = async (comment_id) => {
+const deleteUserComment = async (comment_id: number) => {
     try {
         const { error } = await supabase
             .from("comments")
@@ -74,7 +74,7 @@ const deleteUserComment = async (comment_id) => {
             .eq("comment_id", comment_id);
         if (error) throw error;
         displayComments.value = displayComments.value.filter(
-            (comment) => comment.comment_id !== comment_id
+            (comment: any) => comment.comment_id !== comment_id
         );
     } catch (error) {
         console.log(error);

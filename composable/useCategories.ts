@@ -9,7 +9,7 @@ export function useCategories() {
             if (error) throw error;
             return categories;
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
     };
 

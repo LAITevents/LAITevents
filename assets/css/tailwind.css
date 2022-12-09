@@ -1,14 +1,17 @@
 @font-face {
     font-family: "gordita-regular";
     src: url("@/assets/fonts/gordita-regular.woff") format("woff");
+    crossorigin: true;
 }
 @font-face {
     font-family: "gordita-medium";
     src: url("@/assets/fonts/gordita-medium.woff") format("woff");
+    crossorigin: true;
 }
 @font-face {
     font-family: "gordita-bold";
     src: url("@/assets/fonts/gordita-bold.woff") format("woff");
+    crossorigin: true;
 }
 
 @tailwind base;
@@ -17,7 +20,7 @@
 
 @layer components {
     .custom-input {
-        @apply py-2 px-3 mb-6 bg-light-blue text-white font-regular placeholder-lait-grey focus:outline-none;
+        @apply py-2 px-3 mb-4 bg-light-blue text-white font-regular placeholder-lait-grey focus:outline-none;
     }
 
     .custom-select {

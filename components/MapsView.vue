@@ -38,7 +38,7 @@ async function initMap() {
     const infowindow = new google.maps.InfoWindow();
     const service = new google.maps.places.PlacesService(map);
 
-    service.getDetails(request, (place, status) => {
+    service.getDetails(request, (place: any, status: any) => {
         if (
             status === google.maps.places.PlacesServiceStatus.OK &&
             place &&

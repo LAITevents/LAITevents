@@ -9,7 +9,7 @@ const user = useSupabaseUser();
 const userDetails = ref("");
 
 const getDisplayUsername = async () => {
-    await getUsername(user?.value.id).then((result) => {
+    await getUsername(user?.value?.id).then((result) => {
         userDetails.value = result;
     });
 };
@@ -17,7 +17,9 @@ const getDisplayUsername = async () => {
 // Get viewed events from user' localstorage
 const localstorageArr = ref();
 const getStorageData = () => {
-    localstorageArr.value = JSON.parse(localStorage.getItem("viewedEvents"));
+    localstorageArr.value = JSON.parse(
+        localStorage.getItem("viewedEvents") || "[]"
+    );
 };
 
 onMounted(() => {
