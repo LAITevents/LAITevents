@@ -152,7 +152,7 @@ const filteredEvents = computed(() => {
                             "
                             name="ic:baseline-notification-important"
                             title="Dette event er blevet opdateret for nyligt"
-                            class="text-lait-yellow animate-bounce"
+                            class="text-lait-yellow"
                             size="24"
                         />
                     </div>
@@ -162,7 +162,7 @@ const filteredEvents = computed(() => {
                         :src="event.img_url"
                     />
                     <div v-else class="h-72"></div>
-                    <div class="pr-8 right-0 bottom-12 absolute">
+                    <div class="pr-8 right-0 bottom-14 absolute">
                         <CountdownLabel :date="event.deadline_date" />
                     </div>
                 </div>
