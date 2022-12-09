@@ -27,20 +27,18 @@ const changeDayOrDays = () => {
     }
     return changeString;
 };
-changeDayOrDays();
 
 // show if more than 0 diffDays diff
-const showdiffDays = ref();
+const showdiffDays = ref<number | null>(null);
 
 const checkDiffDays = () => {
     if (diffDays > 0) {
         showdiffDays.value = diffDays;
     } else {
-        showdiffDays.value = "";
+        showdiffDays.value = null;
     }
     return showdiffDays;
 };
-checkDiffDays();
 
 // change time or timer "string"
 const changeTimeOrTimer = () => {
@@ -50,7 +48,6 @@ const changeTimeOrTimer = () => {
         return "timer";
     }
 };
-changeTimeOrTimer();
 
 onMounted(() => {
     changeDayOrDays(), checkDiffDays(), changeTimeOrTimer();
