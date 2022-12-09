@@ -51,6 +51,10 @@ const changeTimeOrTimer = () => {
     }
 };
 changeTimeOrTimer();
+
+onMounted(() => {
+    changeDayOrDays(), checkDiffDays(), changeTimeOrTimer();
+});
 </script>
 
 <template>
