@@ -1,7 +1,7 @@
 export function useUser() {
     const supabase = useSupabaseClient();
 
-    const getUsername = async (userId: string) => {
+    const getUsername = async (userId?: string) => {
         const { data: profile } = await supabase
             .from("profiles")
             .select("username, avatar_url")

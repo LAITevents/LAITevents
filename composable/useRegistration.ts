@@ -1,7 +1,7 @@
 export function useRegistration() {
     const supabase = useSupabaseClient();
 
-    const registerEvent = async (currentId, userId?) => {
+    const registerEvent = async (currentId: number, userId?: string) => {
         try {
             const { error } = await supabase.from("event_participants").insert({
                 event_id: currentId,
@@ -13,7 +13,10 @@ export function useRegistration() {
         }
     };
 
-    const deleteUserRegistration = async (currentId, userId?) => {
+    const deleteUserRegistration = async (
+        currentId: number,
+        userId?: string
+    ) => {
         try {
             const { error } = await supabase
                 .from("event_participants")

@@ -17,7 +17,7 @@ const errorMsg = ref(null);
 
 // Gets event data from supabase
 const data = ref();
-const currentId = route.params.id;
+const currentId: any = route.params.id;
 const dataLoaded = ref(null);
 
 const getEventForRouteId = async () => {
@@ -30,7 +30,7 @@ const getEventForRouteId = async () => {
         if (error) throw error;
         dataLoaded.value = true;
         data.value = events[0];
-    } catch (error) {
+    } catch (error: any) {
         errorMsg.value = error.message;
         setTimeout(() => {
             errorMsg.value = false;
@@ -57,7 +57,7 @@ const getParticipants = async () => {
                 registered.value = true;
             }
         });
-    } catch (error) {
+    } catch (error: any) {
         errorMsg.value = error.message;
         setTimeout(() => {
             errorMsg.value = false;
@@ -103,7 +103,9 @@ const logEventView = () => {
         storedArray = [];
     }
 
-    let objIndex = storedArray.findIndex((obj) => obj.eventId == currentId);
+    let objIndex = storedArray.findIndex(
+        (obj: any) => obj.eventId == currentId
+    );
     if (objIndex >= 0) {
         storedArray[objIndex].viewed_at = new Date().getTime();
         localStorage.setItem("viewedEvents", JSON.stringify(storedArray));

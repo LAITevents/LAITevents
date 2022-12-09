@@ -16,11 +16,11 @@ const props = defineProps({
 
 // Array of hashtags to filter from
 const hashtags = ref([
-    { name: "#ALLE", count: counterForHashtags("#ALLE").length },
-    { name: "#FEST", count: counterForHashtags("#FEST").length },
-    { name: "#FAGLIGHED", count: counterForHashtags("#FAGLIGHED").length },
-    { name: "#SPORT", count: counterForHashtags("#SPORT").length },
-    { name: "#HYGGE", count: counterForHashtags("#HYGGE").length },
+    { name: "#ALLE", count: counterForHashtags("#ALLE")?.length },
+    { name: "#FEST", count: counterForHashtags("#FEST")?.length },
+    { name: "#FAGLIGHED", count: counterForHashtags("#FAGLIGHED")?.length },
+    { name: "#SPORT", count: counterForHashtags("#SPORT")?.length },
+    { name: "#HYGGE", count: counterForHashtags("#HYGGE")?.length },
 ]);
 
 // Set filter value
@@ -40,12 +40,16 @@ function counterForHashtags(filterValue: string) {
     if (filterValue == "#ALLE") {
         return eventsList.value;
     }
-    return eventsList.value.filter(
+    return eventsList.value?.filter(
         (event) => event.category_id.name === filterValue
     );
 }
 
-const updateIndicator = (event_id, updated_at, created_at) => {
+const updateIndicator = (
+    event_id: string,
+    updated_at: string,
+    created_at: string
+) => {
     if (created_at !== updated_at) {
         const date = new Date(updated_at);
         const timestamp = date.getTime();
@@ -72,7 +76,7 @@ const filteredEvents = computed(() => {
         return eventsList.value;
     }
 
-    return eventsList.value.filter(
+    return eventsList.value?.filter(
         (event) => event.category_id.name === filterValue.value
     );
 });

@@ -7,6 +7,10 @@ export default defineNuxtConfig({
         "nuxt-icon",
     ],
 
+    tailwindcss: {
+        cssPath: "~/assets/css/tailwind.css",
+    },
+
     runtimeConfig: {
         public: {
             slackUrl: process.env.SLACK_URL,

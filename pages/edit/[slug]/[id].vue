@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ErrorCodes, ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useRoute, useRouter } from "vue-router";
 import { useDashify } from "@/composable/dashify";
@@ -83,7 +83,7 @@ const updateEvent = async () => {
             statusMsg.value = "";
         }, 5000);
         if (error) throw error;
-    } catch (error) {
+    } catch (error: any) {
         errorMsg.value = error.message;
         setTimeout(() => {
             errorMsg.value = "";
@@ -105,7 +105,7 @@ const files = ref();
 const src = ref("");
 const imagePath = ref("");
 
-async function setCurrentFile(filePath, file) {
+async function setCurrentFile(filePath: string, file: string) {
     src.value = URL.createObjectURL(file);
     const { data } = await supabase.storage
         .from("images")
@@ -115,7 +115,7 @@ async function setCurrentFile(filePath, file) {
 }
 
 // Upload image
-const uploadImage = async (evt) => {
+const uploadImage = async (evt: any) => {
     files.value = evt.target.files;
     try {
         uploading.value = true;
@@ -126,12 +126,12 @@ const uploadImage = async (evt) => {
         const fileExt = file.name.split(".").pop();
         const fileName = `${Math.random()}.${fileExt}`;
         const filePath = `${fileName}`;
-        const { error: uploadError } = await supabase.storage
+        const { error } = await supabase.storage
             .from("images")
             .upload("events/" + filePath, file);
-        if (uploadError) throw uploadError;
+        if (error) throw error;
         setCurrentFile(filePath, file);
-    } catch (error) {
+    } catch (error: any) {
         errorMsg.value = error.message;
     } finally {
         uploading.value = false;

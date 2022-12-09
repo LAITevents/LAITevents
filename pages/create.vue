@@ -30,7 +30,7 @@ const newDateTime = () => {
 // Generate filepath for image
 const imagePath = ref("");
 
-async function setCurrentFile(filePath, file) {
+async function setCurrentFile(filePath: any, file: any) {
     src.value = URL.createObjectURL(file);
     const { data } = await supabase.storage
         .from("images")
@@ -44,7 +44,7 @@ const uploading = ref(false);
 const files = ref();
 const src = ref("");
 
-const uploadImage = async (evt) => {
+const uploadImage = async (evt: any) => {
     files.value = evt.target.files;
     try {
         uploading.value = true;
@@ -61,7 +61,7 @@ const uploadImage = async (evt) => {
         if (uploadError) throw uploadError;
 
         setCurrentFile(filePath, file);
-    } catch (error) {
+    } catch (error: any) {
         alert(error.message);
     } finally {
         uploading.value = false;
@@ -107,7 +107,7 @@ const addEvent = async () => {
         setTimeout(() => {
             statusMsg.value = "";
         }, 5000);
-    } catch (error) {
+    } catch (error: any) {
         errorMsg.value = `Error: ${error.message}`;
         setTimeout(() => {
             errorMsg.value = "";
@@ -131,7 +131,7 @@ const getCreatedEvent = async () => {
             eventId.value = createdEvent[0].id;
             titleOnCreatedEvent.value = createdEvent[0].title;
         }
-    } catch (error) {
+    } catch (error: any) {
         console.log(error.message);
     }
 };

@@ -44,7 +44,7 @@ onUnmounted(() => {
         "script[src*='maps.googleapis.com/maps-api-v3']"
     );
     for (var i = 0; i < scripts.length; i++) {
-        scripts[i].parentNode.removeChild(scripts[i]);
+        scripts[i].parentNode?.removeChild(scripts[i]);
     }
 });
 </script>

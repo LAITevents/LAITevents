@@ -55,7 +55,7 @@ const updateProfile = async () => {
                 setTimeout(() => {
                     statusMsg.value = "";
                 }, 5000);
-            } catch (error) {
+            } catch (error: any) {
                 errorMsg.value = error.message;
                 setTimeout(() => {
                     errorMsg.value = "";
@@ -87,7 +87,7 @@ const updateProfile = async () => {
             statusMsg.value = "";
         }, 5000);
         if (error) throw error;
-    } catch (error) {
+    } catch (error: any) {
         errorMsg.value = error.message;
         setTimeout(() => {
             errorMsg.value = "";
@@ -106,7 +106,7 @@ const getPastEvents = async () => {
 
 getPastEvents();
 
-const deleteEvent = async (event_id) => {
+const deleteEvent = async (event_id: string) => {
     try {
         const { error } = await supabase
             .from("event_participants")
