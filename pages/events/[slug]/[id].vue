@@ -16,7 +16,7 @@ const statusMsg = ref(null);
 const errorMsg = ref(null);
 
 // Gets event data from supabase
-const data = ref({});
+const data = ref();
 const currentId = route.params.id;
 const dataLoaded = ref(null);
 
@@ -81,7 +81,7 @@ const cancelRegistration = async () => {
 };
 
 // Read more button
-const hideText = ref(false);
+const hideText = ref(true);
 
 const eventDescription = () => {
     const description: String = data.value.description;

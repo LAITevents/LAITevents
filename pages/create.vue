@@ -3,9 +3,11 @@ import { ref } from "vue";
 import { useDateFormatter } from "@/composable/useDateFormatter";
 import { useCategories } from "@/composable/useCategories";
 import { useDashify } from "@/composable/dashify";
+import { useSlack } from "@/composable/useSlack";
 
 const { dashify } = useDashify();
 const { formatDeadlineDate } = useDateFormatter();
+const { postEventOnSlack } = useSlack();
 const { getCategoriesFromDb } = useCategories();
 const supabase = useSupabaseClient();
 const user = supabase.auth.user();
@@ -94,6 +96,11 @@ const addEvent = async () => {
             },
         ]);
         if (error) throw error;
+        await postEventOnSlack(
+            eventTitle.value,
+            eventDescription.value,
+            selectedDeadline.value
+        );
         statusMsg.value = "Success: Event oprettet";
         eventTitle.value = null;
         eventDescription.value = null;
