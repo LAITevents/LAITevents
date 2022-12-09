@@ -162,10 +162,8 @@ const filteredEvents = computed(() => {
                         :src="event.img_url"
                     />
                     <div v-else class="h-72"></div>
-                    <div class="flex justify-end">
-                        <div class="">
-                            <countdown :date="event.deadline_date" />
-                        </div>
+                    <div class="pr-8 right-0 bottom-12 absolute">
+                        <CountdownLabel :date="event.deadline_date" />
                     </div>
                 </div>
             </NuxtLink>
