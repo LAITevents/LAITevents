@@ -160,7 +160,7 @@ const filteredEvents = computed(() => {
                     <div v-else class="h-72"></div>
                     <div class="flex justify-end">
                         <div class="">
-                            <countdown :date="event.deadline_date" />
+                            <CountdownLabel :date="event.deadline_date" />
                         </div>
                     </div>
                 </div>

@@ -15,7 +15,6 @@ const diffDays = Math.floor(diff);
 const diffHours = Math.floor((diff - diffDays) * 24);
 
 // change dag or dage "string"
-
 const changeString = ref("");
 
 const changeDayOrDays = () => {
