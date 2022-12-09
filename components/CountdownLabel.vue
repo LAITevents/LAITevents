@@ -57,7 +57,7 @@ onMounted(() => {
 <template>
     <div
         v-if="diff > 0 && diff < 4"
-        class="relative lg:bottom-14 flex justify-center items-center bg-lait-yellow h-9 w-64"
+        class="relative flex justify-center items-center bg-lait-yellow h-9 w-64"
     >
         <p class="text-xs font-bold text-lait-blue">
             Tilmeldingfrist: {{ showdiffDays }} {{ changeString }}
@@ -67,7 +67,7 @@ onMounted(() => {
     </div>
     <div
         v-else-if="dateTodayFormat >= dateDeadlineFormat"
-        class="relative lg:bottom-14 flex justify-center items-center bg-lait-yellow font-bold h-9 w-64"
+        class="relative flex justify-center items-center bg-lait-yellow font-bold h-9 w-64"
     >
         <p class="text-xs text-lait-blue">Tilmelding lukket</p>
     </div>
