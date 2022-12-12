@@ -86,7 +86,7 @@ const filteredEvents = computed(() => {
     <div>
         <div>
             <ul
-                class="flex flex-end space-x-4 lg:space-x-10 lg:space-y-1.5 mt-4 flex-wrap lg:justify-end items-end text-lait-yellow font-bold"
+                class="flex flex-end space-x-4 lg:space-x-10 lg:space-y-1.5 mt-6 flex-wrap lg:justify-end items-end text-lait-yellow font-bold"
             >
                 <li
                     v-for="(hashtag, index) in hashtags"
@@ -101,7 +101,7 @@ const filteredEvents = computed(() => {
                     </span>
 
                     <span
-                        class="absolute text-[10px] font-medium top-[165px] lg:top-[200px] ml-0.5"
+                        class="absolute text-[10px] font-medium top-[145px] lg:top-[223px] ml-0.5"
                         >{{ hashtag.count }}</span
                     >
                 </li>
@@ -110,7 +110,7 @@ const filteredEvents = computed(() => {
 
         <div
             v-if="filteredEvents.length"
-            class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4"
+            class="grid grid-cols-1 lg:grid-cols-12 gap-8 my-6"
         >
             <NuxtLink
                 v-for="(event, index) in filteredEvents"
