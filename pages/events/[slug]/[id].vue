@@ -84,8 +84,10 @@ const cancelRegistration = async () => {
 const hideText = ref(true);
 
 const eventDescription = () => {
-    const description: String = data.value.description;
-    if (hideText.value) {
+    const description: string = data.value.description;
+    if (data.value.description.length < 250) {
+        return description;
+    } else if (hideText.value) {
         return `${description.slice(0, 250)}...`;
     }
     return description;
@@ -103,9 +105,11 @@ const logEventView = () => {
         storedArray = [];
     }
 
+    // find the index in array where id' match
     let objIndex = storedArray.findIndex(
         (obj: any) => obj.eventId == currentId
     );
+
     if (objIndex >= 0) {
         storedArray[objIndex].viewed_at = new Date().getTime();
         localStorage.setItem("viewedEvents", JSON.stringify(storedArray));
@@ -150,6 +154,7 @@ definePageMeta({
                         <p>
                             {{ eventDescription() }}
                         </p>
+
                         <button
                             v-if="data.description.length > 249"
                             @click="hideText = !hideText"

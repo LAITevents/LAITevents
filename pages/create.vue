@@ -156,7 +156,7 @@ definePageMeta({
     <div>
         <ErrorMessage :statusMsg="statusMsg" :errorMsg="errorMsg" />
 
-        <div class="grid grid-cols-12 gap-5">
+        <div class="grid grid-cols-12 gap-5 mb-20">
             <h1
                 class="text-3xl font-medium lg:col-start-2 col-span-10 lg:col-span-3"
             >

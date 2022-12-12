@@ -158,6 +158,7 @@ onMounted(() => {
                     v-model:path="avatar_path"
                     @upload="updateProfile"
                     :showUpload="true"
+                    class=""
                 />
             </div>
 
@@ -188,7 +189,7 @@ onMounted(() => {
                         />
                     </div>
 
-                    <div class="flex gap-5 justify-between">
+                    <div class="lg:flex gap-5 justify-between">
                         <input
                             class="custom-input w-full placeholder:text-lait-grey custom-input-focus"
                             type="password"
@@ -255,7 +256,7 @@ onMounted(() => {
                 </ul>
             </div>
 
-            <div class="col-span-12 lg:col-start-2">
+            <div class="col-span-12 mb-20 lg:col-start-2">
                 <h2 class="text-3xl font-medium pt-10 text-lait-yellow mb-5">
                     Tidligere events
                 </h2>

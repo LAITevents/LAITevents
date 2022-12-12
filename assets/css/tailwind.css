@@ -36,7 +36,7 @@
     }
 
     .custom-image-resize img {
-        @apply max-h-[40px] w-10 object-cover;
+        @apply max-h-10 w-10 object-cover;
     }
 
     .custom-input-focus {
