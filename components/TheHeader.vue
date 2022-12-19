@@ -5,7 +5,7 @@ const router = useRouter();
 const signOut = async () => {
     const supabase = useSupabaseClient();
     await supabase.auth.signOut().then(() => {
-        navigateTo({ path: "/login" });
+        navigateTo("/login");
     });
 };
 </script>
