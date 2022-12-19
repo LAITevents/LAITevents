@@ -7,6 +7,10 @@ const signOut = async () => {
     await supabase.auth.signOut().then(() => {
         navigateTo("/login");
     });
+
+    nextTick(() => {
+        window.location.reload();
+    });
 };
 </script>
 
