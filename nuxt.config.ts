@@ -19,6 +19,7 @@ export default defineNuxtConfig({
         manifest: {
             name: "LAITevents",
             short_name: "LAITevents",
+            theme_color: "#376570",
             background_color: "#376570",
             display: "standalone",
             orientation: "portrait",
