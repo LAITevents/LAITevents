@@ -9,6 +9,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@kevinmarrec/nuxt-pwa": "^0.13.0",
     "@nuxt/image-edge": "^1.0.0-27827328.bc9ddc0",
     "@nuxtjs/supabase": "^0.1.25",
     "@nuxtjs/tailwindcss": "^6.1.3",
