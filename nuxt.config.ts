@@ -5,10 +5,24 @@ export default defineNuxtConfig({
         "@nuxtjs/tailwindcss",
         "@nuxt/image-edge",
         "nuxt-icon",
+        "@kevinmarrec/nuxt-pwa",
     ],
 
     tailwindcss: {
         cssPath: "~/assets/css/tailwind.css",
+    },
+
+    pwa: {
+        meta: {
+            mobileAppIOS: true,
+        },
+        manifest: {
+            name: "LAITevents",
+            short_name: "LAITevents",
+            background_color: "#376570",
+            display: "standalone",
+            orientation: "portrait",
+        },
     },
 
     runtimeConfig: {
@@ -21,6 +35,7 @@ export default defineNuxtConfig({
 
     app: {
         head: {
+            title: "LAIT Events",
             htmlAttrs: {
                 lang: "da_DK",
             },
