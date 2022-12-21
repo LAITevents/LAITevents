@@ -9,38 +9,38 @@ const user = useSupabaseUser();
 const userDetails = ref("");
 
 const getDisplayUsername = async () => {
-    await getUsername(user?.value?.id).then((result) => {
-        userDetails.value = result;
-    });
+	await getUsername(user?.value?.id).then((result) => {
+		userDetails.value = result;
+	});
 };
 
 // Get viewed events from user' localstorage
 const localstorageArr = ref();
 const getStorageData = () => {
-    localstorageArr.value = JSON.parse(
-        localStorage.getItem("viewedEvents") || "[]"
-    );
+	localstorageArr.value = JSON.parse(
+		localStorage.getItem("viewedEvents") || "[]"
+	);
 };
 
 onMounted(() => {
-    getDisplayUsername();
-    getStorageData();
+	getDisplayUsername();
+	getStorageData();
 });
 
 definePageMeta({
-    middleware: "auth",
+	middleware: "auth",
 });
 </script>
 
 <template>
-    <div>
-        <div class="text-2xl font-medium">
-            <p>
-                Hej
-                <span class="text-lait-yellow">{{ userDetails.username }}</span>
-            </p>
-        </div>
+	<div>
+		<div class="text-2xl font-medium">
+			<p>
+				Hej
+				<span class="text-lait-yellow">{{ userDetails.username }}</span>
+			</p>
+		</div>
 
-        <EventCard :localstorageArr="localstorageArr" />
-    </div>
+		<EventCard v-if="user" :localstorageArr="localstorageArr" />
+	</div>
 </template>
